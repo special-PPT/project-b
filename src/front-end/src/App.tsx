@@ -4,10 +4,11 @@ import './App.css';
 import { ThemeProvider } from '@mui/material';
 import theme from './theme';
 import CreatePage from './components/auth/createAccPage';
+import BasicInfo from './components/onboard/basicInfo';
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <CreatePage />
+      <BasicInfo/>
     </ThemeProvider>
   );
 }
