@@ -1,7 +1,10 @@
 import { Box, Button, Container, Grid, OutlinedInput, Typography } from '@mui/material'
 import React from 'react'
 
-export default function Reference() {
+type PersonProps = {
+  tableName: string;
+};
+const PersonInfo: React.FC<PersonProps> = ({ tableName }) => {
   return (
     <Container>
         <Box
@@ -15,7 +18,7 @@ export default function Reference() {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                     <Typography variant="h5" component="h1" gutterBottom>
-                        Leagal Name
+                        {tableName}
                     </Typography>
               </Grid>
               <Grid item xs={12}
@@ -114,3 +117,5 @@ export default function Reference() {
     </Container>
   )
 }
+
+export default PersonInfo;
