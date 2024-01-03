@@ -476,7 +476,7 @@ export default function BasicInfo() {
                 <Grid item xs={12}>
                     <Button 
                     sx={{
-                        width: '15%',
+                        width: isMobile? '100%':'15%',
                     }}
                     variant="contained" color="primary" >
                         Save
