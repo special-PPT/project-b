@@ -102,16 +102,6 @@ const PersonInfo: React.FC<PersonProps> = ({ tableName }) => {
                         id="relationship"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Button variant="outlined" color="primary" fullWidth>
-                        Back
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Button variant="contained" color="primary" fullWidth>
-                        Save
-                    </Button>
-                  </Grid>
             </Grid>  
         </Box>
     </Container>
