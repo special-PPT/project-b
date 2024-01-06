@@ -2,10 +2,15 @@ import { useState } from "react";
 import { SideNav } from "./sideNav";
 import TopNav from "./topNav";
 import { styled } from "@mui/material/styles";
+import React, { ReactNode } from 'react';
+
 import { Routes, Route } from "react-router-dom";
 import EmployeeHome from "../EmployeeHome";
 import EmployeeProfile from "../EmployeeProfile";
 import EmployeeVisaManagement from "../EmployeeVisaManagement";
+type DashboardLayoutProps = {
+  children: ReactNode;
+};
 
 const SIDE_NAV_WIDTH = 280;
 
@@ -25,7 +30,7 @@ const LayoutContainer = styled("div")({
   width: "100%",
 });
 
-export default function DashboardLayout() {
+export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [openNav, setOpenNav] = useState(false);
 
   return (
@@ -34,15 +39,7 @@ export default function DashboardLayout() {
       <SideNav onClose={() => setOpenNav(false)} open={openNav} />
       <LayoutRoot>
         <LayoutContainer>
-          <Routes>
-            <Route path="/" element={<EmployeeHome />} />
-            <Route path="/profile" element={<EmployeeProfile />} />
-            <Route
-              path="/visa-management"
-              element={<EmployeeVisaManagement />}
-            />
-            {/* Additional routes as needed */}
-          </Routes>
+        {children}
         </LayoutContainer>
       </LayoutRoot>
     </>

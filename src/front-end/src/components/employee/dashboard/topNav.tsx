@@ -12,6 +12,7 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
+import userImage from './user.png';
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -74,15 +75,16 @@ export default function TopNav(props: TopNavProps) {
                 </Badge>
               </IconButton>
             </Tooltip>
+            <Typography>Logout</Typography>
             <Avatar
               sx={{
                 cursor: "pointer",
                 height: 40,
                 width: 40,
               }}
-              src="src/front-end/src/temp/avatar-3814049_1280 2.png"
+              src={userImage}
             />
-            <Typography>Logout</Typography>
+            
           </Stack>
         </Stack>
       </Box>

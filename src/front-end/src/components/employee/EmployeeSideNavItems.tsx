@@ -14,7 +14,7 @@ interface NavItem {
 export const items: NavItem[] = [
   {
     title: 'Home',
-    path: '/',
+    path: '/employee/home',
     icon: (
       <SvgIcon fontSize="medium">
         <IoMdHome />
@@ -23,7 +23,7 @@ export const items: NavItem[] = [
   },
   {
     title: 'Profile',
-    path: '/profile',
+    path: '/employee/profile',
     icon: (
       <SvgIcon fontSize="medium">
         <IoMdPerson />
@@ -32,7 +32,7 @@ export const items: NavItem[] = [
   },
   {
     title: 'Visa Management',
-    path: '/visa-management',
+    path: '/employee/visa-management',
     icon: (
       <SvgIcon fontSize="medium">
         <FaPassport />
@@ -41,7 +41,7 @@ export const items: NavItem[] = [
   },
   {
     title: 'Settings',
-    path: '/settings',
+    path: '/employee/settings',
     icon: (
       <SvgIcon fontSize="medium">
         <IoMdSettings />

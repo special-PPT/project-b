@@ -10,18 +10,35 @@ import theme from "./theme";
 import OnBoardingSteper from "./components/onboard/OnBoardingSteper";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DashboardLayout from "./components/employee/dashboard/layout";
+import EmployeeHome from "./components/employee/EmployeeHome";
+import EmployeeProfile from "./components/employee/EmployeeProfile";
 function App() {
   return (
-  //   <ThemeProvider theme={theme}>
-  //     <OnBoardingSteper />
-  //     {/* <EmergencyContact />
-  // <Footer /> */}
-  //   </ThemeProvider>
+    //   <ThemeProvider theme={theme}>
+    //     <OnBoardingSteper />
+    //     {/* <EmergencyContact />
+    // <Footer /> */}
+    //   </ThemeProvider>
 
     <Router>
       <ThemeProvider theme={theme}>
         <Routes>
-          <Route path="/" element={<DashboardLayout />} />
+          <Route
+            path="/employee/home"
+            element={
+              <DashboardLayout>
+                <EmployeeHome />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/employee/profile"
+            element={
+              <DashboardLayout>
+                <EmployeeProfile />
+              </DashboardLayout>
+            }
+          />
           {/* You can add more routes here if needed */}
         </Routes>
       </ThemeProvider>
