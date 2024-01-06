@@ -12,11 +12,14 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DashboardLayout from "./components/employee/dashboard/layout";
 function App() {
   return (
+  //   <ThemeProvider theme={theme}>
+  //     <OnBoardingSteper />
+  //     {/* <EmergencyContact />
+  // <Footer /> */}
+  //   </ThemeProvider>
+
     <Router>
       <ThemeProvider theme={theme}>
-        <OnBoardingSteper />
-        {/* <EmergencyContact />
-      <Footer /> */}
         <Routes>
           <Route path="/" element={<DashboardLayout />} />
           {/* You can add more routes here if needed */}

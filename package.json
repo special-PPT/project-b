@@ -4,11 +4,15 @@
     "description": "",
     "main": "index.js",
     "directories": {
-      "doc": "doc"
+        "doc": "doc"
     },
     "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "",
-    "license": "ISC"
-  }
+    "license": "ISC",
+    "dependencies": {
+        "@mui/lab": "^5.0.0-alpha.159",
+        "@mui/x-date-pickers": "^6.18.7"
+    }
+}
