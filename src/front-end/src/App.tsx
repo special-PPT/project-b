@@ -6,10 +6,14 @@ import theme from './theme';
 import PersonInfo from './components/onboard/Personinfo';
 import Reference from './components/onboard/Reference';
 import EmergencyContact from './components/onboard/EmergencyContact';
+import Footer from './components/common/Footer';
+import OnBoardingSteper from './components/onboard/OnBoardingSteper';
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <EmergencyContact />
+      <OnBoardingSteper />
+      {/* <EmergencyContact />
+      <Footer /> */}
     </ThemeProvider>
   );
 }
