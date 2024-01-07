@@ -1,7 +1,7 @@
-import ApplicantStatus from "./ApplicantStatus";
+import ApplicationStatus from "./ApplicationStatus";
 
 export default function EmployeeHome() {
   return (
-    <ApplicantStatus />
+    <ApplicationStatus />
   );
 }

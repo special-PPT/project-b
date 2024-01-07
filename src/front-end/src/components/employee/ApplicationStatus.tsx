@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Typography, useTheme, useMediaQuery, Container } from "@mui/material";
 
-const ApplicantStatus: React.FC = () => {
+const ApplicationStatus: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [applicationStatus, setStatus] = useState("");
@@ -69,4 +69,4 @@ const ApplicantStatus: React.FC = () => {
   );
 };
 
-export default ApplicantStatus;
+export default ApplicationStatus;
