@@ -551,51 +551,57 @@ export default function EmployeeProfile() {
             boxShadow: 4,
           }}
         >
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }} align="right">
-                    Last modified
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }} align="right">
-                    Size
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }} align="right">
-                    Download
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }} align="right">
-                    Preview
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {fileTable.map((row) => (
-                  <TableRow
-                    key={row.name}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell component="th" scope="row">
-                      {row.name}
+          <Typography variant="h5" sx={{ m: 2 }}>
+            Summary of Uploaded Files
+          </Typography>
+          <Box sx={{ m: 2 }}>
+            {" "}
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }} align="right">
+                      Last modified
                     </TableCell>
-                    <TableCell align="right">{row.modifiedTime}</TableCell>
-                    <TableCell align="right">{row.size}</TableCell>
-                    <TableCell align="right">
-                      <Button>
-                        <DownloadIcon />
-                      </Button>
+                    <TableCell sx={{ fontWeight: "bold" }} align="right">
+                      Size
                     </TableCell>
-                    <TableCell align="right">
-                      <Button>
-                        <RemoveRedEyeIcon />
-                      </Button>
+                    <TableCell sx={{ fontWeight: "bold" }} align="right">
+                      Download
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }} align="right">
+                      Preview
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {fileTable.map((row) => (
+                    <TableRow
+                      key={row.name}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {row.name}
+                      </TableCell>
+                      <TableCell align="right">{row.modifiedTime}</TableCell>
+                      <TableCell align="right">{row.size}</TableCell>
+                      <TableCell align="right">
+                        <Button>
+                          <DownloadIcon />
+                        </Button>
+                      </TableCell>
+                      <TableCell align="right">
+                        <Button>
+                          <RemoveRedEyeIcon />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
         </Box>
       </Stack>
     </Container>
