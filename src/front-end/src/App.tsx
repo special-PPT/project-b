@@ -12,6 +12,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DashboardLayout from "./components/employee/dashboard/layout";
 import EmployeeHome from "./components/employee/EmployeeHome";
 import EmployeeProfile from "./components/employee/EmployeeProfile";
+import HrEmployeeProfiles from "./components/hr/HrEmployeeProfiles";
+
 function App() {
   return (
     //   <ThemeProvider theme={theme}>
@@ -23,10 +25,11 @@ function App() {
     <Router>
       <ThemeProvider theme={theme}>
         <Routes>
+          {/* Employee routes */}
           <Route
             path="/employee/home"
             element={
-              <DashboardLayout>
+              <DashboardLayout role="employee">
                 <EmployeeHome />
               </DashboardLayout>
             }
@@ -34,12 +37,31 @@ function App() {
           <Route
             path="/employee/profile"
             element={
-              <DashboardLayout>
+              <DashboardLayout role="employee">
                 <EmployeeProfile />
               </DashboardLayout>
             }
           />
-          {/* You can add more routes here if needed */}
+
+          {/* HR routes */}
+          <Route
+            path="/hr/home"
+            element={
+              <DashboardLayout role="hr">
+                <HrEmployeeProfiles />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/hr/employee-profiles"
+            element={
+              <DashboardLayout role="hr">
+                <HrEmployeeProfiles />
+              </DashboardLayout>
+            }
+          />
+
+          {/* Other Routes */}
         </Routes>
       </ThemeProvider>
     </Router>

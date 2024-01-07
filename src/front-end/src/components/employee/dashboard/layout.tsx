@@ -10,6 +10,7 @@ import EmployeeProfile from "../EmployeeProfile";
 import EmployeeVisaManagement from "../EmployeeVisaManagement";
 type DashboardLayoutProps = {
   children: ReactNode;
+  role: string;
 };
 
 const SIDE_NAV_WIDTH = 280;
@@ -30,13 +31,13 @@ const LayoutContainer = styled("div")({
   width: "100%",
 });
 
-export default function DashboardLayout({ children }: DashboardLayoutProps) {
+export default function DashboardLayout({ children, role }: DashboardLayoutProps) {
   const [openNav, setOpenNav] = useState(false);
 
   return (
     <>
       <TopNav onNavOpen={() => setOpenNav(true)} />
-      <SideNav onClose={() => setOpenNav(false)} open={openNav} />
+      <SideNav onClose={() => setOpenNav(false)} open={openNav} role={role} />
       <LayoutRoot>
         <LayoutContainer>
         {children}
