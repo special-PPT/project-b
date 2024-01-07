@@ -11,10 +11,10 @@ interface NavItem {
   external?: boolean;
 }
 
-export const employeeItems: NavItem[] = [
+export const hrItems: NavItem[] = [
   {
     title: 'Home',
-    path: '/employee/home',
+    path: '/hr/home',
     icon: (
       <SvgIcon fontSize="medium">
         <IoMdHome />
@@ -23,7 +23,7 @@ export const employeeItems: NavItem[] = [
   },
   {
     title: 'Profile',
-    path: '/employee/profile',
+    path: '/hr/employee-profiles',
     icon: (
       <SvgIcon fontSize="medium">
         <IoMdPerson />
@@ -32,7 +32,16 @@ export const employeeItems: NavItem[] = [
   },
   {
     title: 'Visa Management',
-    path: '/employee/visa-management',
+    path: '/hr/visa-management',
+    icon: (
+      <SvgIcon fontSize="medium">
+        <FaPassport />
+      </SvgIcon>
+    )
+  },
+  {
+    title: 'Hiring Management',
+    path: '/hr/Hiring-management',
     icon: (
       <SvgIcon fontSize="medium">
         <FaPassport />
@@ -41,7 +50,7 @@ export const employeeItems: NavItem[] = [
   },
   {
     title: 'Settings',
-    path: '/employee/settings',
+    path: '/hr/settings',
     icon: (
       <SvgIcon fontSize="medium">
         <IoMdSettings />

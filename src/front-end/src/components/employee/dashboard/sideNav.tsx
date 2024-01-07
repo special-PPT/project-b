@@ -7,18 +7,23 @@ import {
   Theme,
 } from "@mui/material";
 import { Logo } from "../../common/logo";
-import { items } from "../EmployeeSideNavItems";
+import { employeeItems } from "../EmployeeSideNavItems";
 import { SideNavItem } from "./sideNavItem";
+import { hrItems } from "../../hr/HrSideNavItems";
 
 interface SideNavProps {
   open: boolean;
   onClose: () => void;
+  role: string;
 }
 
-export const SideNav: React.FC<SideNavProps> = ({ open, onClose }) => {
+export const SideNav: React.FC<SideNavProps> = ({ open, onClose, role }) => {
   const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
   const location = useLocation();
   const pathname = location.pathname;
+
+  // determine which items to use based on role
+  const items = role === "employee" ? employeeItems : hrItems;
 
   const content = (
     <Box
