@@ -11,7 +11,7 @@ interface NavItem {
   external?: boolean;
 }
 
-export const employeeItems: NavItem[] = [
+export const items: NavItem[] = [
   {
     title: 'Home',
     path: '/employee/home',
