@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Paper, useMediaQuery } from "@mui/material";
+import { Typography, useMediaQuery } from "@mui/material";
 import EmployeeCard from "./EmployeeCard";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -275,6 +275,9 @@ export default function HrEmployeeProfiles() {
               email={row.email}
             />
           ))}
+          <Typography style={{ textAlign: "center", marginTop: "20px" }}>
+            Total: {filteredRows.length}, End of Display
+          </Typography>
         </>
       )}
     </StyledPaper>
