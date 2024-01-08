@@ -1,4 +1,6 @@
 import * as React from "react";
+import { Paper, useMediaQuery } from "@mui/material";
+import EmployeeCard from "./EmployeeCard";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
@@ -174,6 +176,7 @@ const rows = [
 ];
 
 export default function HrEmployeeProfiles() {
+  const isMobile = useMediaQuery("(max-width:600px)");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -193,63 +196,87 @@ export default function HrEmployeeProfiles() {
     setSearchQuery(query.toLowerCase());
   };
 
-  const filteredRows = rows.filter((row) => {
-    // TODO: is name part of input in backend APIs?
-    return row.name.toLowerCase().includes(searchQuery);
-  });
+  const filteredRows = rows
+    .filter((row) => {
+      // TODO: is name part of input in backend APIs?
+      return row.name.toLowerCase().includes(searchQuery);
+    })
+    .sort((a, b) => {
+      const lastNameA = a.name.split(" ").pop()?.toLowerCase() ?? "";
+      const lastNameB = b.name.split(" ").pop()?.toLowerCase() ?? "";
+      return lastNameA.localeCompare(lastNameB);
+    });
 
   return (
     <StyledPaper>
       <TableSearch onSearchChange={handleSearchChange} />
-      <StyledTableContainer>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <StyledHeaderCell
-                  key={column.id}
-                  align={column.align}
-                  minWidth={column.minWidth}
-                >
-                  {column.label}
-                </StyledHeaderCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredRows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => (
-                <TableRow
-                  hover
-                  role="checkbox"
-                  tabIndex={-1}
-                  key={row.employee_id}
-                >
-                  {columns.map((column) => {
-                    const value = row[column.id];
-                    return (
-                      <StyledBodyCell key={column.id} align={column.align}>
-                        {column.format && typeof value === "number"
-                          ? column.format(value)
-                          : value}
-                      </StyledBodyCell>
-                    );
-                  })}
+      {!isMobile ? (
+        <>
+          <StyledTableContainer>
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  {columns.map((column) => (
+                    <StyledHeaderCell
+                      key={column.id}
+                      align={column.align}
+                      minWidth={column.minWidth}
+                    >
+                      {column.label}
+                    </StyledHeaderCell>
+                  ))}
                 </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </StyledTableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 30]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+              </TableHead>
+              <TableBody>
+                {filteredRows
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={row.employee_id}
+                    >
+                      {columns.map((column) => {
+                        const value = row[column.id];
+                        return (
+                          <StyledBodyCell key={column.id} align={column.align}>
+                            {column.format && typeof value === "number"
+                              ? column.format(value)
+                              : value}
+                          </StyledBodyCell>
+                        );
+                      })}
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </StyledTableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 30]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </>
+      ) : (
+        <>
+          {filteredRows.map((row) => (
+            <EmployeeCard
+              key={row.employee_id}
+              employee_id={row.employee_id}
+              name={row.name}
+              ssn={row.ssn}
+              work_auth={row.work_auth}
+              phone={row.phone}
+              email={row.email}
+            />
+          ))}
+        </>
+      )}
     </StyledPaper>
   );
 }
