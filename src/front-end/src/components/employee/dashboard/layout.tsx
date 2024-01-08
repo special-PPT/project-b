@@ -4,10 +4,6 @@ import TopNav from "./topNav";
 import { styled } from "@mui/material/styles";
 import React, { ReactNode } from 'react';
 
-import { Routes, Route } from "react-router-dom";
-import EmployeeHome from "../EmployeeHome";
-import EmployeeProfile from "../EmployeeProfile";
-import EmployeeVisaManagement from "../EmployeeVisaManagement";
 type DashboardLayoutProps = {
   children: ReactNode;
   role: string;
