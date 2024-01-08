@@ -9,7 +9,10 @@ const StyledPaper = styled(Paper)(({ theme }) => {
 
   return {
     ...(isMobile
-      ? {}
+      ? {
+          boxShadow: 'none', 
+          borderBottom: 'none',
+        }
       : {
           width: "90%",
           overflow: "hidden",
