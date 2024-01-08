@@ -2,18 +2,27 @@ import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import { TableCell, TableCellProps } from "@mui/material";
 import TableContainer from "@mui/material/TableContainer";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
-const StyledPaper = styled(Paper)(({ theme }) => ({
-  width: "90%",
-  overflow: "hidden",
-  padding: "10px",
-  alignSelf: "center",
-  marginTop: "30px",
-  borderStyle: "solid",
-  borderWidth: "2px",
-  borderRadius: "12px",
-  borderColor: theme.palette.primary.dark,
-}));
+const StyledPaper = styled(Paper)(({ theme }) => {
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  return {
+    ...(isMobile
+      ? {}
+      : {
+          width: "90%",
+          overflow: "hidden",
+          padding: "10px",
+          alignSelf: "center",
+          marginTop: "30px",
+          borderStyle: "solid",
+          borderWidth: "2px",
+          borderRadius: "12px",
+          borderColor: theme.palette.primary.dark,
+        }),
+  };
+});
 
 const StyledTableContainer = styled(TableContainer)({
   minHeight: "500px",
@@ -38,4 +47,4 @@ const StyledBodyCell = styled(TableCell)({
   maxHeight: "15px",
 });
 
-export {StyledPaper, StyledTableContainer, StyledHeaderCell, StyledBodyCell};
+export { StyledPaper, StyledTableContainer, StyledHeaderCell, StyledBodyCell };
