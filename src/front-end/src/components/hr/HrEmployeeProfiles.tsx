@@ -1,13 +1,16 @@
 import * as React from "react";
-import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TableSearch from "./TableSearch";
+import {
+  StyledPaper,
+  StyledTableContainer,
+  StyledHeaderCell,
+  StyledBodyCell,
+} from "../../styles/hr/profile";
 
 interface Column {
   id: "employee_id" | "name" | "ssn" | "work_auth" | "phone" | "email";
@@ -173,7 +176,7 @@ const rows = [
 export default function HrEmployeeProfiles() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [searchQuery, setSearchQuery] = React.useState('');
+  const [searchQuery, setSearchQuery] = React.useState("");
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -196,87 +199,48 @@ export default function HrEmployeeProfiles() {
   });
 
   return (
-    <Paper
-      sx={{
-        width: "90%",
-        overflow: "hidden",
-        padding: "10px",
-        alignSelf: "center",
-        marginTop: "30px",
-        borderStyle: "solid",
-        borderWidth: "2px",
-        borderRadius: "12px",
-        borderColor: (theme) => theme.palette.primary.dark,
-      }}
-    >
+    <StyledPaper>
       <TableSearch onSearchChange={handleSearchChange} />
-      <TableContainer
-        sx={{
-          minHeight: "500px",
-          maxHeight: "100%",
-        }}
-      >
+      <StyledTableContainer>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
               {columns.map((column) => (
-                <TableCell
+                <StyledHeaderCell
                   key={column.id}
                   align={column.align}
-                  style={{
-                    minWidth: column.minWidth,
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                  }}
+                  minWidth={column.minWidth}
                 >
                   {column.label}
-                </TableCell>
+                </StyledHeaderCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
             {filteredRows
-              .sort((a, b) => {
-                // Split the names to get the last names
-                const lastNameA = a.name.split(" ").pop()?.toLowerCase() ?? "";
-                const lastNameB = b.name.split(" ").pop()?.toLowerCase() ?? "";
-
-                // Compare the last names
-                return lastNameA.localeCompare(lastNameB);
-              })
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={row.employee_id}
-                  >
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell
-                          key={column.id}
-                          align={column.align}
-                          sx={{
-                            fontSize: "16px",
-                            minHeight: "15px",
-                            maxHeight: "15px",
-                          }}
-                        >
-                          {column.format && typeof value === "number"
-                            ? column.format(value)
-                            : value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
+              .map((row) => (
+                <TableRow
+                  hover
+                  role="checkbox"
+                  tabIndex={-1}
+                  key={row.employee_id}
+                >
+                  {columns.map((column) => {
+                    const value = row[column.id];
+                    return (
+                      <StyledBodyCell key={column.id} align={column.align}>
+                        {column.format && typeof value === "number"
+                          ? column.format(value)
+                          : value}
+                      </StyledBodyCell>
+                    );
+                  })}
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </StyledTableContainer>
       <TablePagination
         rowsPerPageOptions={[5, 10, 30]}
         component="div"
@@ -286,6 +250,6 @@ export default function HrEmployeeProfiles() {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-    </Paper>
+    </StyledPaper>
   );
 }
