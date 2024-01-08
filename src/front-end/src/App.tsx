@@ -12,6 +12,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DashboardLayout from "./components/employee/dashboard/layout";
 import EmployeeHome from "./components/employee/EmployeeHome";
 import EmployeeProfile from "./components/employee/EmployeeProfile";
+import EmployeeVisaManagement from "./components/employee/EmployeeVisaManagement";
 import HrEmployeeProfiles from "./components/hr/HrEmployeeProfiles";
 
 function App() {
@@ -39,6 +40,14 @@ function App() {
             element={
               <DashboardLayout role="employee">
                 <EmployeeProfile />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/employee/visa-management"
+            element={
+              <DashboardLayout role="employee">
+                <EmployeeVisaManagement />
               </DashboardLayout>
             }
           />
