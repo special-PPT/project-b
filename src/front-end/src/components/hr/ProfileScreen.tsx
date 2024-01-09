@@ -7,6 +7,7 @@ import {
   Element10,
   Element11,
   Element02,
+  AvatarBox,
 } from "./profile/profileElements";
 
 const employeeData = {
@@ -102,24 +103,7 @@ const ProfileScreen: React.FC = () => {
             >
               {/* Content of the first row */}
               {columnIndex === 0 && (
-                <Box
-                  sx={{
-                    width: "100%",
-                    height: `${rowHeights[0].topHeight}px`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Avatar
-                    src={employeeData.avatar || undefined}
-                    sx={{
-                      width: "100%",
-                      height: topHeight,
-                      borderRadius: "0px",
-                    }}
-                  />
-                </Box>
+                <AvatarBox topHeight={topHeight} avatar={employeeData.avatar} />
               )}
               {columnIndex === 1 && <Element01 employeeData={employeeData} />}
               {columnIndex === 2 && <Element02 employeeData={employeeData} />}
