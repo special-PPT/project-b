@@ -2,10 +2,16 @@ import React from "react";
 import { Box, Grid, Typography, Avatar } from "@mui/material";
 import { getRectangleStyle } from "../../styles/hr/profile";
 import { useParams } from "react-router-dom";
-import { Element01, Element10, Element11, Element02 } from "./profile/profileElements";
+import {
+  Element01,
+  Element10,
+  Element11,
+  Element02,
+} from "./profile/profileElements";
 
 const employeeData = {
-  avatar: "https://wallpapers-clan.com/wp-content/uploads/2023/06/sad-ghost-dark-blue-background.jpg",
+  avatar:
+    "https://wallpapers-clan.com/wp-content/uploads/2023/06/sad-ghost-dark-blue-background.jpg",
   basic_info: {
     name: "Jane Doe",
     employee_id: "12345",
@@ -96,15 +102,27 @@ const ProfileScreen: React.FC = () => {
             >
               {/* Content of the first row */}
               {columnIndex === 0 && (
-                <Avatar
-                  src={employeeData.avatar || undefined}
-                  sx={{ width: 56, height: 56 }}
-                />
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: `${rowHeights[0].topHeight}px`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Avatar
+                    src={employeeData.avatar || undefined}
+                    sx={{
+                      width: "100%",
+                      height: topHeight,
+                      borderRadius: "0px",
+                    }}
+                  />
+                </Box>
               )}
               {columnIndex === 1 && <Element01 employeeData={employeeData} />}
-              {columnIndex === 2 && (
-                 <Element02 employeeData={employeeData} />
-              )}
+              {columnIndex === 2 && <Element02 employeeData={employeeData} />}
             </Box>
             <Box
               sx={{
@@ -114,12 +132,8 @@ const ProfileScreen: React.FC = () => {
             >
               {/* Content of the second row */}
               {columnIndex === 0 && <Element10 employeeData={employeeData} />}
-              {columnIndex === 1 && (
-                <Element11 employeeData={employeeData} />
-              )}
-              {columnIndex === 2 && (
-               <div></div>
-              )}
+              {columnIndex === 1 && <Element11 employeeData={employeeData} />}
+              {columnIndex === 2 && <div></div>}
             </Box>
           </Grid>
         ))}

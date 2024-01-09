@@ -11,7 +11,7 @@ const InfoBox: React.FC<InfoBoxProps> = ({ children }) => (
       paddingLeft: "10px",
       width: "90%",
       display: "grid",
-      gridTemplateColumns: "1.5fr 2fr", 
+      gridTemplateColumns: "1.5fr 2fr",
       textAlign: "left",
       gap: 1,
     }}
@@ -20,7 +20,6 @@ const InfoBox: React.FC<InfoBoxProps> = ({ children }) => (
   </Box>
 );
 
-
 interface SectionTitleProps {
   title: string;
 }
@@ -28,7 +27,11 @@ interface SectionTitleProps {
 const SectionTitle: React.FC<SectionTitleProps> = ({ title }) => (
   <Typography
     variant="subtitle1"
-    sx={{ fontWeight: "bold", gridColumn: "1 / -1", fontSize: { xs: '0.6rem', sm: '0.8rem', md: '1rem' } }}
+    sx={{
+      fontWeight: "bold",
+      gridColumn: "1 / -1",
+      fontSize: { xs: "0.6rem", sm: "0.8rem", md: "1rem" },
+    }}
   >
     {title.toUpperCase()}
   </Typography>
@@ -41,15 +44,25 @@ interface InfoEntryProps {
 
 const InfoEntry: React.FC<InfoEntryProps> = ({ label, value }) => (
   <React.Fragment>
-    <Typography variant="subtitle2" sx={{ fontWeight: "regular", fontSize: { xs: '0.6rem', sm: '0.7rem', md: '1rem' } }}>
+    <Typography
+      variant="subtitle2"
+      sx={{
+        fontWeight: "regular",
+        fontSize: { xs: "0.6rem", sm: "0.7rem", md: "1rem" },
+      }}
+    >
       {label.toUpperCase()}:
     </Typography>
-    <Typography sx={{ wordBreak: 'break-all', fontSize: { xs: '0.6rem', sm: '0.7rem', md: '1rem' } }}>
+    <Typography
+      sx={{
+        wordBreak: "break-all",
+        fontSize: { xs: "0.6rem", sm: "0.7rem", md: "1rem" },
+      }}
+    >
       {value}
     </Typography>
   </React.Fragment>
 );
-
 
 interface EmployeeData {
   avatar: string;
@@ -106,13 +119,11 @@ interface EmployeeData {
   };
 }
 
-
 // used in ProfileScreen
 interface ElementProps {
   employeeData: EmployeeData | null;
 }
 
-// Basic Info
 const Element10: React.FC<ElementProps> = ({ employeeData }) => {
   if (!employeeData || !employeeData.basic_info) {
     return <div>No data available</div>;
@@ -175,7 +186,10 @@ const Element11: React.FC<ElementProps> = ({ employeeData }) => {
 };
 
 const Element02: React.FC<ElementProps> = ({ employeeData }) => {
-  if (!employeeData || (!employeeData.emergency_contact1 && !employeeData.emergency_contact2)) {
+  if (
+    !employeeData ||
+    (!employeeData.emergency_contact1 && !employeeData.emergency_contact2)
+  ) {
     return <div>No emergency contact data available</div>;
   }
 
@@ -185,9 +199,15 @@ const Element02: React.FC<ElementProps> = ({ employeeData }) => {
       {employeeData.emergency_contact1 && (
         <>
           <SectionTitle title="Emergency Contact 1" />
-          {Object.entries(employeeData.emergency_contact1).map(([key, value]) => (
-            <InfoEntry key={key} label={key.replace(/_/g, " ")} value={value} />
-          ))}
+          {Object.entries(employeeData.emergency_contact1).map(
+            ([key, value]) => (
+              <InfoEntry
+                key={key}
+                label={key.replace(/_/g, " ")}
+                value={value}
+              />
+            )
+          )}
         </>
       )}
 
@@ -195,13 +215,46 @@ const Element02: React.FC<ElementProps> = ({ employeeData }) => {
       {employeeData.emergency_contact2 && (
         <>
           <SectionTitle title="Emergency Contact 2" />
-          {Object.entries(employeeData.emergency_contact2).map(([key, value]) => (
-            <InfoEntry key={key} label={key.replace(/_/g, " ")} value={value} />
-          ))}
+          {Object.entries(employeeData.emergency_contact2).map(
+            ([key, value]) => (
+              <InfoEntry
+                key={key}
+                label={key.replace(/_/g, " ")}
+                value={value}
+              />
+            )
+          )}
         </>
       )}
     </InfoBox>
   );
 };
 
-export { Element10, Element01, Element11, Element02 };
+// avatar
+interface AvatarBoxProps {
+  topHeight: number;
+  avatar?: string;
+}
+
+const AvatarBox: React.FC<AvatarBoxProps> = ({ topHeight, avatar }) => (
+  <Box
+    sx={{
+      width: "100%",
+      height: `${topHeight}px`,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+  >
+    <Avatar
+      src={avatar || undefined}
+      sx={{
+        width: "100%",
+        height: topHeight,
+        borderRadius: "0px",
+      }}
+    />
+  </Box>
+);
+
+export { Element10, Element01, Element11, Element02, AvatarBox };
