@@ -14,6 +14,7 @@ import EmployeeHome from "./components/employee/EmployeeHome";
 import EmployeeProfile from "./components/employee/EmployeeProfile";
 import EmployeeVisaManagement from "./components/employee/EmployeeVisaManagement";
 import HrEmployeeProfiles from "./components/hr/HrEmployeeProfiles";
+import ProfileScreen from "./components/hr/ProfileScreen";
 
 function App() {
   return (
@@ -68,6 +69,10 @@ function App() {
                 <HrEmployeeProfiles />
               </DashboardLayout>
             }
+          />
+          <Route
+            path="/hr/employee-profile/:employeeId"
+            element={<ProfileScreen />}
           />
 
           {/* Other Routes */}
