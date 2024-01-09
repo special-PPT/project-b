@@ -8,7 +8,9 @@ import {
   Element11,
   Element02,
   AvatarBox,
+  DocumentsElement,
 } from "./profile/profileElements";
+import Document from "./other/Document";
 
 const employeeData = {
   avatar:
@@ -59,12 +61,34 @@ const employeeData = {
     relationship: "Brother",
     email: "michaelasdfasdfasdfasdfdfdfdfdf.doe@example.com",
   },
-  documents: {
-    doc1: "Document 1 Content",
-    doc2: "Document 2 Content",
-    doc3: "Document 3 Content",
-  },
 };
+
+const documents = [
+  {
+    documentName: "Annual Report 2023",
+    lastModifiedDate: "2023-12-01",
+    documentSize: "2.5 MB",
+    canDownload: true,
+    canPreview: true,
+    documentUrl: "https://example.com/annual-report-2023.pdf",
+  },
+  {
+    documentName: "Employee Handbook",
+    lastModifiedDate: "2023-10-15",
+    documentSize: "1.2 MB",
+    canDownload: true,
+    canPreview: false,
+    documentUrl: "https://example.com/employee-handbook.pdf",
+  },
+  {
+    documentName: "Project Plan - New Website",
+    lastModifiedDate: "2023-11-20",
+    documentSize: "3.7 MB",
+    canDownload: false,
+    canPreview: true,
+    documentUrl: "https://example.com/project-plan-website.pdf",
+  },
+];
 
 const ProfileScreen: React.FC = () => {
   const { employeeId } = useParams();
@@ -117,7 +141,7 @@ const ProfileScreen: React.FC = () => {
               {/* Content of the second row */}
               {columnIndex === 0 && <Element10 employeeData={employeeData} />}
               {columnIndex === 1 && <Element11 employeeData={employeeData} />}
-              {columnIndex === 2 && <div></div>}
+              {columnIndex === 2 && <DocumentsElement documents={documents} />}
             </Box>
           </Grid>
         ))}

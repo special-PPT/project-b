@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Grid, Typography, Avatar } from "@mui/material";
+import Document from "../other/Document";
 
 interface InfoBoxProps {
   children: React.ReactNode;
@@ -111,11 +112,6 @@ interface EmployeeData {
     phone: string;
     relationship: string;
     email: string;
-  };
-  documents: {
-    doc1: string;
-    doc2: string;
-    doc3: string;
   };
 }
 
@@ -257,4 +253,51 @@ const AvatarBox: React.FC<AvatarBoxProps> = ({ topHeight, avatar }) => (
   </Box>
 );
 
-export { Element10, Element01, Element11, Element02, AvatarBox };
+// documents
+interface DocumentProps {
+  documentName: string;
+  lastModifiedDate: string;
+  documentSize: string;
+  canDownload: boolean;
+  canPreview: boolean;
+  documentUrl: string;
+}
+
+interface DocumentsElementProps {
+  documents: DocumentProps[];
+}
+
+const DocumentsElement: React.FC<DocumentsElementProps> = ({ documents }) => (
+  <Box
+    sx={{
+      paddingLeft: "10px",
+      width: "90%",
+      display: "grid",
+      gridTemplateColumns: "1fr",
+      textAlign: "left",
+      gap: 1,
+    }}
+  >
+    <SectionTitle title="Documents" />
+    {documents.map((doc, index) => (
+      <Document
+        key={index}
+        documentName={doc.documentName}
+        lastModifiedDate={doc.lastModifiedDate}
+        documentSize={doc.documentSize}
+        canDownload={doc.canDownload}
+        canPreview={doc.canPreview}
+        documentUrl={doc.documentUrl}
+      />
+    ))}
+  </Box>
+);
+
+export {
+  Element10,
+  Element01,
+  Element11,
+  Element02,
+  AvatarBox,
+  DocumentsElement,
+};
