@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Grid, Typography, Avatar } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { getRectangleStyle } from "../../styles/hr/profile";
 import { useParams } from "react-router-dom";
 import {
@@ -10,7 +10,6 @@ import {
   AvatarBox,
   DocumentsElement,
 } from "./profile/profileElements";
-import Document from "./other/Document";
 
 const employeeData = {
   avatar:

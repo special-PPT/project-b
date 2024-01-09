@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Grid, Typography, Avatar } from "@mui/material";
+import { Box, Typography, Avatar } from "@mui/material";
 import Document from "../other/Document";
 
 interface InfoBoxProps {
