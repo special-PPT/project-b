@@ -1,5 +1,6 @@
 import React from "react";
-import { Box, Grid, Typography, Avatar } from "@mui/material";
+import { Box, Grid, useMediaQuery } from "@mui/material";
+import { useTheme } from '@mui/material/styles';
 import { getRectangleStyle } from "../../styles/hr/profile";
 import { useParams } from "react-router-dom";
 import {
@@ -10,7 +11,8 @@ import {
   AvatarBox,
   DocumentsElement,
 } from "./profile/profileElements";
-import Document from "./other/Document";
+import ProfileMobile from "./profile/ProfileMobile";
+
 
 const employeeData = {
   avatar:
@@ -92,6 +94,8 @@ const documents = [
 
 const ProfileScreen: React.FC = () => {
   const { employeeId } = useParams();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // 'sm' typically represents small or mobile devices
 
   // height percentages for the top rows
   const rowHeightPercentages = ["50%", "70%", "55%"];
@@ -103,6 +107,12 @@ const ProfileScreen: React.FC = () => {
     const bottomHeight = heightWithoutPadding - topHeight;
     return { topHeight, bottomHeight };
   });
+
+  if (isMobile) {
+    return (
+      <ProfileMobile employeeData={employeeData} documents={documents} />
+    );
+  }
 
   return (
     <Box
