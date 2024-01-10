@@ -1,6 +1,16 @@
 import React from "react";
-import { Box, Typography, Avatar } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Avatar,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import Document from "../other/Document";
+import {
+  EmployeeDataInterface,
+  DocumentInterface,
+} from "../data/EmployeeDataInterfaces";
 
 interface InfoBoxProps {
   children: React.ReactNode;
@@ -65,59 +75,9 @@ const InfoEntry: React.FC<InfoEntryProps> = ({ label, value }) => (
   </React.Fragment>
 );
 
-interface EmployeeData {
-  avatar: string;
-  basic_info: {
-    name: string;
-    employee_id: string;
-    ssn: string;
-    work_auth: string;
-    phone: string;
-    email: string;
-    dob: string;
-    gender: string;
-    preferred_name: string;
-  };
-  address: {
-    street: string;
-    building: string;
-    city: string;
-    state: string;
-    zip_code: string;
-  };
-  contact: {
-    email: string;
-    cell_phone: string;
-    work_phone: string;
-  };
-  visa_status: {
-    visa_title: string;
-    start_date: string;
-    end_date: string;
-  };
-  reference: {
-    name: string;
-    phone_number: string;
-    email: string;
-    relationship: string;
-  };
-  emergency_contact1: {
-    name: string;
-    phone: string;
-    relationship: string;
-    email: string;
-  };
-  emergency_contact2: {
-    name: string;
-    phone: string;
-    relationship: string;
-    email: string;
-  };
-}
-
 // used in ProfileScreen
 interface ElementProps {
-  employeeData: EmployeeData | null;
+  employeeData: EmployeeDataInterface | null;
 }
 
 const Element10: React.FC<ElementProps> = ({ employeeData }) => {
@@ -254,44 +214,41 @@ const AvatarBox: React.FC<AvatarBoxProps> = ({ topHeight, avatar }) => (
 );
 
 // documents
-interface DocumentProps {
-  documentName: string;
-  lastModifiedDate: string;
-  documentSize: string;
-  canDownload: boolean;
-  canPreview: boolean;
-  documentUrl: string;
-}
-
 interface DocumentsElementProps {
-  documents: DocumentProps[];
+  documents: DocumentInterface[];
 }
 
-const DocumentsElement: React.FC<DocumentsElementProps> = ({ documents }) => (
-  <Box
-    sx={{
-      paddingLeft: "10px",
-      width: "90%",
-      display: "grid",
-      gridTemplateColumns: "1fr",
-      textAlign: "left",
-      gap: 1,
-    }}
-  >
-    <SectionTitle title="Documents" />
-    {documents.map((doc, index) => (
-      <Document
-        key={index}
-        documentName={doc.documentName}
-        lastModifiedDate={doc.lastModifiedDate}
-        documentSize={doc.documentSize}
-        canDownload={doc.canDownload}
-        canPreview={doc.canPreview}
-        documentUrl={doc.documentUrl}
-      />
-    ))}
-  </Box>
-);
+const DocumentsElement: React.FC<DocumentsElementProps> = ({ documents }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  return (
+    <Box
+      sx={{
+        paddingLeft: "10px",
+        width: "90%",
+        display: "grid",
+        gridTemplateColumns: "1fr",
+        textAlign: "left",
+        gap: 1,
+        paddingTop: isMobile ? "40px" : 0,
+      }}
+    >
+      {!isMobile && <SectionTitle title="Documents" />}
+      {documents.map((doc, index) => (
+        <Document
+          key={index}
+          documentName={doc.documentName}
+          lastModifiedDate={doc.lastModifiedDate}
+          documentSize={doc.documentSize}
+          canDownload={doc.canDownload}
+          canPreview={doc.canPreview}
+          documentUrl={doc.documentUrl}
+        />
+      ))}
+    </Box>
+  );
+};
 
 export {
   Element10,
