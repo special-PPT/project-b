@@ -29,6 +29,7 @@ export default function BasicInfo() {
                 alignItems: 'center',
             }}
         >
+            
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                    <Paper
@@ -48,7 +49,7 @@ export default function BasicInfo() {
                         maxWidth: isMobile? '60vw': '20vw', 
                         height: 'auto', // 高度自动
                     }}
-                    src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/ghost-and-pumpkin-background-design-template-226db258785cb1efaeeb18ce9d815657_screen.jpg?ts=1697877076" alt="profile pic"/>  
+                    src="user.png" alt="profile pic"/>  
                    </Paper>
                 </Grid>
                 <Grid item xs={12}>

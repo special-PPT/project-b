@@ -1,58 +1,83 @@
-import React, { useState } from 'react'
+import React from 'react'
 import theme from '../../theme'
-import { Button, Container, Grid, Step, StepLabel, Stepper, useMediaQuery } from '@mui/material';
-import BasicInfo from './BasicInfo';
-import Reference from './Reference';
-import EmergencyContact from './EmergencyContact';
-function getStepContent(step: number) {
-  switch (step) {
-    case 0:
-      return <BasicInfo />;
-    case 1:
-      return <Reference />;
-    case 2:
-      return <EmergencyContact />;
-    default:
-      throw new Error('Unknown step');
-  }
+import { Box, Container, Drawer, Step, StepLabel, Stepper, useMediaQuery } from '@mui/material';
+import { Logo } from '../common/logo';
+
+const styles = {
+  stepLabel: { // 调整字体大小
+    fontSize: '3rem', // 或其他你想要的大小
+  },
+  stepIcon: { // 调整图标大小
+    fontSize: '3rem', // 或其他你想要的大小
+    // 你也可以通过width和height来调整图标大小，如果它们是SVG或字体图标
+  },
+};
+
+interface OnBoardingSteperProps {
+  activeStep: number;
+  setActiveStep: (step: number) => void;
 }
 
 
-export default function OnBoardingSteper() {
+const OnBoardingSteper: React.FC<OnBoardingSteperProps> = ({ activeStep, setActiveStep }) => {
   const steps = ['Basic Infomation', 'Reference', 'Emergency Contact', 'Upload Documents'];
-  const [activeStep, setActiveStep] = useState<number>(0);
-  const handleNext = () => {
-    setActiveStep(activeStep + 1);
-  };
-  const handleBack = () => {
-      setActiveStep(activeStep - 1);
-  }
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  if(!isMobile){
   return (
     <Container>
-      <Grid container spacing={3}>
-        <Grid item xs={6}>
-          <Button fullWidth disabled={activeStep === 0} onClick={handleBack}>Back</Button>
-        </Grid>
-        <Grid item xs={6}>
-          <Button fullWidth variant="contained" onClick={handleNext}>Next</Button>
-        </Grid>
-        <Grid item xs={12}>
-          <Stepper activeStep={activeStep} alternativeLabel={isMobile} orientation={isMobile? 'horizontal': 'vertical'}
+      <Drawer
+        variant='permanent'
+        anchor='left'
+        sx={{
+          width: '30vw',
+          flexShrink: 0,
+          overflow: 'auto',
+          backgroundColor: theme.palette.primary.main,
+        }}
+        PaperProps={{
+          style: {
+            width: '30vw',
+            height: '100vh',
+            backgroundColor: theme.palette.primary.main,
+          },
+        }}
+        >
+          <Logo /> 
+          <Box
+            sx={{
+              height: '10vh',
+            }}
           >
+          </Box>     
+          <Stepper activeStep={activeStep} 
+            orientation="vertical" style={{ height: '50%', overflow: 'auto',}}
+
+          >
+            {steps.map((label) => (
+              <Step key={label}  >
+                <StepLabel style={styles.stepLabel}
+                StepIconProps={{
+                  style: styles.stepIcon, // 应用图标样式
+                }}
+                >{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+        </Drawer>
+    </Container>
+  )
+  }else{
+    return(
+      <Container>
+        <Stepper activeStep={activeStep} orientation="horizontal" alternativeLabel>
           {steps.map((label) => (
-            <Step key={label}>
+            <Step key={label}  >
               <StepLabel>{label}</StepLabel>
             </Step>
           ))}
-          </Stepper>
-        </Grid>
-        <Grid item xs={12}>
-          {getStepContent(activeStep)}
-        </Grid>
-      </Grid>
-      
-      
-    </Container>
-  )
+        </Stepper>
+      </Container>
+    )
+  }
 }
+export default OnBoardingSteper;
