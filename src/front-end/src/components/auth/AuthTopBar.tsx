@@ -21,11 +21,12 @@ export default function AuthTopBar() {
                     <Box flexGrow={1} />
                     <Box
                     sx={{
+                        
                         width: 200,  
                         height: 100, 
                         borderRadius: '50%', 
                         backgroundColor: theme.palette.primary.main,
-                        transform: 'scale(2)'
+                        transform: 'translate(-50%, -50%) scale(2)'
                     }}
                     />
                     <Box
