@@ -7,13 +7,14 @@ import theme from "./theme";
 // import Reference from "./components/onboard/Reference";
 // import EmergencyContact from "./components/onboard/EmergencyContact";
 // import Footer from "./components/common/Footer";
-import OnBoardingSteper from "./components/onboard/OnBoardingSteper";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DashboardLayout from "./components/employee/dashboard/layout";
 import EmployeeHome from "./components/employee/EmployeeHome";
 import EmployeeProfile from "./components/employee/EmployeeProfile";
 import EmployeeVisaManagement from "./components/employee/EmployeeVisaManagement";
 import HrEmployeeProfiles from "./components/hr/HrEmployeeProfiles";
+import OnboardingLayout from "./components/onboard/OnboardingLayout";
+import AuthLayout from "./components/auth/AuthLayout";
 import ProfileScreen from "./components/hr/ProfileScreen";
 
 function App() {
@@ -27,6 +28,20 @@ function App() {
     <Router>
       <ThemeProvider theme={theme}>
         <Routes>
+          {/* Auth Routes */}
+          <Route
+            path="/login"
+            element={
+              <AuthLayout />
+            }
+          />
+          {/* Onboarding routes */}
+          <Route
+            path="/onboarding"
+            element={
+              <OnboardingLayout />
+            }
+          />
           {/* Employee routes */}
           <Route
             path="/employee/home"
