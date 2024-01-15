@@ -12,7 +12,7 @@ import DashboardLayout from "./components/employee/dashboard/layout";
 import EmployeeHome from "./components/employee/EmployeeHome";
 import EmployeeProfile from "./components/employee/EmployeeProfile";
 import EmployeeVisaManagement from "./components/employee/EmployeeVisaManagement";
-import HrEmployeeProfiles from "./components/hr/HrEmployeeProfiles";
+import HrEmployeeProfiles from "./components/hr/profile/HrEmployeeProfiles";
 import OnboardingLayout from "./components/onboard/OnboardingLayout";
 import AuthLayout from "./components/auth/AuthLayout";
 import ProfileScreen from "./components/hr/ProfileScreen";

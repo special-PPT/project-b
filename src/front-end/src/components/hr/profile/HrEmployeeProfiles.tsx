@@ -6,14 +6,14 @@ import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import TableSearch from "./TableSearch";
+import TableSearch from "../TableSearch";
 import {
   StyledPaper,
   StyledTableContainer,
   StyledHeaderCell,
   StyledBodyCell,
   ClickableSpan,
-} from "../../styles/hr/profile";
+} from "../../../styles/hr/profile";
 
 interface Column {
   id: "employee_id" | "name" | "ssn" | "work_auth" | "phone" | "email";
