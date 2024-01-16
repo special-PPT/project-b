@@ -8,6 +8,10 @@ import hrRoutes from './routes/hrRoutes';
 require('dotenv').config();
 const app = express();
 
+
+// Test Email
+// const { sendEmail } = require('./config/mailConfig');
+// sendEmail('zhengmao@pdx.edu', '1234567890');
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URL!)
   .then(() => console.log('Connected to MongoDB'))
