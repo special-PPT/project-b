@@ -18,7 +18,6 @@ const StyledPaper = styled(Paper)(({ theme }) => {
           overflow: "hidden",
           padding: "10px",
           alignSelf: "center",
-          marginTop: "30px",
           borderStyle: "solid",
           borderWidth: "2px",
           borderRadius: "12px",

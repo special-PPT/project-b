@@ -15,7 +15,8 @@ import EmployeeVisaManagement from "./components/employee/EmployeeVisaManagement
 import HrEmployeeProfiles from "./components/hr/profile/HrEmployeeProfiles";
 import OnboardingLayout from "./components/onboard/OnboardingLayout";
 import AuthLayout from "./components/auth/AuthLayout";
-import ProfileScreen from "./components/hr/ProfileScreen";
+import ProfileScreen from "./components/hr/profile/ProfileScreen";
+import HrVisaManagement from "./components/hr/visa/HrVisaManagement";
 
 function App() {
   return (
@@ -82,6 +83,14 @@ function App() {
             element={
               <DashboardLayout role="hr">
                 <HrEmployeeProfiles />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/hr/visa-management"
+            element={
+              <DashboardLayout role="hr">
+                <HrVisaManagement />
               </DashboardLayout>
             }
           />

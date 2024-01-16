@@ -185,7 +185,7 @@ export default function HrEmployeeProfiles() {
 
   const handleRowClick = (employeeId: String) => {
     const url = `/hr/employee-profile/${employeeId}`;
-    window.open(url, '_blank');
+    window.open(url, "_blank");
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -215,7 +215,7 @@ export default function HrEmployeeProfiles() {
     });
 
   return (
-    <StyledPaper>
+    <StyledPaper style={{marginTop: "30px"}}>
       <TableSearch onSearchChange={handleSearchChange} />
       {!isMobile ? (
         <>
@@ -243,14 +243,19 @@ export default function HrEmployeeProfiles() {
                       role="checkbox"
                       tabIndex={-1}
                       key={row.employee_id}
-                      onClick={() => handleRowClick(row.employee_id.toString())}
                     >
                       {columns.map((column) => {
                         const value = row[column.id];
                         return (
                           <StyledBodyCell key={column.id} align={column.align}>
                             {column.id === "name" ? (
-                              <ClickableSpan>{value}</ClickableSpan>
+                              <ClickableSpan
+                                onClick={() =>
+                                  handleRowClick(row.employee_id.toString())
+                                }
+                              >
+                                {value}
+                              </ClickableSpan>
                             ) : column.format && typeof value === "number" ? (
                               column.format(value)
                             ) : (
