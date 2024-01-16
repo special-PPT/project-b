@@ -5,7 +5,7 @@ import personalInfoRoutes from './routes/personalInfoRoutes';
 import applicationRoutes from './routes/applicationRoutes'; 
 import visaRoutes from './routes/visaRoutes';
 import hrRoutes from './routes/hrRoutes';
-
+require('dotenv').config();
 const app = express();
 
 // Connect to MongoDB
