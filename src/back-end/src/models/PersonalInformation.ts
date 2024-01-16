@@ -1,5 +1,10 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
+interface IDocumentSubSchema {
+  type: string;
+  url: string;
+}
+
 export interface IPersonalInformation extends Document {
   userID: mongoose.Types.ObjectId;
   firstName: string;
@@ -29,11 +34,13 @@ export interface IPersonalInformation extends Document {
     relationship: string;
   }];
   workAuth: string;
-  documents: [{
-    type: string;
-    url: string;
-  }];
+  documents: IDocumentSubSchema[];
 }
+
+const DocumentSubSchema = new Schema<IDocumentSubSchema>({
+  type: { type: String, required: true },
+  url: { type: String, required: true },
+});
 
 const personalInformationSchema: Schema = new Schema({
   userID: { type: Schema.Types.ObjectId, ref: 'User', required: true },
@@ -64,10 +71,7 @@ const personalInformationSchema: Schema = new Schema({
     relationship: { type: String, required: true },
   }],
   workAuth: { type: String, required: true },
-  documents: [{
-    type: { type: String, required: true },
-    url: { type: String, required: true },
-  }],
+  documents: [DocumentSubSchema],
 }, { timestamps: true });
 
 export default mongoose.model<IPersonalInformation>('PersonalInformation', personalInformationSchema);

@@ -1,5 +1,15 @@
 import { Request, Response } from "express";
 import VisaStatus from "../models/VisaStatus";
+import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+
+const s3Client = new S3Client({
+  region: process.env.AWS_REGION,
+  credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!
+  }
+});
 
 const visaController = {
   // Update visa status
@@ -27,44 +37,40 @@ const visaController = {
     }
   },
 
-  // Upload visa document
-  async uploadVisaDocument(req: Request, res: Response) {
+  async uploadDocument(req: Request, res: Response) {
+    const file = req.file as Express.MulterS3.File;
+    const userId = req.params.userId;
+
     try {
-      const { userId, documentType, documentUrl } = req.body;
+        // Update user's document with the S3 file URL
+        const updatedInfo = await VisaStatus.findOneAndUpdate(
+            { userID: userId },
+            { $push: { documents: { url: file.location, type: file.mimetype } } },
+            { new: true }
+        );
 
-      const visaStatus = await VisaStatus.findOne({ userID: userId });
-      if (!visaStatus) {
-        return res.status(404).send("Visa status not found");
-      }
-
-      visaStatus.documents.push({
-        type: documentType,
-        url: documentUrl,
-        status: "Pending",
-      });
-      await visaStatus.save();
-
-      res.status(200).json({ message: "Document uploaded successfully" });
+        res.status(200).json({ message: 'Document uploaded successfully', updatedInfo });
     } catch (error) {
-      res.status(500).json({ message: "Error uploading document", error });
+        res.status(500).json({ message: 'Error uploading document', error });
     }
-  },
+},
 
-  // View visa documents
-  async viewVisaDocuments(req: Request, res: Response) {
+  async getDocument(req: Request, res: Response) {
+    const { userId, documentKey } = req.params;
+
+    // Generate a signed URL for the document
+    const command = new GetObjectCommand({
+        Bucket: 'chuwaprojectb',
+        Key: documentKey
+    });
+
     try {
-      const userId = req.params.userId;
-
-      const visaStatus = await VisaStatus.findOne({ userID: userId });
-      if (!visaStatus) {
-        return res.status(404).send("Visa status not found");
-      }
-
-      res.status(200).json(visaStatus.documents);
+        const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 }); // URL expires in 1 hour
+        res.status(200).json({ documentUrl: url });
     } catch (error) {
-      res.status(500).json({ message: "Error retrieving documents", error });
+        res.status(500).json({ message: 'Error generating document URL', error });
     }
-  },
+},
 
   // Other visa management methods...
 };

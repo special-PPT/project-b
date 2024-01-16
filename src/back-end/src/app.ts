@@ -1,15 +1,15 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import userRoutes from './routes/userRoutes'; // Adjust the import path
-import personalInfoRoutes from './routes/personalInfoRoutes'; // Adjust the import path
-import applicationRoutes from './routes/applicationRoutes'; // Adjust the import path
-import visaRoutes from './routes/visaRoutes'; // Adjust the import path
-import hrRoutes from './routes/hrRoutes'; // Adjust the import path
+import userRoutes from './routes/userRoutes';
+import personalInfoRoutes from './routes/personalInfoRoutes'; 
+import applicationRoutes from './routes/applicationRoutes'; 
+import visaRoutes from './routes/visaRoutes';
+import hrRoutes from './routes/hrRoutes';
 
 const app = express();
 
 // Connect to MongoDB
-mongoose.connect('your-mongodb-connection-string')
+mongoose.connect(process.env.MONGODB_URL!)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Could not connect to MongoDB', err));
 
