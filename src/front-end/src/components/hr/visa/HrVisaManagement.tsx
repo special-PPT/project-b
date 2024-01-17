@@ -5,33 +5,6 @@ import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import VisaTable from "./VisaTable";
 import VisaTableMobile from "./VisaTableMobile";
 
-interface Column {
-  id:
-    | "employee_id"
-    | "name"
-    | "work_auth"
-    | "start_day"
-    | "end_day"
-    | "remaining"
-    | "next_step"
-    | "documents";
-  label: string;
-  minWidth?: number;
-  align?: "right";
-  format?: (value: number | string) => string;
-}
-
-const columns: readonly Column[] = [
-  { id: "employee_id", label: "Employee ID", minWidth: 50 },
-  { id: "name", label: "Name", minWidth: 100 },
-  { id: "work_auth", label: "Work Auth", minWidth: 60 },
-  { id: "start_day", label: "Start Day", minWidth: 70 },
-  { id: "end_day", label: "End Day", minWidth: 70 },
-  { id: "remaining", label: "Remaining", minWidth: 70 },
-  { id: "next_step", label: "Next Step", minWidth: 80 },
-  { id: "documents", label: "Documents", minWidth: 50 },
-];
-
 interface Data {
   employee_id: number;
   name: string;
@@ -155,18 +128,17 @@ export default function HrVisaManagement() {
           </BottomNavigation>
 
           {currentTab === "all" && (
-            <VisaTable rows={rows} columns={columns} currTab={currentTab} />
+            <VisaTable rows={rows} currTab={currentTab} />
           )}
           {currentTab === "inProgress" && (
             <VisaTable
               rows={rows.filter((row) => row.next_step !== "Completed")}
-              columns={columns}
               currTab={currentTab}
             />
           )}
         </>
       ) : (
-        <VisaTableMobile rows={rows} columns={columns} />
+        <VisaTableMobile rows={rows} />
       )}
     </>
   );

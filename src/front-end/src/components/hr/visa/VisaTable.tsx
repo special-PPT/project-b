@@ -33,6 +33,17 @@ interface Column {
   format?: (value: number | string) => string;
 }
 
+const columns: readonly Column[] = [
+  { id: "employee_id", label: "Employee ID", minWidth: 50 },
+  { id: "name", label: "Name", minWidth: 100 },
+  { id: "work_auth", label: "Work Auth", minWidth: 60 },
+  { id: "start_day", label: "Start Day", minWidth: 70 },
+  { id: "end_day", label: "End Day", minWidth: 70 },
+  { id: "remaining", label: "Remaining", minWidth: 70 },
+  { id: "next_step", label: "Next Step", minWidth: 80 },
+  { id: "documents", label: "Documents", minWidth: 50 },
+];
+
 interface Data {
   employee_id: number;
   name: string;
@@ -45,11 +56,10 @@ interface Data {
 
 interface VisaTableProps {
   rows: Data[];
-  columns: readonly Column[];
   currTab: string;
 }
 
-const VisaTable: React.FC<VisaTableProps> = ({ rows, columns, currTab }) => {
+const VisaTable: React.FC<VisaTableProps> = ({ rows, currTab }) => {
   const theme = useTheme();
 
   const [page, setPage] = useState(0);

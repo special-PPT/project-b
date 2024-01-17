@@ -38,10 +38,9 @@ interface Data {
 
 interface VisaTableProps {
   rows: Data[];
-  columns: readonly Column[];
 }
 
-const VisaTableMobile: React.FC<VisaTableProps> = ({ rows, columns }) => {
+const VisaTableMobile: React.FC<VisaTableProps> = ({ rows }) => {
   const theme = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
   const [filterOption, setFilterOption] = useState("all");
