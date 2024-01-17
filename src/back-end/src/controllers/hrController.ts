@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express';
 import HRManagement from '../models/HRManagement'; 
 import User from '../models/User';
+const {registTokenGen} = require('../config/registTokenGen');
+const { sendEmail } = require('../config/mailConfig');
 
 const hrController = {
   // Generate and send a registration token
@@ -9,8 +11,9 @@ const hrController = {
       const { name, email } = req.body;
 
       // Generate a token logic here (can use a package like uuid or crypto)
-      const token = 'generated-token'; // Replace this with actual token generation logic
-
+      const token =  registTokenGen(email + name);// Replace this with actual token generation logic
+      sendEmail(email, token);
+      
       // Save the token information in HRManagement
       // Assuming HRManagement schema can store registration tokens
       const hrRecord = new HRManagement({
