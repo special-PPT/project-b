@@ -8,7 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import Box from "@mui/material/Box";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
-import { handleRowClick } from "../utils/utils";
+import { handleRowClick, handleApplicationClick } from "../utils/utils";
 import {
   StyledPaper,
   StyledTableContainer,
@@ -31,7 +31,7 @@ const columns: readonly Column[] = [
   { id: "name", label: "Name", minWidth: 100 },
   { id: "email", label: "Email", minWidth: 150 },
   { id: "status", label: "Status", minWidth: 100 },
-  { id: "view", label: "View Application", minWidth: 50 }, // New column
+  { id: "view", label: "View Application", minWidth: 50 },
 ];
 
 interface Data {
@@ -145,7 +145,9 @@ const OnboardAppReviewTable: React.FC<OnboardAppReviewTableProps> = ({
                         color: theme.palette.primary.main,
                         cursor: "pointer",
                       }}
-                      onClick={() => {}}
+                      onClick={() =>
+                        handleApplicationClick(row.employee_id.toString())
+                      }
                     />
                   </StyledBodyCell>
                 </TableRow>

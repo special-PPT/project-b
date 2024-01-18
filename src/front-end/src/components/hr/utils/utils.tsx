@@ -15,6 +15,11 @@ const handleRowClick = (employeeId: string) => {
   window.open(url, "_blank");
 };
 
+const handleApplicationClick = (employeeId: string) => {
+  const url = `/hr/employee-application/${employeeId}`;
+  window.open(url, "_blank");
+};
+
 const actionStyle = {
   "& .MuiBottomNavigationAction-label": {
     fontSize: "1.3rem",
@@ -26,4 +31,4 @@ const actionStyle = {
 };
 
 
-export { handleSendClick, handleLinkClick, handleClickHistory, handleRowClick, actionStyle };
+export { handleSendClick, handleLinkClick, handleClickHistory, handleRowClick, handleApplicationClick, actionStyle };
