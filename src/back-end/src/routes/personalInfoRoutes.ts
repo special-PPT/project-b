@@ -12,7 +12,7 @@ router.put('/update/:userId', personalInfoController.updatePersonalInfo);
 router.get('/get/:userId', personalInfoController.getPersonalInfo);
 
 // Upload document route
-router.post('/uploadDocument/:userId', upload.single('document'), personalInfoController.uploadDocument);
+router.post('/uploadDocument/:userId', upload.single('file'), personalInfoController.uploadDocument);
 
 // Route for getting a document
 router.get('/document/:userId/:documentKey', personalInfoController.getDocument);

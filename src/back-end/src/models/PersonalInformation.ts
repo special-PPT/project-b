@@ -3,6 +3,7 @@ import mongoose, { Schema, Document } from "mongoose";
 interface IDocumentSubSchema {
   type: string;
   url: string;
+  documentKey: string;
 }
 
 interface IEmergencyContact {
@@ -42,6 +43,7 @@ export interface IPersonalInformation extends Document {
 const DocumentSubSchema = new Schema<IDocumentSubSchema>({
   type: { type: String, required: true },
   url: { type: String, required: true },
+  documentKey: { type: String, required: true },
 });
 
 const EmergencyContactSchema = new Schema<IEmergencyContact>({
