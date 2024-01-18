@@ -3,6 +3,7 @@ import { Typography, useMediaQuery, useTheme } from "@mui/material";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import VisaTable from "./VisaTable";
+import { actionStyle } from "../utils/utils";
 import VisaTableMobile from "./VisaTableMobile";
 
 interface Data {
@@ -108,22 +109,12 @@ export default function HrVisaManagement() {
             <BottomNavigationAction
               label="All"
               value="all"
-              sx={{
-                "& .MuiBottomNavigationAction-label": {
-                  fontSize: "1.3rem",
-                  "&.Mui-selected": { fontSize: "1.3rem" },
-                },
-              }}
+              sx={actionStyle}
             />
             <BottomNavigationAction
               label="In Progress"
               value="inProgress"
-              sx={{
-                "& .MuiBottomNavigationAction-label": {
-                  fontSize: "1.3rem",
-                  "&.Mui-selected": { fontSize: "1.3rem" },
-                },
-              }}
+              sx={actionStyle}
             />
           </BottomNavigation>
 

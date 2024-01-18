@@ -10,22 +10,6 @@ import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 import { visaStyles } from "../../../styles/hr/visaTableMobile";
 
-interface Column {
-  id:
-    | "employee_id"
-    | "name"
-    | "work_auth"
-    | "start_day"
-    | "end_day"
-    | "remaining"
-    | "next_step"
-    | "documents";
-  label: string;
-  minWidth?: number;
-  align?: "right";
-  format?: (value: number | string) => string;
-}
-
 interface Data {
   employee_id: number;
   name: string;

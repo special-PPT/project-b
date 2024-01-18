@@ -17,6 +17,8 @@ import OnboardingLayout from "./components/onboard/OnboardingLayout";
 import AuthLayout from "./components/auth/AuthLayout";
 import ProfileScreen from "./components/hr/profile/ProfileScreen";
 import HrVisaManagement from "./components/hr/visa/HrVisaManagement";
+import HrHiringManagement from "./components/hr/hiring/HrHiringManagement";
+import HrEmployeeApplication from "./components/hr/hiring/HrEmployeeApplication";
 
 function App() {
   return (
@@ -30,19 +32,9 @@ function App() {
       <ThemeProvider theme={theme}>
         <Routes>
           {/* Auth Routes */}
-          <Route
-            path="/login"
-            element={
-              <AuthLayout />
-            }
-          />
+          <Route path="/login" element={<AuthLayout />} />
           {/* Onboarding routes */}
-          <Route
-            path="/onboarding"
-            element={
-              <OnboardingLayout />
-            }
-          />
+          <Route path="/onboarding" element={<OnboardingLayout />} />
           {/* Employee routes */}
           <Route
             path="/employee/home"
@@ -95,8 +87,20 @@ function App() {
             }
           />
           <Route
+            path="/hr/hiring-management"
+            element={
+              <DashboardLayout role="hr">
+                <HrHiringManagement />
+              </DashboardLayout>
+            }
+          />
+          <Route
             path="/hr/employee-profile/:employeeId"
             element={<ProfileScreen />}
+          />
+          <Route
+            path="/hr/employee-application/:employeeId"
+            element={<HrEmployeeApplication />}
           />
 
           {/* Other Routes */}
