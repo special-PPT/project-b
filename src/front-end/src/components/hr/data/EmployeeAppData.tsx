@@ -1,3 +1,5 @@
+import { SxProps, Theme } from '@mui/system';
+
 const employeeData = {
   personalDetails: {
     firstName: "John",
@@ -130,6 +132,55 @@ const emergencyContact1Fields2: EmergencyContactFieldConfig[] = [
   { key: "relationship", label: "Relationship" },
 ];
 
+export interface TextFieldGroupProps {
+  fields: PersonalDetailsFieldConfig[] | EmergencyContactFieldConfig[];
+  data: PersonalDetails | EmergencyContact;
+  sx?: SxProps<Theme>;
+}
+
+type SectionData = {
+  title: string;
+  fields: (PersonalDetailsFieldConfig[] | EmergencyContactFieldConfig[])[];
+  data: PersonalDetails | EmergencyContact;
+  sx?: SxProps<Theme>;
+};
+
+
+const sections: SectionData[] = [
+  {
+    title: "Basic Info",
+    fields: [personalDetailsField1, personalDetailsField2],
+    data: employeeData.personalDetails,
+  },
+  {
+    title: "Address",
+    fields: [addressField1, addressField2],
+    data: employeeData.personalDetails,
+  },
+  {
+    title: "Contact",
+    fields: [contactFields],
+    data: employeeData.personalDetails,
+    sx: { px: 3 },
+  },
+  {
+    title: "Employment",
+    fields: [employmentFields],
+    data: employeeData.personalDetails,
+    sx: { px: 3 },
+  },
+  {
+    title: "Emergency Contact 1",
+    fields: [emergencyContact1Fields1, emergencyContact1Fields2],
+    data: employeeData.emergencyContacts[0],
+  },
+  {
+    title: "Emergency Contact 2",
+    fields: [emergencyContact1Fields1, emergencyContact1Fields2],
+    data: employeeData.emergencyContacts[1],
+  },
+];
+
 
 export {
   employeeData,
@@ -141,4 +192,5 @@ export {
   employmentFields,
   emergencyContact1Fields1,
   emergencyContact1Fields2,
+  sections,
 };

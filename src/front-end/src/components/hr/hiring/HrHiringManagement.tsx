@@ -65,7 +65,14 @@ const HrHiringManagement: React.FC<HrHiringManagementProps> = (props) => {
           )}
         </>
       ) : (
-        <HrHiringTableMobile currentTab={currentTab} rows={regData} />
+        <>
+          {currentTab === "registrationToken" && (
+            <HrHiringTableMobile currentTab={currentTab} rows={regData} />
+          )}
+          {currentTab === "onboardingApplicationReview" && (
+            <HrHiringTableMobile currentTab={currentTab} rows={onboardDataArray} />
+          )}
+        </>
       )}
     </>
   );

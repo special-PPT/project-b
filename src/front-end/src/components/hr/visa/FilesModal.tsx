@@ -6,13 +6,11 @@ import {
   List,
   ListItem,
   IconButton,
-  Button,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import CheckIcon from "@mui/icons-material/Check";
-import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import { visaFileModalStyle } from "../../../styles/hr/visaTableMobile";
 import Document from "../common/Document";
+import DecisionButtons from "../common/FileDecision";
 
 interface FileData {
   name: string;
@@ -36,8 +34,6 @@ const FilesModal: React.FC<FilesModalProps> = ({
   open,
   onClose,
 }) => {
-  const pastelDarkGreen = "#3cb371";
-  const pastelDarkRed = "#cd5c5c";
   const [files, setFiles] = useState<FileData[]>([]);
 
   const generateRandomFiles = (): FileData[] => {
@@ -86,39 +82,7 @@ const FilesModal: React.FC<FilesModalProps> = ({
                 canPreview={file.canPreview}
                 documentUrl={file.documentUrl}
               />
-              {(currTab === "inProgress") && (
-                <Box sx={{ mt: 1, alignSelf: "stretch", marginLeft: "20px" }}>
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    sx={{
-                      mr: 1,
-                      color: pastelDarkGreen,
-                      borderColor: pastelDarkGreen,
-                      "&:hover": {
-                        backgroundColor: "rgba(152, 251, 152, 0.1)",
-                      },
-                    }}
-                    startIcon={<CheckIcon />}
-                  >
-                    Accept
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    sx={{
-                      color: pastelDarkRed,
-                      borderColor: pastelDarkRed,
-                      "&:hover": {
-                        backgroundColor: "rgba(255, 182, 193, 0.1)",
-                      },
-                    }}
-                    startIcon={<WarningAmberIcon />}
-                  >
-                    Reject
-                  </Button>
-                </Box>
-              )}
+              {currTab === "inProgress" && <DecisionButtons />}
             </ListItem>
           ))}
         </List>

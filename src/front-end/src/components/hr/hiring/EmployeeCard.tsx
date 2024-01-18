@@ -1,27 +1,23 @@
 import React from "react";
 import { styled, alpha } from "@mui/material/styles";
-import {
-  Card,
-  CardContent,
-  Typography,
-  Divider,
-  useTheme,
-} from "@mui/material";
+import { Card, CardContent, Typography, useTheme } from "@mui/material";
 import { ClickableSpan } from "../../../styles/hr/profile";
 import SendIcon from "@mui/icons-material/Send";
 import {
   handleRowClick,
   handleSendClick,
   handleLinkClick,
+  handleApplicationClick,
 } from "../utils/utils";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 interface EmployeeCardProps {
   employee_id: number;
   name: string;
   email: string;
-  generate_token_and_send_email: boolean;
-  link: string;
-  status: string;
+  generate_token_and_send_email?: boolean;
+  link?: string;
+  status?: string;
   currTab: string;
 }
 
@@ -36,28 +32,46 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
   employee_id,
   name,
   email,
-  generate_token_and_send_email,
-  link,
-  status,
+  generate_token_and_send_email = false,
+  link = "",
+  status = "",
   currTab,
 }) => {
   const theme = useTheme();
   return (
     <StyledCard>
       <CardContent>
-        {generate_token_and_send_email ? (
-          <SendIcon
-            style={{
+        {currTab === "registrationToken" ? (
+          generate_token_and_send_email ? (
+            <SendIcon
+              style={{
+                position: "absolute",
+                right: 10,
+                color: theme.palette.primary.light,
+                cursor: "pointer",
+              }}
+              onClick={() => handleSendClick(employee_id)}
+            />
+          ) : (
+            <SendIcon
+              style={{
+                position: "absolute",
+                top: 10,
+                right: 10,
+                color: "grey",
+              }}
+            />
+          )
+        ) : (
+          <VisibilityIcon
+            fontSize="large"
+            sx={{
+              color: theme.palette.primary.main,
+              cursor: "pointer",
               position: "absolute",
               right: 10,
-              color: theme.palette.primary.light,
-              cursor: "pointer",
             }}
-            onClick={() => handleSendClick(employee_id)}
-          />
-        ) : (
-          <SendIcon
-            style={{ position: "absolute", top: 10, right: 10, color: "grey" }}
+            onClick={() => handleApplicationClick(employee_id.toString())}
           />
         )}
         <Typography variant="h6">
@@ -68,11 +82,15 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
         <Typography color="textSecondary">ID: {employee_id}</Typography>
         <Typography variant="body2">email: {email}</Typography>
         <Typography variant="body2">Status: {status}</Typography>
-        <Typography variant="body2">
-          <ClickableSpan onClick={() => handleLinkClick(link)}>
-            {link}
-          </ClickableSpan>
-        </Typography>
+        {currTab === "registrationToken" && (
+          <>
+            <Typography variant="body2">
+              <ClickableSpan onClick={() => handleLinkClick(link)}>
+                {link}
+              </ClickableSpan>
+            </Typography>
+          </>
+        )}
       </CardContent>
     </StyledCard>
   );
