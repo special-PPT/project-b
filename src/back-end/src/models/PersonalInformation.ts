@@ -1,8 +1,18 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document } from "mongoose";
 
 interface IDocumentSubSchema {
   type: string;
   url: string;
+  documentKey: string;
+}
+
+interface IEmergencyContact {
+  firstName: string;
+  lastName: string;
+  middleName?: string;
+  phone: string;
+  email: string;
+  relationship: string;
 }
 
 export interface IPersonalInformation extends Document {
@@ -25,14 +35,7 @@ export interface IPersonalInformation extends Document {
   };
   dateOfBirth: Date;
   gender: string;
-  emergencyContacts: [{
-    firstName: string;
-    lastName: string;
-    middleName: string;
-    phone: string;
-    email: string;
-    relationship: string;
-  }];
+  emergencyContacts: IEmergencyContact[];
   workAuth: string;
   documents: IDocumentSubSchema[];
 }
@@ -40,38 +43,47 @@ export interface IPersonalInformation extends Document {
 const DocumentSubSchema = new Schema<IDocumentSubSchema>({
   type: { type: String, required: true },
   url: { type: String, required: true },
+  documentKey: { type: String, required: true },
 });
 
-const personalInformationSchema: Schema = new Schema({
-  userID: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+const EmergencyContactSchema = new Schema<IEmergencyContact>({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
-  middleName: { type: String },
-  preferredName: { type: String },
-  profilePicture: { type: String },
-  address: {
-    building: { type: String, required: true },
-    street: { type: String, required: true },
-    city: { type: String, required: true },
-    state: { type: String, required: true },
-    zip: { type: String, required: true },
-  },
-  phoneNumbers: {
-    cell: { type: String, required: true },
-    work: { type: String },
-  },
-  dateOfBirth: { type: Date, required: true },
-  gender: { type: String, required: true },
-  emergencyContacts: [{
+  middleName: { type: String, required: false },
+  phone: { type: String, required: true },
+  email: { type: String, required: true },
+  relationship: { type: String, required: true },
+});
+
+const personalInformationSchema: Schema = new Schema(
+  {
+    userID: { type: Schema.Types.ObjectId, ref: "User", required: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    middleName: { type: String, required: false },
-    phone: { type: String, required: true },
-    email: { type: String, required: true },
-    relationship: { type: String, required: true },
-  }],
-  workAuth: { type: String, required: true },
-  documents: [DocumentSubSchema],
-}, { timestamps: true });
+    middleName: { type: String },
+    preferredName: { type: String },
+    profilePicture: { type: String },
+    address: {
+      building: { type: String, required: true },
+      street: { type: String, required: true },
+      city: { type: String, required: true },
+      state: { type: String, required: true },
+      zip: { type: String, required: true },
+    },
+    phoneNumbers: {
+      cell: { type: String, required: true },
+      work: { type: String },
+    },
+    dateOfBirth: { type: Date, required: true },
+    gender: { type: String, required: true },
+    emergencyContacts: [EmergencyContactSchema],
+    workAuth: { type: String, required: true },
+    documents: [DocumentSubSchema],
+  },
+  { timestamps: true }
+);
 
-export default mongoose.model<IPersonalInformation>('PersonalInformation', personalInformationSchema);
+export default mongoose.model<IPersonalInformation>(
+  "PersonalInformation",
+  personalInformationSchema
+);

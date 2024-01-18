@@ -16,7 +16,7 @@ const onboardingApplicationSchema: Schema = new Schema({
   applicationData: { type: Schema.Types.ObjectId, ref: 'PersonalInformation', required: true, default: null },
   feedback: { type: String },
   submittedDate: { type: Date, required: true },
-  reviewedDate: { type: Date },
+  reviewedDate: { type: Date, default: null },
 }, { timestamps: true });
 
 export default mongoose.model<IOnboardingApplication>('OnboardingApplication', onboardingApplicationSchema);
