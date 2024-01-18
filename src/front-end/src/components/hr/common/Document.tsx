@@ -26,6 +26,7 @@ const Document: React.FC<DocumentProps> = ({
   return (
     <Box
       sx={{
+        width: "100%",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
