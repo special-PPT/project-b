@@ -7,12 +7,12 @@ import OnboardingApplication, {
   IOnboardingApplication,
 } from "../models/OnboardingApplication"; // Adjust the import path
 
-// MongoDB connection string
-const dbUri = "mongodb+srv://hangwei:hangwei@cluster0.qah3pgm.mongodb.net/"; // Replace with your MongoDB URI
+
+require('dotenv').config();
 
 // Connect to MongoDB
 mongoose
-  .connect(dbUri)
+  .connect(process.env.MONGODB_URL!)
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("Could not connect to MongoDB", err));
 
