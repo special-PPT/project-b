@@ -33,7 +33,14 @@ export default function LoginPage() {
     axios.post('http://localhost:8000/user/login', hashedData)
     .then(res => {
       console.log(res.data);
+      if(res.data.token){
+        const token = res.data.token;
+        document.cookie = `auth-token=${token};max-age=10800;path=/`;
+      }
+      console.log(document.cookie);
+
       // navigate('/employee/home');
+
     })
     .catch(err => {
       console.log(err);
