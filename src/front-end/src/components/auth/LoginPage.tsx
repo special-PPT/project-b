@@ -2,6 +2,8 @@ import { Box, Button, Container, Grid, IconButton, InputAdornment, Link, Outline
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import React, { useState } from 'react';
+import CryptoJS from 'crypto-js';
+import axios from 'axios';
 
 export default function LoginPage() {
   interface LoginData{
@@ -12,11 +14,30 @@ export default function LoginPage() {
     username: '',
     password: ''
   });
+  const [hashedData, setHashedData] = useState<LoginData>({
+    username: '',
+    password: ''
+  });
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = event.target;
     setLoginData({ ...loginData, [id]: value });
     // console.log(loginData);
+  }
+  const handleLogin = () => {
+    // console.log(loginData);
+    // SHA256
+    const hashedPasswd = CryptoJS.SHA256(loginData.password).toString();
+    setHashedData({username: loginData.username, password: loginData.password});
+    // console.log(hashedData);
+    axios.post('http://localhost:8000/user/login', hashedData)
+    .then(res => {
+      console.log(res.data);
+      // navigate('/employee/home');
+    })
+    .catch(err => {
+      console.log(err);
+    });
   }
   return (
     <Container maxWidth="sm">
@@ -82,6 +103,7 @@ export default function LoginPage() {
             <Grid item xs={12}>
               <Button fullWidth variant="contained" color="primary"
                 sx={{borderRadius: '20px'}}
+                onClick={handleLogin}
               >
                 Login
               </Button>

@@ -5,6 +5,7 @@ import personalInfoRoutes from './routes/personalInfoRoutes';
 import applicationRoutes from './routes/applicationRoutes'; 
 import visaRoutes from './routes/visaRoutes';
 import hrRoutes from './routes/hrRoutes';
+import cors from 'cors'; 
 require('dotenv').config();
 const app = express();
 
@@ -18,7 +19,13 @@ mongoose.connect(process.env.MONGODB_URL!)
   .catch(err => console.error('Could not connect to MongoDB', err));
 
 // Middleware to parse JSON
+const corsOptions = {
+  credentials: true, // 允许跨域请求携带凭据
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
+
 
 // Route Middlewares
 app.use('/user', userRoutes);
@@ -32,5 +39,5 @@ app.use((req, res, next) => {
   res.status(404).send('Sorry, that route does not exist.');
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
