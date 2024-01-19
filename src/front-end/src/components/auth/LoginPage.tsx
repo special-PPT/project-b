@@ -27,10 +27,10 @@ export default function LoginPage() {
   const handleLogin = () => {
     // console.log(loginData);
     // SHA256
-    // const hashedPasswd = CryptoJS.SHA256(loginData.password).toString();
+    const hashedPasswd = CryptoJS.SHA256(loginData.password).toString();
     setHashedData({username: loginData.username, password: loginData.password});
     // console.log(hashedData);
-    axios.post('/api/login', hashedData)
+    axios.post('http://localhost:8000/user/login', hashedData)
     .then(res => {
       console.log(res.data);
       // navigate('/employee/home');
