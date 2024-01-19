@@ -12,10 +12,13 @@ import DashboardLayout from "./components/employee/dashboard/layout";
 import EmployeeHome from "./components/employee/EmployeeHome";
 import EmployeeProfile from "./components/employee/EmployeeProfile";
 import EmployeeVisaManagement from "./components/employee/EmployeeVisaManagement";
-import HrEmployeeProfiles from "./components/hr/HrEmployeeProfiles";
+import HrEmployeeProfiles from "./components/hr/profile/HrEmployeeProfiles";
 import OnboardingLayout from "./components/onboard/OnboardingLayout";
 import AuthLayout from "./components/auth/AuthLayout";
-import ProfileScreen from "./components/hr/ProfileScreen";
+import ProfileScreen from "./components/hr/profile/ProfileScreen";
+import HrVisaManagement from "./components/hr/visa/HrVisaManagement";
+import HrHiringManagement from "./components/hr/hiring/HrHiringManagement";
+import HrEmployeeApplication from "./components/hr/hiring/HrEmployeeApplication";
 
 function App() {
   return (
@@ -29,19 +32,9 @@ function App() {
       <ThemeProvider theme={theme}>
         <Routes>
           {/* Auth Routes */}
-          <Route
-            path="/login"
-            element={
-              <AuthLayout />
-            }
-          />
+          <Route path="/login" element={<AuthLayout />} />
           {/* Onboarding routes */}
-          <Route
-            path="/onboarding"
-            element={
-              <OnboardingLayout />
-            }
-          />
+          <Route path="/onboarding" element={<OnboardingLayout />} />
           {/* Employee routes */}
           <Route
             path="/employee/home"
@@ -86,8 +79,28 @@ function App() {
             }
           />
           <Route
+            path="/hr/visa-management"
+            element={
+              <DashboardLayout role="hr">
+                <HrVisaManagement />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/hr/hiring-management"
+            element={
+              <DashboardLayout role="hr">
+                <HrHiringManagement />
+              </DashboardLayout>
+            }
+          />
+          <Route
             path="/hr/employee-profile/:employeeId"
             element={<ProfileScreen />}
+          />
+          <Route
+            path="/hr/employee-application/:employeeId"
+            element={<HrEmployeeApplication />}
           />
 
           {/* Other Routes */}

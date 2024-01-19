@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Grid, useMediaQuery } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
-import { getRectangleStyle } from "../../styles/hr/profile";
+import { getRectangleStyle } from "../../../styles/hr/profile";
 import { useParams } from "react-router-dom";
 import {
   Element01,
@@ -10,8 +10,8 @@ import {
   Element02,
   AvatarBox,
   DocumentsElement,
-} from "./profile/profileElements";
-import ProfileMobile from "./profile/ProfileMobile";
+} from "./profileElements";
+import ProfileMobile from "./ProfileMobile";
 
 
 const employeeData = {
