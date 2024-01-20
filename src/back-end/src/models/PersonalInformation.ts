@@ -22,6 +22,7 @@ export interface IPersonalInformation extends Document {
   middleName?: string;
   preferredName?: string;
   profilePicture?: string;
+  ssn: string;
   address: {
     building: string;
     street: string;
