@@ -1,6 +1,8 @@
 import React from "react";
 import { styled, alpha } from "@mui/material/styles";
+import { ClickableSpan } from "../../../styles/hr/profile";
 import { Card, CardContent, Typography, Divider } from "@mui/material";
+import { handleRowClick } from "../utils/utils";
 
 interface EmployeeCardProps {
   employee_id: number;
@@ -28,7 +30,11 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
   return (
     <StyledCard>
       <CardContent>
-        <Typography variant="h6">{name}</Typography>
+        <Typography variant="h6">
+          <ClickableSpan onClick={() => handleRowClick(employee_id.toString())}>
+            {name}
+          </ClickableSpan>
+        </Typography>
         <Typography color="textSecondary">ID: {employee_id}</Typography>
         <Divider style={{ margin: "10px 0" }} />
         <Typography variant="body2">SSN: {ssn}</Typography>

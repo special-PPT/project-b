@@ -6,7 +6,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import Document from "../other/Document";
+import Document from "../common/Document";
 import {
   EmployeeDataInterface,
   DocumentInterface,
