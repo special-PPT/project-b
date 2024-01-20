@@ -8,7 +8,7 @@ import PersonalInformation from "../models/PersonalInformation";
 import OnboardingApplication from "../models/OnboardingApplication";
 import VisaStatus from "../models/VisaStatus";
 
-const numUser = 15;
+const numEmployee = 15;
 
 // Connect to MongoDB
 mongoose
@@ -31,7 +31,7 @@ async function createData() {
     console.log("HR user created");
 
     console.log("Creating users with data...");
-    await createUsersWithData(numUser);
+    await createUsersWithData(numEmployee);
     console.log("Users with data created");
 
     console.log("Inserting HR management data...");

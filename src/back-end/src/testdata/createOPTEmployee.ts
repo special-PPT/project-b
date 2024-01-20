@@ -9,14 +9,14 @@ import VisaStatus, { IVisaStatus } from "../models/VisaStatus";
 import { faker } from "@faker-js/faker";
 import { ObjectId } from "mongodb";
 
-const generateRandomUserData = (numUser: number): [
+const generateRandomUserData = (numEmployee: number): [
   Partial<IUser>[],
   Partial<IPersonalInformation>[]
 ] => {
   const users: Partial<IUser>[] = [];
   const personalInfos: Partial<IPersonalInformation>[] = [];
 
-  for (let i = 0; i < numUser; i++) {
+  for (let i = 0; i < numEmployee; i++) {
     const firstName = faker.person.firstName();
     const lastName = faker.person.lastName();
 
@@ -137,9 +137,9 @@ const generateVisaStatusData = (
 
 require("dotenv").config();
 
-export async function createUsersWithData(numUser: number) {
+export async function createUsersWithData(numEmployee: number) {
   try {
-    const [userData, personalInfoData] = generateRandomUserData(numUser);
+    const [userData, personalInfoData] = generateRandomUserData(numEmployee);
 
     for (let i = 0; i < userData.length; i++) {
       // Create new User
