@@ -7,6 +7,7 @@ import visaRoutes from './routes/visaRoutes';
 import hrRoutes from './routes/hrRoutes';
 import cors from 'cors';
 require('dotenv').config();
+const CookieParser = require('cookie-parser');
 
 const app = express();
 
@@ -17,11 +18,12 @@ mongoose.connect(process.env.MONGODB_URL!)
 
 // CORS配置
 const corsOptions = {
-  origin: 'http://127.0.0.1:3000', // 允许的源
+  // origin: 'http://127.0.0.1:3000', // 允许的源
   credentials: true, // 允许跨域请求携带凭据
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
+app.use(CookieParser());
 app.use(express.json());
 
 // 路由中间件
