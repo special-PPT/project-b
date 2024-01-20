@@ -1,6 +1,8 @@
 import User, { IUser } from "../models/User";
 import PersonalInformation, {
   IPersonalInformation,
+  IEmergencyContact,
+  IDocumentSubSchema,
 } from "../models/PersonalInformation";
 import OnboardingApplication, {
   IOnboardingApplication,
@@ -9,10 +11,29 @@ import VisaStatus, { IVisaStatus } from "../models/VisaStatus";
 import { faker } from "@faker-js/faker";
 import { ObjectId } from "mongodb";
 
-const generateRandomUserData = (numEmployee: number): [
-  Partial<IUser>[],
-  Partial<IPersonalInformation>[]
-] => {
+const createContact = (): IEmergencyContact => ({
+  firstName: faker.person.firstName(),
+  lastName: faker.person.lastName(),
+  phone: faker.phone.number(),
+  email: faker.internet.email(),
+  relationship: faker.helpers.arrayElement([
+    "Mother",
+    "Sister",
+    "Friend",
+    "Brother",
+    "Father",
+  ]),
+});
+
+const createDocument = (type: string): IDocumentSubSchema => ({
+  type,
+  url: "www.google.com",
+  documentKey: "example-key",
+});
+
+const generateRandomUserData = (
+  numEmployee: number
+): [Partial<IUser>[], Partial<IPersonalInformation>[]] => {
   const users: Partial<IUser>[] = [];
   const personalInfos: Partial<IPersonalInformation>[] = [];
 
@@ -44,33 +65,16 @@ const generateRandomUserData = (numEmployee: number): [
       },
       dateOfBirth: faker.date.birthdate(),
       gender: faker.person.sex(),
-      emergencyContacts: [
-        {
-          firstName: faker.person.firstName(),
-          lastName: faker.person.lastName(),
-          phone: faker.phone.number(),
-          email: faker.internet.email(),
-          relationship: faker.helpers.arrayElement([
-            "Mother",
-            "Sister",
-            "Friend",
-            "Brother",
-            "Father",
-          ]),
-        },
-      ],
+      reference: createContact(),
+      emergencyContacts: [createContact(), createContact()],
       workAuth: faker.helpers.arrayElement([
         "Green Card",
         "F1(CPT/OPT)",
         "H1B",
       ]),
-      documents: [
-        {
-          type: "Driver License",
-          url: "www.google.com",
-          documentKey: "example-key",
-        },
-      ],
+      documents: ["Driver License1", "Driver License2", "Driver License3"].map(
+        createDocument
+      ),
     };
 
     users.push(user);
