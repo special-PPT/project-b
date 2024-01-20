@@ -39,26 +39,30 @@ const userController = {
   async login(req: Request, res: Response) {
     try {
       const { username, password } = req.body;
-
+      console.log(username, password);
       // Find user by username
       const user = await User.findOne({ username });
+      console.log(user);
       if (!user) {
         return res.status(400).send('User not found');
       }
 
       // Check password
       // const validPassword = await bcrypt.compare(password, user.password);
-      if (user.password !== password) {
+
+      const validPassword = password === user.password;
+      // console.log(validPassword);
+      // console.log(user);
+      if (!validPassword) {
         return res.status(400).send('Invalid password');
       }
 
       // Create and assign a token
-      const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET || 'your-default-secret', { expiresIn: '1h' });
-      
-      res.header('auth-token', token).json({
-        message: 'Logged in successfully',
-        token
-      });
+      const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET || 'your-default-secret', { expiresIn: '3h' });
+      res.cookie('auth-token', token, { maxAge: 3 * 60 * 60 * 1000 });
+      res.cookie('username', username, { maxAge: 3 * 60 * 60 * 1000 });
+      res.cookie('role', user.role, { maxAge: 3 * 60 * 60 * 1000 });
+      res.status(200).json({ message: 'Logged in successfully'});
     } catch (error) {
       res.status(500).json({ message: 'Error logging in user', error });
     }
