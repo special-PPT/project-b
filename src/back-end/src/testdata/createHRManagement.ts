@@ -1,44 +1,47 @@
 import HRManagement from "../models/HRManagement";
 import RegistrationToken from "../models/RegistrationToken";
-import mongoose from "mongoose";
+import User from "../models/User";
 
-require('dotenv').config();
-
-// Connect to MongoDB
-mongoose
-  .connect(process.env.MONGODB_URL!)
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("Could not connect to MongoDB", err));
+require("dotenv").config();
 
 // Sample HRManagement Data
 
-const hrManagementData = {
-  userID: new mongoose.Types.ObjectId("65a5fdd9254cf443d0fc92e4"),
-  registrationTokens: [] as mongoose.Types.ObjectId[],
-  employeeProfiles: [
-    new mongoose.Types.ObjectId("65a5fdd9254cf443d0fc92e4"), // Replace with actual user IDs
-    new mongoose.Types.ObjectId("65a734bd46019f5d95cc2f93"),
-    new mongoose.Types.ObjectId("65a734be46019f5d95cc2fa5"),
-    new mongoose.Types.ObjectId("65a734bf46019f5d95cc2fb5"),
-    // Add more user IDs as needed
-  ],
-};
-
-async function insertHRManagementData() {
+export async function insertHRManagementData() {
   try {
-    // Retrieve all registration tokens and add their IDs to hrManagementData
+    // Retrieve all users with the role of 'HR'
+    const hrs = await User.find({ role: "HR" });
+
+    // Check if there are HRs in the database
+    if (hrs.length === 0) {
+      console.log(
+        "No HRs found in the database. Skipping HR management data insertion."
+      );
+      return;
+    }
+
+    // Retrieve all registration tokens
     const tokens = await RegistrationToken.find({});
-    hrManagementData.registrationTokens = tokens.map((token) => token._id);
+    const tokenIds = tokens.map((token) => token._id);
 
-    const hrManagement = new HRManagement(hrManagementData);
-    await hrManagement.save();
+    // Retrieve all employee user IDs
+    const employees = await User.find({ role: "Employee" });
+    const employeeIds = employees.map((employee) => employee._id);
 
-    console.log("HRManagement data inserted successfully:", hrManagement);
+    for (const hr of hrs) {
+      const hrManagementData = {
+        userID: hr._id,
+        registrationTokens: tokenIds,
+        employeeProfiles: employeeIds,
+      };
+
+      const hrManagement = new HRManagement(hrManagementData);
+      await hrManagement.save();
+
+      console.log("HRManagement data inserted for HR:", hr.username);
+    }
   } catch (error) {
     console.error("Failed to insert HRManagement data:", error);
   } finally {
-    await mongoose.disconnect();
-    console.log("Disconnected from MongoDB");
   }
 }
 

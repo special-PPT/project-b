@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import User, { IUser } from "../models/User"; // Adjust the import path
 import PersonalInformation, {
   IPersonalInformation,
@@ -9,12 +8,6 @@ import OnboardingApplication, {
 
 
 require('dotenv').config();
-
-// Connect to MongoDB
-mongoose
-  .connect(process.env.MONGODB_URL!)
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("Could not connect to MongoDB", err));
 
 // HR User details
 const hrUserInfo: Partial<IUser> = {
@@ -77,7 +70,7 @@ const hrOnboardingApplication: Partial<IOnboardingApplication> = {
   reviewedDate: new Date(),
 };
 
-async function createHRUser() {
+export async function createHRUser() {
   try {
     // Create User with references to PersonalInformation and OnboardingApplication
     const user = new User(hrUserInfo);
@@ -107,12 +100,7 @@ async function createHRUser() {
 
     console.log("HR user created successfully:", user);
 
-    await mongoose.disconnect();
-    console.log("Disconnected from MongoDB");
   } catch (error) {
     console.error("Failed to create HR user:", error);
   }
 }
-
-// Execute the function
-createHRUser();
