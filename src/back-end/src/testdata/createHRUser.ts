@@ -25,6 +25,7 @@ const hrPersonalInfo: Partial<IPersonalInformation> = {
   middleName: "HR",
   preferredName: "Johnny",
   profilePicture: "url-to-profile-picture",
+  ssn: "11-1111-11",
   address: {
     building: "100",
     street: "Main St",
