@@ -23,6 +23,13 @@ const Document: React.FC<DocumentProps> = ({
 }) => {
   const theme = useTheme();
 
+  const handlePreviewClick = () => {
+    const isAbsoluteUrl =
+      documentUrl.startsWith("http://") || documentUrl.startsWith("https://");
+    const urlToOpen = isAbsoluteUrl ? documentUrl : `http://${documentUrl}`;
+    window.open(urlToOpen, "_blank");
+  };
+
   return (
     <Box
       sx={{
@@ -46,7 +53,7 @@ const Document: React.FC<DocumentProps> = ({
           </IconButton>
         )}
         {canPreview && (
-          <IconButton>
+          <IconButton onClick={handlePreviewClick}>
             <PreviewIcon sx={{ color: theme.palette.primary.dark }} />
           </IconButton>
         )}

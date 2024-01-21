@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import HRManagement from "../models/HRManagement";
 import User from "../models/User";
+import PersonalInformation from "../models/PersonalInformation";
+import VisaStatus from "../models/VisaStatus";
 import RegistrationToken from "../models/RegistrationToken";
 const { registTokenGen } = require("../config/registTokenGen");
 const { sendEmail } = require("../config/mailConfig");
@@ -60,6 +62,60 @@ const hrController = {
     }
   },
 
+  // get all employees' information for display
+  // used by HR: id, name, ssn, work auth, phone, email
+  async getAllEmployeeProfiles(req: Request, res: Response) {
+    try {
+      const employees = await User.find({ role: "Employee" })
+        .populate("personalInformation")
+        .populate("visaStatus");
+      res.status(200).json(employees);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error retrieving all employee personal info",
+        error,
+      });
+    }
+  },
+
+  async getEmployeePersonalInfoById(req: Request, res: Response) {
+    try {
+      const employeeId = req.params.employeeId;
+      const personalInfo = await PersonalInformation.findOne({
+        userID: employeeId,
+      }).populate("documents");
+
+      if (!personalInfo) {
+        return res.status(404).json({ message: "Employee not found" });
+      }
+
+      res.status(200).json(personalInfo);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error retrieving employee personal info",
+        error,
+      });
+    }
+  },
+
+  async getEmployeeVisaStatusById(req: Request, res: Response) {
+    try {
+      const employeeId = req.params.employeeId;
+      const visaStatus = await VisaStatus.findOne({ userID: employeeId });
+
+      if (!visaStatus) {
+        return res.status(404).json({ message: "Employee not found" });
+      }
+
+      res.status(200).json(visaStatus);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error retrieving employee visa status",
+        error,
+      });
+    }
+  },
+
   // Update an employee profile (or other HR specific operations)
   async updateEmployeeProfile(req: Request, res: Response) {
     try {
@@ -72,12 +128,10 @@ const hrController = {
         return res.status(404).send("Employee profile not found");
       }
 
-      res
-        .status(200)
-        .json({
-          message: "Employee profile updated successfully",
-          updatedProfile,
-        });
+      res.status(200).json({
+        message: "Employee profile updated successfully",
+        updatedProfile,
+      });
     } catch (error) {
       res
         .status(500)

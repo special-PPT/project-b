@@ -1,6 +1,6 @@
 import React from "react";
-import { Box, Grid, useMediaQuery } from "@mui/material";
-import { useTheme } from '@mui/material/styles';
+import { Box, Grid, useMediaQuery, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { getRectangleStyle } from "../../../styles/hr/profile";
 import { useParams } from "react-router-dom";
 import {
@@ -12,90 +12,26 @@ import {
   DocumentsElement,
 } from "./profileElements";
 import ProfileMobile from "./ProfileMobile";
-
-
-const employeeData = {
-  avatar:
-    "https://wallpapers-clan.com/wp-content/uploads/2023/06/sad-ghost-dark-blue-background.jpg",
-  basic_info: {
-    name: "Jane Doe",
-    employee_id: "12345",
-    ssn: "XXX-XX-1234",
-    work_auth: "Citizen",
-    phone: "555-123-4567",
-    email: "jane.doe@example.com",
-    dob: "1980-01-01",
-    gender: "Female",
-    preferred_name: "Jane",
-  },
-  address: {
-    street: "123 Main St",
-    building: "Apt 4",
-    city: "Springfield",
-    state: "IL",
-    zip_code: "62704",
-  },
-  contact: {
-    email: "jane.doe@example.com",
-    cell_phone: "555-123-4567",
-    work_phone: "555-765-4321",
-  },
-  visa_status: {
-    visa_title: "N/A",
-    start_date: "N/A",
-    end_date: "N/A",
-  },
-  reference: {
-    name: "John Smith",
-    phone_number: "555-987-6543",
-    email: "john.smith@example.com",
-    relationship: "Former Manager",
-  },
-  emergency_contact1: {
-    name: "Emily Doe",
-    phone: "555-321-9876",
-    relationship: "Sister",
-    email: "emily.doe@example.com",
-  },
-  emergency_contact2: {
-    name: "Michael Doe",
-    phone: "555-678-1234",
-    relationship: "Brother",
-    email: "michaelasdfasdfasdfasdfdfdfdfdf.doe@example.com",
-  },
-};
-
-const documents = [
-  {
-    documentName: "Annual Report 2023",
-    lastModifiedDate: "2023-12-01",
-    documentSize: "2.5 MB",
-    canDownload: true,
-    canPreview: true,
-    documentUrl: "https://example.com/annual-report-2023.pdf",
-  },
-  {
-    documentName: "Employee Handbook",
-    lastModifiedDate: "2023-10-15",
-    documentSize: "1.2 MB",
-    canDownload: true,
-    canPreview: false,
-    documentUrl: "https://example.com/employee-handbook.pdf",
-  },
-  {
-    documentName: "Project Plan - New Website",
-    lastModifiedDate: "2023-11-20",
-    documentSize: "3.7 MB",
-    canDownload: false,
-    canPreview: true,
-    documentUrl: "https://example.com/project-plan-website.pdf",
-  },
-];
+import {
+  transformEmployeeToProfileData,
+  transformProfileDocuments,
+} from "../data/profile/profileDataTramsformUtils";
+import { useTypedSelector } from "../../../redux/hooks/useTypedSelector";
 
 const ProfileScreen: React.FC = () => {
-  const { employeeId } = useParams();
+  const { employeeId } = useParams<{ employeeId: string }>();
+  const employees = useTypedSelector((state) => state.hr.employees);
+  const employee =
+    employeeId && employees[employeeId] ? employees[employeeId] : undefined;
+  const [employeeData, documents] = employee
+    ? [
+        transformEmployeeToProfileData(employee),
+        transformProfileDocuments(employee.personalInformation.documents),
+      ]
+    : [null, null];
+
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // 'sm' typically represents small or mobile devices
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   // height percentages for the top rows
   const rowHeightPercentages = ["50%", "70%", "55%"];
@@ -108,54 +44,61 @@ const ProfileScreen: React.FC = () => {
     return { topHeight, bottomHeight };
   });
 
-  if (isMobile) {
-    return (
+  return employeeData ? (
+    !isMobile ? (
+      <Box
+        sx={{
+          margin: "20px",
+          width: "95%",
+          height: `${largeBoxHeight}px`,
+          borderRadius: 12,
+          border: "2px solid #a1caff",
+          alignSelf: "center",
+          overflow: "hidden",
+        }}
+      >
+        <Grid container spacing={0}>
+          {rowHeights.map(({ topHeight, bottomHeight }, columnIndex) => (
+            <Grid item sm={4} key={columnIndex}>
+              <Box
+                sx={{
+                  height: `${topHeight}px`,
+                  ...getRectangleStyle(0, columnIndex),
+                }}
+              >
+                {/* Content of the first row */}
+                {columnIndex === 0 && (
+                  <AvatarBox
+                    topHeight={topHeight}
+                    avatar={employeeData.avatar}
+                  />
+                )}
+                {columnIndex === 1 && <Element01 employeeData={employeeData} />}
+                {columnIndex === 2 && <Element02 employeeData={employeeData} />}
+              </Box>
+              <Box
+                sx={{
+                  height: `${bottomHeight}px`,
+                  ...getRectangleStyle(1, columnIndex),
+                }}
+              >
+                {/* Content of the second row */}
+                {columnIndex === 0 && <Element10 employeeData={employeeData} />}
+                {columnIndex === 1 && <Element11 employeeData={employeeData} />}
+                {columnIndex === 2 && (
+                  <DocumentsElement documents={documents} />
+                )}
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+    ) : (
       <ProfileMobile employeeData={employeeData} documents={documents} />
-    );
-  }
-
-  return (
-    <Box
-      sx={{
-        margin: "20px",
-        width: "95%",
-        height: `${largeBoxHeight}px`,
-        borderRadius: 12,
-        border: "2px solid #a1caff",
-        alignSelf: "center",
-        overflow: "hidden",
-      }}
-    >
-      <Grid container spacing={0}>
-        {rowHeights.map(({ topHeight, bottomHeight }, columnIndex) => (
-          <Grid item sm={4} key={columnIndex}>
-            <Box
-              sx={{
-                height: `${topHeight}px`,
-                ...getRectangleStyle(0, columnIndex),
-              }}
-            >
-              {/* Content of the first row */}
-              {columnIndex === 0 && (
-                <AvatarBox topHeight={topHeight} avatar={employeeData.avatar} />
-              )}
-              {columnIndex === 1 && <Element01 employeeData={employeeData} />}
-              {columnIndex === 2 && <Element02 employeeData={employeeData} />}
-            </Box>
-            <Box
-              sx={{
-                height: `${bottomHeight}px`,
-                ...getRectangleStyle(1, columnIndex),
-              }}
-            >
-              {/* Content of the second row */}
-              {columnIndex === 0 && <Element10 employeeData={employeeData} />}
-              {columnIndex === 1 && <Element11 employeeData={employeeData} />}
-              {columnIndex === 2 && <DocumentsElement documents={documents} />}
-            </Box>
-          </Grid>
-        ))}
-      </Grid>
+    )
+  ) : (
+    <Box sx={{ margin: "20px", alignSelf: "center" }}>
+      <Typography>This employee doesn't exist.</Typography>
     </Box>
   );
 };
