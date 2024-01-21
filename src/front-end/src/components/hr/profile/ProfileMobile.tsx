@@ -12,7 +12,7 @@ import { alpha } from "@mui/material/styles";
 import {
   EmployeeDataInterface,
   DocumentInterface,
-} from "../data/EmployeeDataInterfaces";
+} from "../data/profile/EmployeeDataInterfaces";
 import { DocumentsElement } from "./profileElements";
 
 interface InfoDisplayComponentProps {

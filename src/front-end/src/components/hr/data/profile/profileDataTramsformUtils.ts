@@ -3,7 +3,7 @@ import { formatDate } from "../../utils/utils";
 import {
   EmployeeDataInterface,
   DocumentInterface,
-} from "../EmployeeDataInterfaces";
+} from "./EmployeeDataInterfaces";
 
 export function transformEmployeeToProfileData(
   employee: Employee
