@@ -149,6 +149,15 @@ const ProfileMobile: React.FC<ProfileMobileProps> = ({
     }
   };
 
+  const actionStyle = {
+    "& .MuiBottomNavigationAction-label": {
+      fontSize: "1rem",
+      "&.Mui-selected": {
+        fontSize: "1rem",
+      },
+    },
+  };
+
   return (
     <Box>
       <Box sx={{ textAlign: "center", my: 2 }}>
@@ -175,15 +184,15 @@ const ProfileMobile: React.FC<ProfileMobileProps> = ({
       >
         <BottomNavigationAction
           label="Basic Info"
-          sx={{ "& .MuiBottomNavigationAction-label": { fontSize: "1rem" } }}
+          sx={actionStyle}
         />
         <BottomNavigationAction
           label="Reference"
-          sx={{ "& .MuiBottomNavigationAction-label": { fontSize: "1rem" } }}
+          sx={actionStyle}
         />
         <BottomNavigationAction
           label="Emergency Contact"
-          sx={{ "& .MuiBottomNavigationAction-label": { fontSize: "1rem" } }}
+          sx={actionStyle}
         />
         <BottomNavigationAction
           label="Documents"
