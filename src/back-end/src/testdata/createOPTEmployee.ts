@@ -69,9 +69,18 @@ const generateRandomUserData = (
       emergencyContacts: [createContact(), createContact()],
       workAuth: faker.helpers.arrayElement([
         "Green Card",
-        "F1(CPT/OPT)",
+        "Citizen",
         "H1B",
+        "L2",
+        "H4",
+        "F1(CPT/OPT)",
+        "F1(CPT/OPT)",
+        "F1(CPT/OPT)",
+        "F1(CPT/OPT)",
+        "F1(CPT/OPT)",
+        "Other",
       ]),
+      // more likely to generate "F1(CPT/OPT)" users
       documents: ["Driver License1", "Driver License2", "Driver License3"].map(
         createDocument
       ),
@@ -107,13 +116,14 @@ const generateOnboardingApplicationData = (
 };
 
 const generateVisaStatusData = (
+  isActive: boolean,
   userId: string,
   workAuth: string
 ): Partial<IVisaStatus> => {
-  if (workAuth === "Green Card") {
+  if (isActive === false && workAuth !== "F1(CPT/OPT)") {
     return {
       userID: new ObjectId(userId),
-      visaType: "Green Card",
+      visaType: "None",
       status: "Approved",
       startDate: new Date("1111-11-11"),
       endDate: new Date("1111-11-11"),
@@ -121,21 +131,49 @@ const generateVisaStatusData = (
     };
   }
 
+  const documents = [];
+  const documentTypes = ["OPT Receipt", "OPT EAD", "I-983", "I-20"];
+  const lastDocumentIndex = faker.datatype.number({
+    min: 0,
+    max: documentTypes.length - 2,
+  });
+  let overallStatus = "Approved";
+
+  for (let i = 0; i <= lastDocumentIndex; i++) {
+    const docType = documentTypes[i];
+    let status = "Approved";
+
+    if (docType === "I-983") {
+      status = faker.helpers.arrayElement(["Pending", "Approved", "Rejected"]);
+    }
+
+    const document = {
+      type: docType,
+      url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+      status: status,
+      feedback: status === "Rejected" ? "feedback is here..." : "",
+    };
+
+    documents.push(document);
+
+    // Update overall status based on the most recent document
+    if (status === "Pending" || status === "Rejected") {
+      overallStatus = status;
+    }
+  }
+
+  // Check if all documents are approved
+  if (documents.every((doc) => doc.status === "Approved")) {
+    overallStatus = "Approved";
+  }
+
   return {
     userID: new ObjectId(userId),
-    visaType: workAuth === "F1(CPT/OPT)" ? "OPT" : "H1B",
-    status: faker.helpers.arrayElement(["Pending", "Approved", "Rejected"]),
+    visaType: "OPT",
+    status: overallStatus,
     startDate: new Date(faker.date.past()),
     endDate: new Date(faker.date.future()),
-    documents: [
-      {
-        type: "OPT Receipt",
-        url: "url-to-opt-receipt",
-        status: faker.helpers.arrayElement(["Approved", "Pending", "Locked"]),
-        feedback: "Approved OPT Receipt",
-      },
-      // Add more documents as needed
-    ],
+    documents: documents,
   };
 };
 
@@ -169,9 +207,11 @@ export async function createUsersWithData(numEmployee: number) {
 
       // Generate and save VisaStatus
       const visaStatusData = generateVisaStatusData(
+        newUser.isActive,
         newUser._id.toString(),
         newPersonalInfo.workAuth
       );
+
       const newVisaStatus = new VisaStatus(visaStatusData);
       await newVisaStatus.save();
 
