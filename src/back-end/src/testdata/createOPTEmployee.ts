@@ -11,6 +11,10 @@ import VisaStatus, { IVisaStatus } from "../models/VisaStatus";
 import { faker } from "@faker-js/faker";
 import { ObjectId } from "mongodb";
 
+const generateBiasedBoolean = (trueProbability: number): boolean => {
+  return Math.random() < trueProbability;
+};
+
 const createContact = (): IEmergencyContact => ({
   firstName: faker.person.firstName(),
   lastName: faker.person.lastName(),
@@ -46,7 +50,7 @@ const generateRandomUserData = (
       email: faker.internet.email({ firstName, lastName }),
       password: "password",
       role: "Employee",
-      isActive: faker.datatype.boolean(),
+      isActive: generateBiasedBoolean(0.7),
     };
 
     const personalInfo: Partial<IPersonalInformation> = {
@@ -69,9 +73,21 @@ const generateRandomUserData = (
       emergencyContacts: [createContact(), createContact()],
       workAuth: faker.helpers.arrayElement([
         "Green Card",
-        "F1(CPT/OPT)",
+        "Citizen",
         "H1B",
+        "L2",
+        "H4",
+        "F1(CPT/OPT)",
+        "F1(CPT/OPT)",
+        "F1(CPT/OPT)",
+        "F1(CPT/OPT)",
+        "F1(CPT/OPT)",
+        "F1(CPT/OPT)",
+        "F1(CPT/OPT)",
+        "F1(CPT/OPT)",
+        "Other",
       ]),
+      // more likely to generate "F1(CPT/OPT)" users
       documents: ["Driver License1", "Driver License2", "Driver License3"].map(
         createDocument
       ),
@@ -107,13 +123,14 @@ const generateOnboardingApplicationData = (
 };
 
 const generateVisaStatusData = (
+  isActive: boolean,
   userId: string,
   workAuth: string
 ): Partial<IVisaStatus> => {
-  if (workAuth === "Green Card") {
+  if (isActive === false || workAuth !== "F1(CPT/OPT)") {
     return {
       userID: new ObjectId(userId),
-      visaType: "Green Card",
+      visaType: "None",
       status: "Approved",
       startDate: new Date("1111-11-11"),
       endDate: new Date("1111-11-11"),
@@ -121,21 +138,48 @@ const generateVisaStatusData = (
     };
   }
 
+  const documents = [];
+  const documentTypes = ["OPT Receipt", "OPT EAD", "I-983", "I-20"];
+  const lastDocumentIndex = faker.datatype.number({
+    min: 0,
+    max: documentTypes.length - 1,
+  });
+  let overallStatus = "Approved";
+  let status;
+
+  for (let i = 0; i <= lastDocumentIndex; i++) {
+    const docType = documentTypes[i];
+
+    if (i < lastDocumentIndex) {
+      status = "Approved";
+    } else {
+      // Assign random status to the last document
+      status = faker.helpers.arrayElement(["Pending", "Approved", "Rejected"]);
+    }
+
+    const document = {
+      type: docType,
+      url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+      status: status,
+      feedback: status === "Rejected" ? "feedback is here..." : "",
+    };
+
+    documents.push(document);
+  }
+
+  if (documents.every((doc) => doc.status === "Approved" && documents.length === documentTypes.length)) {
+    overallStatus = "Approved";
+  } else {
+    overallStatus = documents[documents.length - 1].status;
+  }
+
   return {
     userID: new ObjectId(userId),
-    visaType: workAuth === "F1(CPT/OPT)" ? "OPT" : "H1B",
-    status: faker.helpers.arrayElement(["Pending", "Approved", "Rejected"]),
+    visaType: "F1(CPT/OPT)",
+    status: overallStatus,
     startDate: new Date(faker.date.past()),
     endDate: new Date(faker.date.future()),
-    documents: [
-      {
-        type: "OPT Receipt",
-        url: "url-to-opt-receipt",
-        status: faker.helpers.arrayElement(["Approved", "Pending", "Locked"]),
-        feedback: "Approved OPT Receipt",
-      },
-      // Add more documents as needed
-    ],
+    documents: documents,
   };
 };
 
@@ -169,9 +213,11 @@ export async function createUsersWithData(numEmployee: number) {
 
       // Generate and save VisaStatus
       const visaStatusData = generateVisaStatusData(
+        newUser.isActive,
         newUser._id.toString(),
         newPersonalInfo.workAuth
       );
+
       const newVisaStatus = new VisaStatus(visaStatusData);
       await newVisaStatus.save();
 

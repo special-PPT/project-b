@@ -7,7 +7,7 @@ export interface Employee {
   isActive: boolean;
   personalInformation: PersonalInformation;
   onboardingApplication: string;
-  visaStatus: string | null;
+  visaStatus: VisaStatus;
   createdAt: string;
   updatedAt: string;
   __v: number;
@@ -25,7 +25,9 @@ interface PersonalInformation {
   preferredName: string;
   profilePicture: string;
   dateOfBirth: string;
+  ssn: string;
   gender: string;
+  reference: EmergencyContact,
   emergencyContacts: EmergencyContact[];
   workAuth: string;
   documents: Document[];
@@ -57,10 +59,30 @@ interface EmergencyContact {
   _id: string;
 }
 
-interface Document {
+export interface Document {
   type: string;
   url: string;
   _id: string;
+}
+
+interface DocumentSub {
+  type: string;
+  url: string;
+  status: string;
+  feedback?: string;
+}
+
+interface VisaStatus {
+  _id: string;
+  userID: string;
+  visaType: string;
+  status: string;
+  startDate: string; // ISO date string format
+  endDate: string;   // ISO date string format
+  documents: DocumentSub[]; 
+  createdAt: string; // ISO date string format
+  updatedAt: string; // ISO date string format
+  __v: number;
 }
 
 // structure needed by HrEmployeeProfiles

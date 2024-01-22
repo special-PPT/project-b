@@ -4,7 +4,7 @@ import FilesModal from "./FilesModal";
 import { useTheme } from "@mui/material";
 
 interface ActionButtonsProps {
-  employeeId: number;
+  employeeId: string;
   nextStep: string;
 }
 
@@ -52,7 +52,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
         Send Token
       </Button>
     );
-  } else if (nextStep === "Wait for Approve") {
+  } else if (nextStep === "Wait for Approval") {
     button = (
       <Button variant="contained" onClick={handlePreview} sx={buttonStyle}>
         Preview

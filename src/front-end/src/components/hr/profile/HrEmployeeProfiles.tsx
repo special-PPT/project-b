@@ -14,6 +14,7 @@ import {
   StyledBodyCell,
   ClickableSpan,
 } from "../../../styles/hr/profile";
+import { useTypedSelector } from "../../../redux/hooks/useTypedSelector";
 
 interface Column {
   id: "employee_id" | "name" | "ssn" | "work_auth" | "phone" | "email";
@@ -32,153 +33,20 @@ const columns: readonly Column[] = [
   { id: "email", label: "Email", minWidth: 120 },
 ];
 
-interface Data {
-  employee_id: number;
-  name: string;
-  ssn: string;
-  work_auth: string;
-  phone: string;
-  email: string;
-}
-
-function createData(
-  employee_id: number,
-  name: string,
-  ssn: string,
-  work_auth: string,
-  phone: string,
-  email: string
-): Data {
-  return { employee_id, name, ssn, work_auth, phone, email };
-}
-
-// TODO: get data from API
-const rows = [
-  createData(
-    104,
-    "David Brown",
-    "890-12-3456",
-    "Yes",
-    "555-0104",
-    "david@example.com"
-  ),
-  createData(
-    107,
-    "Grace Lee",
-    "456-78-9012",
-    "Yes",
-    "555-0107",
-    "grace@example.com"
-  ),
-  createData(
-    102,
-    "Bob Johnson",
-    "987-65-4321",
-    "No",
-    "555-0102",
-    "bob@example.com"
-  ),
-  createData(
-    109,
-    "Ivy Taylor",
-    "789-01-2345",
-    "Yes",
-    "555-0109",
-    "ivy@example.com"
-  ),
-  createData(
-    111,
-    "Kathy Brown",
-    "901-23-4567",
-    "Yes",
-    "555-0111",
-    "kathy@example.com"
-  ),
-  createData(
-    105,
-    "Eve Davis",
-    "567-89-0123",
-    "No",
-    "555-0105",
-    "eve@example.com"
-  ),
-  createData(
-    113,
-    "Mia Johnson",
-    "123-45-6789",
-    "Yes",
-    "555-0113",
-    "mia@example.com"
-  ),
-  createData(
-    101,
-    "Alice Smith",
-    "123-45-6789",
-    "Yes",
-    "555-0101",
-    "alice@example.com"
-  ),
-  createData(
-    115,
-    "Olivia Brown",
-    "345-67-8901",
-    "Yes",
-    "555-0115",
-    "olivia@example.com"
-  ),
-  createData(
-    110,
-    "Jack Davis",
-    "890-12-3456",
-    "No",
-    "555-0110",
-    "jack@example.com"
-  ),
-  createData(
-    103,
-    "Carol Williams",
-    "234-56-7890",
-    "Yes",
-    "555-0103",
-    "carol@example.com"
-  ),
-  createData(
-    106,
-    "Frank Miller",
-    "345-67-8901",
-    "Yes",
-    "555-0106",
-    "frank@example.com"
-  ),
-  createData(
-    108,
-    "Henry Wilson",
-    "678-90-1234",
-    "No",
-    "555-0108",
-    "henry@example.com"
-  ),
-  createData(
-    112,
-    "Liam Smith",
-    "012-34-5678",
-    "No",
-    "555-0112",
-    "liam@example.com"
-  ),
-  createData(
-    114,
-    "Noah Williams",
-    "234-56-7890",
-    "No",
-    "555-0114",
-    "noah@example.com"
-  ),
-];
-
 export default function HrEmployeeProfiles() {
-  const isMobile = useMediaQuery("(max-width:600px)");
+  const employees = useTypedSelector((state) => state.hr.employees);
 
+  // Convert the dictionary to an array and map over it
+  const rows = Object.values(employees).map((employee) => ({
+    employee_id: employee._id,
+    name: `${employee.personalInformation.firstName} ${employee.personalInformation.lastName}`,
+    ssn: employee.personalInformation.ssn,
+    work_auth: employee.personalInformation.workAuth,
+    phone: employee.personalInformation.phoneNumbers.cell,
+    email: employee.email,
+  }));
+
+  const isMobile = useMediaQuery("(max-width:600px)");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -205,7 +73,6 @@ export default function HrEmployeeProfiles() {
 
   const filteredRows = rows
     .filter((row) => {
-      // TODO: is name part of input in backend APIs?
       return row.name.toLowerCase().includes(searchQuery);
     })
     .sort((a, b) => {
@@ -215,7 +82,7 @@ export default function HrEmployeeProfiles() {
     });
 
   return (
-    <StyledPaper style={{marginTop: "30px"}}>
+    <StyledPaper style={{ marginTop: "30px" }}>
       <TableSearch onSearchChange={handleSearchChange} />
       {!isMobile ? (
         <>
