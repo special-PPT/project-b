@@ -162,10 +162,17 @@ const userSlicer = createSlice({
     initialState:
     initState,
     reducers:{
-      edditFirstName(state, action){
-        state.firstName = action.payload;
+      edditBasicInfo(state, action){
+        const {firstName, lastName, middleName, preferredName, profilePicture} = action.payload;
+        state.firstName = firstName;
+        state.lastName = lastName;
+        state.middleName = middleName;
+        state.preferredName = preferredName;
+        state.profilePicture = profilePicture;
       }
+
+
     }
 })
-export const {edditFirstName} = userSlicer.actions;
+export const {edditBasicInfo} = userSlicer.actions;
 export default userSlicer.reducer; 

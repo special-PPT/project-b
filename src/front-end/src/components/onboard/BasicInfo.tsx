@@ -1,24 +1,17 @@
 import { Box, Button, Container, Divider, Grid, MenuItem, OutlinedInput, Paper, Select, SelectChangeEvent, Typography, useMediaQuery } from '@mui/material'
-import React from 'react'
+import React, { useContext } from 'react'
 import theme from '../../theme'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { useDispatch } from '../../redux/hooks/useDispatch';
-import { edditFirstName } from '../../redux/features/onboard/UserSlicer';
-
+import { UserContext } from './UserContext';
 
 
 export default function BasicInfo() {
-    
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        // const { id, value } = event.target;
-        // setUserInfo({ ...userInfo, [id]: value });
-        // console.log(userInfo);
-    }
-    
+    const { userInfo, setUserInfo, handleChange } = useContext(UserContext);
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [isFreetoWork, setIsFreetoWork] = React.useState<string>('');
     const [isOPT, setIsOPT] = React.useState<boolean>(false);
+    const [phoneType, setPhoneType] = React.useState<string>('cell');
     const handleOPTChange = (event: SelectChangeEvent<string>) => {
         const { value } = event.target;
         if (value === 'opt') {
@@ -88,8 +81,8 @@ export default function BasicInfo() {
                         required
                         fullWidth
                         id="firstName"
-                        // onChange={handleInputChange}
-                        // onChange={(event) => dispatch(edditFirstName(event.target.value))}
+                        defaultValue={userInfo.firstName}
+                        onChange={handleChange}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -103,6 +96,8 @@ export default function BasicInfo() {
                         required
                         fullWidth
                         id="lastName"
+                        defaultValue={userInfo.lastName}
+                        onChange={handleChange}
                         // onChange={handleInputChange}
                         // placeholder="Last Name"
                         // onChange={handleInputChange}
@@ -114,8 +109,10 @@ export default function BasicInfo() {
                         required
                         fullWidth
                         id="middleName"
+                        defaultValue={userInfo.middleName}
+                        onChange={handleChange}
                         // placeholder="Last Name"
-                        onChange={handleInputChange}
+                        // onChange={handleInputChange}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -136,9 +133,11 @@ export default function BasicInfo() {
                     <OutlinedInput
                         required
                         fullWidth
-                        id="streetAddress"
+                        id="address.building"
+                        defaultValue={userInfo.address.building}
+                        onChange={handleChange}
                         // placeholder="Last Name"
-                        onChange={handleInputChange}
+                        // onChange={handleInputChange}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -147,9 +146,11 @@ export default function BasicInfo() {
                     </Typography>
                     <OutlinedInput
                         fullWidth
-                        id="streetAddress2"
+                        id="address.street"
+                        defaultValue={userInfo.address.street}
+                        onChange={handleChange}
                         // placeholder="Last Name"
-                        onChange={handleInputChange}
+                        // onChange={handleInputChange}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -162,9 +163,11 @@ export default function BasicInfo() {
                     <OutlinedInput
                         required
                         fullWidth
-                        id="city"
+                        id="address.city"
+                        defaultValue={userInfo.address.city}
+                        onChange={handleChange}
                         // placeholder="Last Name"
-                        onChange={handleInputChange}
+                        // onChange={handleInputChange}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -177,9 +180,11 @@ export default function BasicInfo() {
                     <OutlinedInput
                         required
                         fullWidth
-                        id="state"
+                        id="address.state"
+                        defaultValue={userInfo.address.state}
+                        onChange={handleChange}
                         // placeholder="Last Name"
-                        onChange={handleInputChange}
+                        // onChange={handleInputChange}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -192,9 +197,9 @@ export default function BasicInfo() {
                     <OutlinedInput
                         required
                         fullWidth
-                        id="zipCode"
-                        // placeholder="Last Name"
-                        onChange={handleInputChange}
+                        id="address.zip"
+                        defaultValue={userInfo.address.zip}
+                        onChange={handleChange}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -237,6 +242,8 @@ export default function BasicInfo() {
                         sx={{
                             width: '100%',
                         }}
+                        defaultValue={phoneType}
+                        onChange={(event) => setPhoneType(event.target.value)}
                     >
                         <MenuItem value={"cell"}>Cell</MenuItem>
                         <MenuItem value={"work"}>Work</MenuItem>
@@ -252,9 +259,9 @@ export default function BasicInfo() {
                     <OutlinedInput
                         required
                         fullWidth
-                        id="phoneNumber"
-                        // placeholder="Last Name"
-                        // onChange={handleInputChange}
+                        id={`phoneNumbers.${phoneType}`} 
+                        defaultValue={userInfo.phoneNumbers.cell}
+                        onChange={handleChange}
                     />
                 </Grid>
                 <Grid  item xs={12}>
@@ -266,8 +273,6 @@ export default function BasicInfo() {
                         required
                         fullWidth
                         id="phoneExtention"
-                        // placeholder="Last Name"
-                        // onChange={handleInputChange}
                     />
                 </Grid>
                 
@@ -290,7 +295,9 @@ export default function BasicInfo() {
                     <OutlinedInput
                         required
                         fullWidth
-                        id="ssn"
+                        id="socialSecurityNumber"
+                        defaultValue={userInfo.socialSecurityNumber}
+                        onChange={handleChange}
                         // placeholder="Last Name"
                         // onChange={handleInputChange}
                     />
