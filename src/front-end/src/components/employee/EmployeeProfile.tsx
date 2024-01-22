@@ -14,45 +14,113 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  useMediaQuery,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DownloadIcon from "@mui/icons-material/Download";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import userImage from "./dashboard/user.png";
-import { useState } from "react";
+import Document from "./common/Document";
+import { useState, useEffect } from "react";
+import EditButton from "./common/EditButton";
 
-const EditItem = () => {
-  return (
-    <Button
-      sx={{
-        position: "absolute",
-        top: 10,
-        right: 10,
-        border: "none",
-      }}
-    >
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "white", // Circle color
-          color: "black", // Icon color
-        }}
-      >
-        <EditIcon />
-      </Box>
-    </Button>
-  );
-};
+
+interface DocumentSub {
+  type: string;
+  url: string;
+  documentKey: string;
+  name: string;
+}
+
+interface EmergencyContact {
+  firstName: string;
+  lastName: string;
+  middleName?: string;
+  phone: string;
+  email: string;
+  relationship: string;
+}
+
+interface PersonalInformation extends Document {
+  userID: string;
+  firstName: string;
+  lastName: string;
+  middleName?: string;
+  preferredName?: string;
+  profilePicture?: string;
+  email: string;
+  address: {
+    building: string;
+    street: string;
+    city: string;
+    state: string;
+    zip: string;
+  };
+  phoneNumbers: {
+    cell: string;
+    work?: string;
+  };
+  dateOfBirth: Date;
+  gender: string;
+  emergencyContacts: EmergencyContact[];
+  workAuth: string;
+  documents: DocumentSub[];
+}
+
 
 export default function EmployeeProfile() {
+  const [personalInfoData, setPersonalInfoData] = useState<PersonalInformation | null>(null);
+  const userId = '65adc821e964d3357d77c4dd';
+  const [alertMessage, setAlertMessage] = useState<String>('');
+
+  const [editModes, setEditModes] = useState<{ [key: string]: boolean; }>({
+    basicInfo: false,
+    address: false,
+    contact: false,
+    employment: false,
+    emergencyContact: false,
+  });
+
+  const toggleEditMode = (section: string) => {
+    setEditModes(prevModes => ({
+      ...prevModes,
+      [section]: !prevModes[section],
+    }));
+  };
+  
+
+  useEffect(() => {
+    const fetchPersonalInfoData = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/personalInfo/get/${userId}`);
+        if (!response.ok) {
+          setAlertMessage(`HTTP error! status: ${response.status}`);
+          return;
+        }
+        const data = await response.json() as PersonalInformation;
+        setPersonalInfoData(data);
+      } catch (e) {
+        if (e instanceof Error) {
+          setAlertMessage(e.message);
+        } else {
+          setAlertMessage('An unknown error occurred');
+        }
+      }
+    };
+
+    fetchPersonalInfoData();
+    console.log(personalInfoData);
+
+  }, []);
+
+  const isMobile = useMediaQuery("(max-width:1000px)");
+
   const [firstName, setFirstName] = useState("John");
   const [lastName, setLastName] = useState("Doe");
   const [middleName, setMiddleName] = useState("Yash");
   const [preferredName, setPreferredName] = useState("");
   const [DOB, setDOB] = useState("2000-01-09");
-  const [gender, setGender] = useState("Male");
+  const [gender, setGender] = useState("male");
   const [SSN, setSSN] = useState("000000");
 
   const [street, setStreet] = useState("112 Second");
@@ -169,7 +237,7 @@ export default function EmployeeProfile() {
             <Typography variant="h5" sx={{ m: 2 }}>
               Basic Info
             </Typography>
-            <EditItem />
+            <EditButton onClick={() => toggleEditMode('basicInfo')} />
           </Container>
 
           <Grid container spacing={4} sx={{ pl: 3, pr: 3 }}>
@@ -180,6 +248,10 @@ export default function EmployeeProfile() {
                   label="First Name"
                   onChange={(e) => {
                     setFirstName(e.target.value);
+                    
+                  }}
+                  InputProps={{
+                    readOnly: !editModes.basicInfo,
                   }}
                 />
                 <TextField
@@ -187,6 +259,9 @@ export default function EmployeeProfile() {
                   label="Middle Name"
                   onChange={(e) => {
                     setMiddleName(e.target.value);
+                  }}
+                  InputProps={{
+                    readOnly: !editModes.basicInfo,
                   }}
                 />
                 <TextField
@@ -197,12 +272,18 @@ export default function EmployeeProfile() {
                   onChange={(e) => {
                     setDOB(e.target.value);
                   }}
+                  InputProps={{
+                    readOnly: !editModes.basicInfo,
+                  }}
                 />
                 <TextField
                   value={SSN}
                   label="Social Security Number"
                   onChange={(e) => {
                     setSSN(e.target.value);
+                  }}
+                  InputProps={{
+                    readOnly: !editModes.basicInfo,
                   }}
                 />
               </Stack>
@@ -215,12 +296,18 @@ export default function EmployeeProfile() {
                   onChange={(e) => {
                     setLastName(e.target.value);
                   }}
+                  InputProps={{
+                    readOnly: !editModes.basicInfo,
+                  }}
                 />
                 <TextField
                   value={preferredName}
                   label="Preferred Name"
                   onChange={(e) => {
                     setPreferredName(e.target.value);
+                  }}
+                  InputProps={{
+                    readOnly: !editModes.basicInfo,
                   }}
                 />
                 <TextField
@@ -230,6 +317,9 @@ export default function EmployeeProfile() {
                   value={gender}
                   onChange={(e) => {
                     setGender(e.target.value);
+                  }}
+                  InputProps={{
+                    readOnly: !editModes.basicInfo,
                   }}
                   sx={{ width: "100%" }}
                 >
@@ -259,7 +349,7 @@ export default function EmployeeProfile() {
             <Typography variant="h5" sx={{ m: 2 }}>
               Address
             </Typography>
-            <EditItem />
+            <EditButton onClick={() => toggleEditMode('address')} />
           </Container>
 
           <Grid container spacing={4} sx={{ pl: 3, pr: 3 }}>
@@ -271,6 +361,9 @@ export default function EmployeeProfile() {
                   onChange={(e) => {
                     setStreet(e.target.value);
                   }}
+                  InputProps={{
+                    readOnly: !editModes.address,
+                  }}
                 />
                 <TextField
                   value={city}
@@ -278,12 +371,18 @@ export default function EmployeeProfile() {
                   onChange={(e) => {
                     setCity(e.target.value);
                   }}
+                  InputProps={{
+                    readOnly: !editModes.address,
+                  }}
                 />
                 <TextField
                   value={zip}
                   label="Zip"
                   onChange={(e) => {
                     setZip(e.target.value);
+                  }}
+                  InputProps={{
+                    readOnly: !editModes.address,
                   }}
                 />
               </Stack>
@@ -296,12 +395,18 @@ export default function EmployeeProfile() {
                   onChange={(e) => {
                     setBuildingOrApp(e.target.value);
                   }}
+                  InputProps={{
+                    readOnly: !editModes.address,
+                  }}
                 />
                 <TextField
                   value={state}
                   label="State"
                   onChange={(e) => {
                     setState(e.target.value);
+                  }}
+                  InputProps={{
+                    readOnly: !editModes.address,
                   }}
                 />
               </Stack>
@@ -324,7 +429,7 @@ export default function EmployeeProfile() {
             <Typography variant="h5" sx={{ m: 2 }}>
               Contact
             </Typography>
-            <EditItem />
+            <EditButton onClick={() => toggleEditMode('contact')}  />
           </Container>
           <Grid item xs={12} sm={6} sx={{ px: 3 }}>
             <Stack spacing={2}>
@@ -334,6 +439,9 @@ export default function EmployeeProfile() {
                 onChange={(e) => {
                   setEmail(e.target.value);
                 }}
+                InputProps={{
+                  readOnly: !editModes.contact,
+                }}
               />
               <TextField
                 value={cellPhone}
@@ -341,12 +449,18 @@ export default function EmployeeProfile() {
                 onChange={(e) => {
                   setCellPhone(e.target.value);
                 }}
+                InputProps={{
+                  readOnly: !editModes.contact,
+                }}
               />
               <TextField
                 value={workingPhone}
                 label="Working Phone"
                 onChange={(e) => {
                   setWorkingPhone(e.target.value);
+                }}
+                InputProps={{
+                  readOnly: !editModes.contact,
                 }}
               />
             </Stack>
@@ -368,7 +482,7 @@ export default function EmployeeProfile() {
             <Typography variant="h5" sx={{ m: 2 }}>
               Employment
             </Typography>
-            <EditItem />
+            <EditButton onClick={() => toggleEditMode('employment')} />
           </Container>
           <Grid item xs={12} sm={6} sx={{ px: 3 }}>
             <Stack spacing={2}>
@@ -379,6 +493,9 @@ export default function EmployeeProfile() {
                 label="Visa Type"
                 onChange={(e) => {
                   setVisaType(e.target.value);
+                }}
+                InputProps={{
+                  readOnly: !editModes.employment,
                 }}
               >
                 <MenuItem value={"OPT"}>OPT</MenuItem>
@@ -393,6 +510,9 @@ export default function EmployeeProfile() {
                 onChange={(e) => {
                   setVisaStartDate(e.target.value);
                 }}
+                InputProps={{
+                  readOnly: !editModes.employment,
+                }}
               />
               <TextField
                 variant="outlined"
@@ -401,6 +521,9 @@ export default function EmployeeProfile() {
                 label="End Date"
                 onChange={(e) => {
                   setVisaEndDate(e.target.value);
+                }}
+                InputProps={{
+                  readOnly: !editModes.employment,
                 }}
               />
             </Stack>
@@ -422,7 +545,7 @@ export default function EmployeeProfile() {
             <Typography variant="h5" sx={{ m: 2 }}>
               Emergency Contact 1
             </Typography>
-            <EditItem />
+            <EditButton onClick={() => toggleEditMode('emergencyContact')}/>
           </Container>
           <Box>
             <Typography variant="h6" sx={{ m: 3 }}>
@@ -437,6 +560,9 @@ export default function EmployeeProfile() {
                     onChange={(e) => {
                       setEmergencyContact1FirstName(e.target.value);
                     }}
+                    InputProps={{
+                      readOnly: !editModes.emergencyContact,
+                    }}
                   />
                   <TextField
                     value={emergencyContact1MiddleName}
@@ -444,12 +570,18 @@ export default function EmployeeProfile() {
                     onChange={(e) => {
                       setEmergencyContact1MiddleName(e.target.value);
                     }}
+                    InputProps={{
+                      readOnly: !editModes.emergencyContact,
+                    }}
                   />
                   <TextField
                     value={emergencyContact1PhoneName}
                     label="phone"
                     onChange={(e) => {
                       setEmergencyContact1PhoneName(e.target.value);
+                    }}
+                    InputProps={{
+                      readOnly: !editModes.emergencyContact,
                     }}
                   />
                 </Stack>
@@ -462,6 +594,9 @@ export default function EmployeeProfile() {
                     onChange={(e) => {
                       setEmergencyContact1LastName(e.target.value);
                     }}
+                    InputProps={{
+                      readOnly: !editModes.emergencyContact,
+                    }}
                   />
                   <TextField
                     value={emergencyContact1Email}
@@ -469,12 +604,18 @@ export default function EmployeeProfile() {
                     onChange={(e) => {
                       setEmergencyContact1Email(e.target.value);
                     }}
+                    InputProps={{
+                      readOnly: !editModes.emergencyContact,
+                    }}
                   />
                   <TextField
                     value={emergencyContact1Relationship}
                     label="Relationship"
                     onChange={(e) => {
                       setEmergencyContact1Relationship(e.target.value);
+                    }}
+                    InputProps={{
+                      readOnly: !editModes.emergencyContact,
                     }}
                   />
                 </Stack>
@@ -494,6 +635,9 @@ export default function EmployeeProfile() {
                     onChange={(e) => {
                       setEmergencyContact2FirstName(e.target.value);
                     }}
+                    InputProps={{
+                      readOnly: !editModes.emergencyContact,
+                    }}
                   />
                   <TextField
                     value={emergencyContact2MiddleName}
@@ -501,12 +645,18 @@ export default function EmployeeProfile() {
                     onChange={(e) => {
                       setEmergencyContact2MiddleName(e.target.value);
                     }}
+                    InputProps={{
+                      readOnly: !editModes.emergencyContact,
+                    }}
                   />
                   <TextField
                     value={emergencyContact2PhoneName}
                     label="phone"
                     onChange={(e) => {
                       setEmergencyContact2PhoneName(e.target.value);
+                    }}
+                    InputProps={{
+                      readOnly: !editModes.emergencyContact,
                     }}
                   />
                 </Stack>
@@ -519,6 +669,9 @@ export default function EmployeeProfile() {
                     onChange={(e) => {
                       setEmergencyContact2LastName(e.target.value);
                     }}
+                    InputProps={{
+                      readOnly: !editModes.emergencyContact,
+                    }}
                   />
                   <TextField
                     value={emergencyContact2Email}
@@ -526,12 +679,18 @@ export default function EmployeeProfile() {
                     onChange={(e) => {
                       setEmergencyContact2Email(e.target.value);
                     }}
+                    InputProps={{
+                      readOnly: !editModes.emergencyContact,
+                    }}
                   />
                   <TextField
                     value={emergencyContact2Relationship}
                     label="Relationship"
                     onChange={(e) => {
                       setEmergencyContact2Relationship(e.target.value);
+                    }}
+                    InputProps={{
+                      readOnly: !editModes.emergencyContact,
                     }}
                   />
                 </Stack>
@@ -555,55 +714,75 @@ export default function EmployeeProfile() {
             Summary of Uploaded Files
           </Typography>
           <Box sx={{ m: 2 }}>
-            {" "}
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
-                    <TableCell sx={{ fontWeight: "bold" }} align="right">
-                      Last modified
-                    </TableCell>
-                    <TableCell sx={{ fontWeight: "bold" }} align="right">
-                      Size
-                    </TableCell>
-                    <TableCell sx={{ fontWeight: "bold" }} align="right">
-                      Download
-                    </TableCell>
-                    <TableCell sx={{ fontWeight: "bold" }} align="right">
-                      Preview
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {fileTable.map((row) => (
-                    <TableRow
-                      key={row.name}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
-                      <TableCell component="th" scope="row">
-                        {row.name}
-                      </TableCell>
-                      <TableCell align="right">{row.modifiedTime}</TableCell>
-                      <TableCell align="right">{row.size}</TableCell>
-                      <TableCell align="right">
-                        <Button>
-                          <DownloadIcon />
-                        </Button>
-                      </TableCell>
-                      <TableCell align="right">
-                        <Button>
-                          <RemoveRedEyeIcon />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            {isMobile ? (
+              <>
+                {fileTable.map((doc, index) => (
+                  <Document
+                    key={index}
+                    documentName={doc.name}
+                    lastModifiedDate={doc.modifiedTime}
+                    documentSize={doc.size}
+                    canDownload={true}
+                    canPreview={true}
+                    documentUrl={doc.src}
+                  />
+                ))}
+              </>
+            ) : (
+              <>
+                <TableContainer component={Paper}>
+                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
+                        <TableCell sx={{ fontWeight: "bold" }} align="right">
+                          Last modified
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: "bold" }} align="right">
+                          Size
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: "bold" }} align="right">
+                          Download
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: "bold" }} align="right">
+                          Preview
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {fileTable.map((row) => (
+                        <TableRow
+                          key={row.name}
+                          sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                        >
+                          <TableCell component="th" scope="row">
+                            {row.name}
+                          </TableCell>
+                          <TableCell align="right">{row.modifiedTime}</TableCell>
+                          <TableCell align="right">{row.size}</TableCell>
+                          <TableCell align="right">
+                            <Button>
+                              <DownloadIcon />
+                            </Button>
+                          </TableCell>
+                          <TableCell align="right">
+                            <Button>
+                              <RemoveRedEyeIcon />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </>
+            )}
+
           </Box>
+
+
         </Box>
       </Stack>
-    </Container>
+    </Container >
   );
 }

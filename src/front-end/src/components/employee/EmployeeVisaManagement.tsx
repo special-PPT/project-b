@@ -1,23 +1,125 @@
 import * as React from "react";
-import { Tabs, Tab, Box, Typography, Stack, Button } from "@mui/material";
+import { useState, useEffect } from "react";
+import { Tabs, Tab, Box, Typography, Stack, Button, Container, useMediaQuery, Card, CardHeader, Chip, IconButton } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import CheckIcon from "@mui/icons-material/Check";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { alpha } from "@mui/material/styles";
+import FileUploadButton from "./common/UploadFileButton";
+import Document from "./common/Document";
+import { CheckCircle, Warning, HourglassEmpty } from '@mui/icons-material';
+import { green, red, yellow, grey } from '@mui/material/colors';
+import PreviewIcon from "@mui/icons-material/Preview";
+import theme from "../../theme";
+
+// Define the shape of the props according to your document structure
+interface DocStatusProps {
+  doc: {
+    status: string;
+  };
+}
+
+const DocStatus: React.FC<DocStatusProps> = ({ doc }) => {
+  const getStatusChip = () => {
+    switch (doc.status) {
+      case 'Approved':
+        return (
+          <Chip
+            icon={<CheckCircle />}
+            label="Approved"
+            sx={{ color: 'white', bgcolor: green[500], fontWeight: 'bold' }}
+          />
+        );
+      case 'Rejected':
+        return (
+          <Chip
+            icon={<Warning />}
+            label="Rejected"
+            sx={{ color: 'white', bgcolor: red[500], fontWeight: 'bold' }}
+          />
+        );
+      case 'Pending':
+        return (
+          <Chip
+            icon={<HourglassEmpty />}
+            label="Pending"
+            sx={{ color: 'white', bgcolor: yellow[800], fontWeight: 'bold' }}
+          />
+        );
+      default:
+        return (
+          <Chip
+            label="Unknown Status"
+            sx={{ color: 'white', bgcolor: grey[500], fontWeight: 'bold' }}
+          />
+        );
+    }
+  };
+
+  return (
+    <Typography component="div" sx={{ display: 'flex', alignItems: 'center' }}>
+      {getStatusChip()}
+    </Typography>
+  );
+};
+
+enum DocumentStatus {
+  Pending = "Pending",
+  Approved = "Approved",
+  Rejected = "Rejected",
+  NotSubmitted = "Not_Submitted"
+}
+
+interface DocumentSub {
+  type: string;
+  docType: string;
+  url: string;
+  status: string;
+  name: string;
+  documentKey?: string;
+  feedback?: string;
+}
+
+interface VisaStatusData {
+  userID: string;
+  visaType: string;
+  status: string;
+  startDate: Date;
+  endDate: Date;
+  documents: DocumentSub[];
+}
 
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
-  fileSubmitted: boolean;
-  feedback: String;
-  isApproved: boolean;
+  document: DocumentSub;
 }
 
+const documentTypes = ["OPT Receipt", "OPT EAD", "I-983", "I-20"];
+
+const initializeDocuments = (existingDocuments: DocumentSub[]): DocumentSub[] => {
+  return documentTypes.map(type => {
+    const foundDoc = existingDocuments.find(doc => doc.type === type);
+    if (foundDoc) return foundDoc;
+
+    // If a document of a specific type is not found, create a default one
+    return {
+      type,
+      docType: '',
+      url: '',
+      status: 'Not_Submitted',
+      name: '',
+      documentKey: '',
+      feedback: ''
+    };
+  });
+};
+
 function CustomTabPanel(props: TabPanelProps) {
-  const { value, index, fileSubmitted, feedback, isApproved } = props;
+  const { value, index, document } = props;
 
   return (
     <div
@@ -26,7 +128,7 @@ function CustomTabPanel(props: TabPanelProps) {
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
     >
-      {!fileSubmitted && (
+      {document.status === DocumentStatus.NotSubmitted ? (
         <Box
           sx={{
             width: 600,
@@ -52,13 +154,9 @@ function CustomTabPanel(props: TabPanelProps) {
             >
               <UploadFileIcon fontSize="large" />
               <Typography>Drag and drop here</Typography>
-              <Button variant="contained" component="label">
-                Browser
-                <input type="file" hidden />
-              </Button>
             </Stack>
           </Box>
-          <Box sx={{m: 2}}>
+          {/* <Box sx={{ m: 2 }}>
             <Button
               sx={{
                 color: "black",
@@ -83,11 +181,11 @@ function CustomTabPanel(props: TabPanelProps) {
             >
               Submit
             </Button>
-          </Box>
+          </Box> */}
+          <FileUploadButton documentType="Not_Submitted" />
         </Box>
-      )}
-      {fileSubmitted && value === index && (
-        <Box
+      ) : (
+        <><Box
           sx={{
             width: 600,
             border: "2px dashed rgba(0, 0, 0, 0.2)",
@@ -103,7 +201,7 @@ function CustomTabPanel(props: TabPanelProps) {
           >
             <Box sx={{ m: 2 }}>
               <Typography sx={{ fontWeight: "bold" }}>Uploaded Doc:</Typography>
-              <Typography>sample_code.pdf</Typography>
+              <Typography>{document.name}</Typography>
             </Box>
             <Stack
               sx={{
@@ -116,12 +214,20 @@ function CustomTabPanel(props: TabPanelProps) {
                 right: 0,
               }}
             >
-              <Button>
+              {/* <Button>
                 <DownloadIcon />
               </Button>
               <Button>
                 <RemoveRedEyeIcon />
-              </Button>
+              </Button> */}
+              <IconButton href={document.url} download>
+            <DownloadIcon sx={{ color: theme.palette.primary.dark }} />
+          </IconButton>
+          <IconButton onClick={() => window.open(document.url, '_blank')}>
+            <PreviewIcon sx={{ color: theme.palette.primary.dark }} />
+          </IconButton>
+
+
             </Stack>
           </Box>
           <Box sx={{ p: 3 }}>
@@ -132,11 +238,11 @@ function CustomTabPanel(props: TabPanelProps) {
                 boxShadow: 4,
               }}
             >
-              <Typography sx={{ m: 4 }}>{feedback}</Typography>
+              <Typography sx={{ m: 4 }}>{document.feedback}</Typography>
             </Box>
           </Box>
           <Box sx={{ position: "relative", p: 3 }}>
-            {isApproved ? (
+            {(document.status === DocumentStatus.Approved) ? (
               <Box
                 sx={{
                   display: "flex",
@@ -166,7 +272,13 @@ function CustomTabPanel(props: TabPanelProps) {
               </Box>
             )}
           </Box>
-        </Box>
+          {document.status === DocumentStatus.Rejected && (
+            <>
+              <FileUploadButton documentType={document.type} />
+            </>
+
+          )}
+        </Box></>
       )}
     </div>
   );
@@ -180,69 +292,157 @@ function a11yProps(index: number) {
 }
 
 export default function EmployeeVisaManagement() {
-  const [value, setValue] = React.useState(0);
-  const userVisaType: String = "OPT";
-  const fileSubmitted: boolean = false;
-  const feedback: String =
-    "Name is not consistent, please change to your legal name";
-  const isApproved: boolean = false;
+  const [currentTab, setCurrentTab] = useState(0);
+  const [visaStatusData, setVisaStatusData] = useState<VisaStatusData | null>(null);
+  const userId = '65ade685726433669abc7518';
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const initializedDocuments: DocumentSub[] = initializeDocuments(visaStatusData?.documents ?? []);
+  const isMobile = useMediaQuery("(max-width:700px)");
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+
+  useEffect(() => {
+    const fetchVisaStatusData = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/visa/${userId}`);
+        if (!response.ok) {
+          setAlertMessage(`HTTP error! status: ${response.status}`);
+          return;
+        }
+        const data = await response.json() as VisaStatusData;
+        setVisaStatusData(data);
+      } catch (e) {
+        if (e instanceof Error) {
+          setAlertMessage(e.message);
+        } else {
+          setAlertMessage('An unknown error occurred');
+        }
+      }
+      finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVisaStatusData();
+    console.log(visaStatusData);
+
+  }, []);
+
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setCurrentTab(newValue);
   };
 
-  if (userVisaType !== "OPT") {
+  // const handleDocumentUpload = (documentType, file) => {
+
+  // };
+
+  if (visaStatusData?.visaType !== "F1(CPT/OPT)") {
     return null;
   }
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+
+
   return (
-    <Box sx={{ width: "100%" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="basic tabs example"
-        >
-          <Tab label="Receipt" {...a11yProps(0)} />
-          <Tab label="EAD" {...a11yProps(1)} disabled />
-          <Tab label="I-983" {...a11yProps(2)} disabled />
-          <Tab label="I-20" {...a11yProps(3)} disabled />
-        </Tabs>
-      </Box>
-      <CustomTabPanel
-        value={value}
-        index={0}
-        fileSubmitted={fileSubmitted}
-        feedback={feedback}
-        isApproved={isApproved}
-      ></CustomTabPanel>
-      <CustomTabPanel
-        value={value}
-        index={1}
-        fileSubmitted={fileSubmitted}
-        feedback={feedback}
-        isApproved={isApproved}
-      >
-        Item Two
-      </CustomTabPanel>
-      <CustomTabPanel
-        value={value}
-        index={2}
-        fileSubmitted={fileSubmitted}
-        feedback={feedback}
-        isApproved={isApproved}
-      >
-        Item Three
-      </CustomTabPanel>
-      <CustomTabPanel
-        value={value}
-        index={3}
-        fileSubmitted={fileSubmitted}
-        feedback={feedback}
-        isApproved={isApproved}
-      >
-        Item Four
-      </CustomTabPanel>
-    </Box>
+    <Container maxWidth="sm" style={{
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: '30px',
+      marginBottom: '40px'
+      // height: '100vh'
+    }}>
+      <Typography variant="h5">OPT Work Authorization Documents</Typography>
+      {isMobile ? (
+        <>
+          <Box>
+            {visaStatusData.documents.map((doc, index) => (
+              <Box gap={5} sx={{
+                marginTop: '40px',
+              }}>
+                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{documentTypes[index]}</Typography>
+                <Document
+                  key={index}
+                  documentName={doc.name}
+                  lastModifiedDate={Date()}
+                  documentSize='5kb'
+                  canDownload={true}
+                  canPreview={true}
+                  documentUrl={doc.url}
+                />
+                <Box sx={{
+                  display: 'flex',
+                  ml: 4,
+                  mt: 1,
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}>
+                  <Box >
+                    <DocStatus doc={{ status: doc.status }} />
+                    <Typography variant="caption">{doc.feedback}</Typography>
+                  </Box>
+                  {/* <Box>
+                <Typography sx={{
+                  fontSize: '1rem'
+                }}>Submitted</Typography>
+              </Box> */}
+                </Box>
+
+
+
+                {doc.status === "Rejected" && (
+                  <FileUploadButton documentType={doc.docType} />
+                )}
+              </Box>
+
+            ))}
+            {visaStatusData.documents.length > 0 && visaStatusData.documents.length < 4 && visaStatusData.documents[visaStatusData.documents.length - 1].status === "Approved" && (
+              <Box gap={5} sx={{
+                marginTop: '40px',
+              }}>
+                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{documentTypes[visaStatusData.documents.length]}</Typography>
+                <FileUploadButton documentType="Not_Submitted" />
+              </Box>
+            )}
+          </Box>
+
+        </>
+      ) : (
+        <>
+          <Box>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <Tabs
+                value={currentTab}
+                onChange={handleTabChange}
+                aria-label="Document tabs"
+              >
+                <Tab label="Receipt" {...a11yProps(0)} />
+                <Tab label="EAD" {...a11yProps(1)} disabled={initializedDocuments[0]?.status !== DocumentStatus.Approved} />
+                <Tab label="I-983" {...a11yProps(2)} disabled={initializedDocuments[1]?.status !== DocumentStatus.Approved} />
+                <Tab label="I-20" {...a11yProps(3)} disabled={initializedDocuments[2]?.status !== DocumentStatus.Approved} />
+              </Tabs>
+            </Box>
+            {
+              initializedDocuments.map((doc, index) => {
+                return (
+                  <CustomTabPanel
+                    key={doc.type}
+                    value={currentTab}
+                    index={index}
+                    document={doc}
+                  />
+                )
+              })
+            }
+          </Box>
+        </>
+      )}
+
+    </Container>
+
   );
 }

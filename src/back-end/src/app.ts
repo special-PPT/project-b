@@ -26,6 +26,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+// Built-in middleware for URL-encoded data
+app.use(express.urlencoded({ extended: true }));
 
 // Route Middlewares
 app.use('/user', userRoutes);

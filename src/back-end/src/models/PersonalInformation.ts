@@ -4,6 +4,7 @@ interface IDocumentSubSchema {
   type: string;
   url: string;
   documentKey: string;
+  name: string;
 }
 
 interface IEmergencyContact {
@@ -22,6 +23,7 @@ export interface IPersonalInformation extends Document {
   middleName?: string;
   preferredName?: string;
   profilePicture?: string;
+  email: string;
   address: {
     building: string;
     street: string;
@@ -44,7 +46,8 @@ const DocumentSubSchema = new Schema<IDocumentSubSchema>({
   type: { type: String, required: true },
   url: { type: String, required: true },
   documentKey: { type: String, required: true },
-});
+  name: { type: String, required: true }
+},{ timestamps: true });
 
 const EmergencyContactSchema = new Schema<IEmergencyContact>({
   firstName: { type: String, required: true },
@@ -63,6 +66,7 @@ const personalInformationSchema: Schema = new Schema(
     middleName: { type: String },
     preferredName: { type: String },
     profilePicture: { type: String },
+    email: { type: String },
     address: {
       building: { type: String, required: true },
       street: { type: String, required: true },

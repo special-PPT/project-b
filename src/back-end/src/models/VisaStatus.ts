@@ -1,9 +1,12 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 interface IDocumentSub {
-  type: string;
+  type: string; // MIME type (e.g., 'application/pdf', 'image/jpeg')
+  docType: string; // Document type (e.g., 'OPT Receipt', 'EAD')
   url: string;
   status: string;
+  name: string;
+  documentKey?: string;
   feedback?: string;
 }
 
@@ -18,10 +21,13 @@ export interface IVisaStatus extends Document {
 
 const DocumentSubSchema = new Schema({
   type: { type: String, required: true },
+  docType: { type: String, required: true },
   url: { type: String, required: true },
   status: { type: String, required: true },
+  name: { type: String, require: true },
+  documentKey: { type: String, default: null },
   feedback: { type: String, default: null },
-});
+},{ timestamps: true });
 
 const visaStatusSchema: Schema = new Schema(
   {
