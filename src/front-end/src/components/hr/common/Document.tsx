@@ -3,6 +3,7 @@ import { Box, Typography, IconButton, useTheme } from "@mui/material";
 import DescriptionIcon from "@mui/icons-material/Description";
 import DownloadIcon from "@mui/icons-material/Download";
 import PreviewIcon from "@mui/icons-material/Preview";
+import { saveAs } from "file-saver";
 
 interface DocumentProps {
   documentName: string;
@@ -48,10 +49,11 @@ const Document: React.FC<DocumentProps> = ({
       </Box>
       <Box>
         {canDownload && (
-          <IconButton href={documentUrl} download>
+          <IconButton onClick={() => saveAs(documentUrl, "downloadedFile.pdf")}>
             <DownloadIcon sx={{ color: theme.palette.primary.dark }} />
           </IconButton>
         )}
+
         {canPreview && (
           <IconButton onClick={handlePreviewClick}>
             <PreviewIcon sx={{ color: theme.palette.primary.dark }} />

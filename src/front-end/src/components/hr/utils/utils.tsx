@@ -1,3 +1,5 @@
+import { saveAs } from "file-saver";
+
 const handleSendClick = (id: number) => {
   console.log("clicked");
 };
@@ -32,12 +34,23 @@ const actionStyle = {
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
-  const month = (date.getMonth() + 1).toString().padStart(2, '0'); // getMonth() returns 0-11
-  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
   const year = date.getFullYear();
   return `${month}/${day}/${year}`;
 };
 
+const calculateRemainingDays = (startDate: string, endDate: string): number => {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  if (start > end) {
+    return -1;
+  }
+
+  const diffTime = Math.abs(end.getTime() - start.getTime());
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+};
 
 export {
   handleSendClick,
@@ -47,4 +60,5 @@ export {
   handleApplicationClick,
   actionStyle,
   formatDate,
+  calculateRemainingDays,
 };

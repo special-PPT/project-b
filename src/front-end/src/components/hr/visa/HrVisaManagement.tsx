@@ -5,86 +5,15 @@ import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import VisaTable from "./VisaTable";
 import { actionStyle } from "../utils/utils";
 import VisaTableMobile from "./VisaTableMobile";
-
-interface Data {
-  employee_id: number;
-  name: string;
-  work_auth: string;
-  start_day: string;
-  end_day: string;
-  remaining: number;
-  next_step: string;
-}
-
-function createData(
-  employee_id: number,
-  name: string,
-  work_auth: string,
-  start_day: string,
-  end_day: string,
-  remaining: number,
-  next_step: string
-): Data {
-  return {
-    employee_id,
-    name,
-    work_auth,
-    start_day,
-    end_day,
-    remaining,
-    next_step,
-  };
-}
-
-// TODO: get data from API: this is functions generating testing data
-function generateRandomData(index: number): Data {
-  const names = [
-    "Alice",
-    "Bob",
-    "Charlie",
-    "David",
-    "Eve",
-    "Frank",
-    "Grace",
-    "Hannah",
-    "Ivan",
-    "Julia",
-    "Kevin",
-    "Luna",
-    "Morgan",
-    "Nina",
-    "Oscar",
-  ];
-  const workAuths = ["Green Card", "H1B", "OPT"];
-  const startDate = `2024-01-${10 + index}`;
-  const endDate = `2024-12-${10 + index}`;
-  const remainingDays = 365 - 10 - index;
-  const nextSteps = [
-    "Send Registration Token",
-    "Completed",
-    "Submit OPT Receipt",
-    "Submit OPT EAD",
-    "Submit OPT I-983",
-    "Submit OPT I-20",
-    "Wait for Approve",
-  ];
-
-  return createData(
-    index + 1,
-    names[index % names.length],
-    workAuths[Math.floor(Math.random() * workAuths.length)],
-    startDate,
-    endDate,
-    remainingDays,
-    nextSteps[Math.floor(Math.random() * nextSteps.length)]
-  );
-}
-const rows: Data[] = [];
-for (let i = 0; i < 15; i++) {
-  rows.push(generateRandomData(i));
-}
+import { useTypedSelector } from "../../../redux/hooks/useTypedSelector";
+import { transformEmployeeToEmployeeData } from "../data/visa/visaDataTransformUtils";
 
 export default function HrVisaManagement() {
+  const employees = useTypedSelector((state) => state.hr.employees);
+  const rows = Object.values(employees)
+    .map((employee) => transformEmployeeToEmployeeData(employee))
+    .filter((employee) => employee.work_auth === "F1(CPT/OPT)");
+
   const [currentTab, setCurrentTab] = useState("all");
   const isMobile = useMediaQuery("(max-width:600px)");
 
@@ -106,11 +35,7 @@ export default function HrVisaManagement() {
             }}
             style={bottomNavStyle}
           >
-            <BottomNavigationAction
-              label="All"
-              value="all"
-              sx={actionStyle}
-            />
+            <BottomNavigationAction label="All" value="all" sx={actionStyle} />
             <BottomNavigationAction
               label="In Progress"
               value="inProgress"
@@ -123,7 +48,7 @@ export default function HrVisaManagement() {
           )}
           {currentTab === "inProgress" && (
             <VisaTable
-              rows={rows.filter((row) => row.next_step !== "Completed")}
+              rows={rows.filter((row) => row.next_step !== "Completed" && row.next_step !== "Send Registration Token" )}
               currTab={currentTab}
             />
           )}

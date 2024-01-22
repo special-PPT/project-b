@@ -47,6 +47,17 @@ const hrSlice = createSlice({
   initialState,
   reducers: {
     // other synchronous reducers
+    updateVisaDocumentStatus: (state, action) => {
+      const { employee_id, type, status, feedback } = action.payload;
+      const employee = state.employees[employee_id];
+      if (employee && employee.visaStatus && employee.visaStatus.documents) {
+        const documentIndex = employee.visaStatus.documents.findIndex(doc => doc.type === type);
+        if (documentIndex !== -1) {
+          employee.visaStatus.documents[documentIndex].status = status;
+          employee.visaStatus.documents[documentIndex].feedback = feedback;
+        }
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchEmployeeProfiles.fulfilled, (state, action) => {
@@ -60,4 +71,5 @@ const hrSlice = createSlice({
   },
 });
 
+export const { updateVisaDocumentStatus } = hrSlice.actions;
 export default hrSlice.reducer;

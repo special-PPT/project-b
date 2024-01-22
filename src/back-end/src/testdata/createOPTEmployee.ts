@@ -11,6 +11,10 @@ import VisaStatus, { IVisaStatus } from "../models/VisaStatus";
 import { faker } from "@faker-js/faker";
 import { ObjectId } from "mongodb";
 
+const generateBiasedBoolean = (trueProbability: number): boolean => {
+  return Math.random() < trueProbability;
+};
+
 const createContact = (): IEmergencyContact => ({
   firstName: faker.person.firstName(),
   lastName: faker.person.lastName(),
@@ -46,7 +50,7 @@ const generateRandomUserData = (
       email: faker.internet.email({ firstName, lastName }),
       password: "password",
       role: "Employee",
-      isActive: faker.datatype.boolean(),
+      isActive: generateBiasedBoolean(0.7),
     };
 
     const personalInfo: Partial<IPersonalInformation> = {
@@ -73,6 +77,9 @@ const generateRandomUserData = (
         "H1B",
         "L2",
         "H4",
+        "F1(CPT/OPT)",
+        "F1(CPT/OPT)",
+        "F1(CPT/OPT)",
         "F1(CPT/OPT)",
         "F1(CPT/OPT)",
         "F1(CPT/OPT)",
@@ -120,7 +127,7 @@ const generateVisaStatusData = (
   userId: string,
   workAuth: string
 ): Partial<IVisaStatus> => {
-  if (isActive === false && workAuth !== "F1(CPT/OPT)") {
+  if (isActive === false || workAuth !== "F1(CPT/OPT)") {
     return {
       userID: new ObjectId(userId),
       visaType: "None",
@@ -135,15 +142,18 @@ const generateVisaStatusData = (
   const documentTypes = ["OPT Receipt", "OPT EAD", "I-983", "I-20"];
   const lastDocumentIndex = faker.datatype.number({
     min: 0,
-    max: documentTypes.length - 2,
+    max: documentTypes.length - 1,
   });
   let overallStatus = "Approved";
+  let status;
 
   for (let i = 0; i <= lastDocumentIndex; i++) {
     const docType = documentTypes[i];
-    let status = "Approved";
 
-    if (docType === "I-983") {
+    if (i < lastDocumentIndex) {
+      status = "Approved";
+    } else {
+      // Assign random status to the last document
       status = faker.helpers.arrayElement(["Pending", "Approved", "Rejected"]);
     }
 
@@ -155,21 +165,17 @@ const generateVisaStatusData = (
     };
 
     documents.push(document);
-
-    // Update overall status based on the most recent document
-    if (status === "Pending" || status === "Rejected") {
-      overallStatus = status;
-    }
   }
 
-  // Check if all documents are approved
-  if (documents.every((doc) => doc.status === "Approved")) {
+  if (documents.every((doc) => doc.status === "Approved" && documents.length === documentTypes.length)) {
     overallStatus = "Approved";
+  } else {
+    overallStatus = documents[documents.length - 1].status;
   }
 
   return {
     userID: new ObjectId(userId),
-    visaType: "OPT",
+    visaType: "F1(CPT/OPT)",
     status: overallStatus,
     startDate: new Date(faker.date.past()),
     endDate: new Date(faker.date.future()),

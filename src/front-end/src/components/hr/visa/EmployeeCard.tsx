@@ -14,7 +14,7 @@ import ActionButtons from "./ActionButtons";
 
 interface EmployeeCardProps {
   filterOption: string;
-  employee_id: number;
+  employee_id: string;
   name: string;
   work_auth: string;
   start_day: string;

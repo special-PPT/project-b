@@ -22,6 +22,9 @@ router.get('/:employeeId/visa-status', hrController.getEmployeeVisaStatusById);
 // Update an employee profile
 router.put("/updateProfile", hrController.updateEmployeeProfile);
 
+// Route for updating visa document status
+router.put('/updateVisaDocStatus', hrController.updateVisaDocStatus);
+
 // Default route for documentation
 router.get("/", (req, res) => {
   res.send({

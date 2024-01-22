@@ -116,6 +116,39 @@ const hrController = {
     }
   },
 
+  // update the status of a file (when hr accept/reject)
+  async updateVisaDocStatus(req: Request, res: Response) {
+    try {
+      const { employee_id, type, isAccept, feedback } = req.body;
+
+      // Find the employee's visa status
+      const visaStatus = await VisaStatus.findOne({ userID: employee_id });
+
+      if (!visaStatus) {
+        return res.status(404).send('Employee not found');
+      }
+
+      // Find the document by type
+      const document = visaStatus.documents.find(doc => doc.type === type);
+
+      if (!document) {
+        return res.status(404).send('Document not found');
+      }
+
+      // Update the document's status and feedback
+      document.status = isAccept ? 'Accepted' : 'Rejected';
+      document.feedback = feedback;
+
+      // Save the updated visa status
+      await visaStatus.save();
+
+      return res.status(200).send('Document status updated successfully');
+    } catch (error) {
+      console.error('Error updating document status:', error);
+      return res.status(500).send('Internal Server Error');
+    }
+  },
+
   // Update an employee profile (or other HR specific operations)
   async updateEmployeeProfile(req: Request, res: Response) {
     try {

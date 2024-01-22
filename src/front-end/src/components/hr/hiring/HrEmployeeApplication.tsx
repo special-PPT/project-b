@@ -77,7 +77,8 @@ export default function HrEmployeeApplication() {
           </Typography>
           <FileTable fileTable={fileTable} />
         </Box>
-        <DecisionButtons biggerButton={true}/>
+        {/* TODO: */}
+        {/* <DecisionButtons biggerButton={true}/> */}
       </Stack>
     </Container>
   );
