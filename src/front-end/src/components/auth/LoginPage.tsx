@@ -4,8 +4,11 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import React, { useState } from 'react';
 import CryptoJS from 'crypto-js';
 import axios from 'axios';
+// import axiosCookieJarSupport from 'axios-cookiejar-support';
+// import { CookieJar } from 'tough-cookie';
 
 export default function LoginPage() {
+  // axiosCookieJarSupport(axios);
   interface LoginData{
     username: string,
     password: string
@@ -29,18 +32,9 @@ export default function LoginPage() {
     // SHA256
     const hashedPasswd = CryptoJS.SHA256(loginData.password).toString();
     setHashedData({username: loginData.username, password: loginData.password});
-    // console.log(hashedData);
     axios.post('http://localhost:8000/user/login', hashedData)
     .then(res => {
       console.log(res.data);
-      if(res.data.token){
-        const token = res.data.token;
-        document.cookie = `auth-token=${token};max-age=10800;path=/`;
-      }
-      console.log(document.cookie);
-
-      // navigate('/employee/home');
-
     })
     .catch(err => {
       console.log(err);

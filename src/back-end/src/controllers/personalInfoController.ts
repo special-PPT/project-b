@@ -17,12 +17,16 @@ const personalInfoController = {
     try {
       const userId = req.params.userId;
       const updateData = req.body;
+      console.log(userId);
+      console.log(req.body);
+      // const personalInfo = await PersonalInformation.findById(userId);
 
       const updatedInfo = await PersonalInformation.findOneAndUpdate(
         { userID: userId },
         updateData,
         { new: true }
       );
+      console.log(updatedInfo);
       if (!updatedInfo) {
         return res.status(404).send("Personal information not found");
       }

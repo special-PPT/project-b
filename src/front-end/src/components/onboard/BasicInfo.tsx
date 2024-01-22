@@ -3,8 +3,19 @@ import React from 'react'
 import theme from '../../theme'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { useDispatch } from '../../redux/hooks/useDispatch';
+import { edditFirstName } from '../../redux/features/onboard/UserSlicer';
+
+
 
 export default function BasicInfo() {
+    
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        // const { id, value } = event.target;
+        // setUserInfo({ ...userInfo, [id]: value });
+        // console.log(userInfo);
+    }
+    
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [isFreetoWork, setIsFreetoWork] = React.useState<string>('');
     const [isOPT, setIsOPT] = React.useState<boolean>(false);
@@ -77,6 +88,8 @@ export default function BasicInfo() {
                         required
                         fullWidth
                         id="firstName"
+                        // onChange={handleInputChange}
+                        // onChange={(event) => dispatch(edditFirstName(event.target.value))}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -90,6 +103,7 @@ export default function BasicInfo() {
                         required
                         fullWidth
                         id="lastName"
+                        // onChange={handleInputChange}
                         // placeholder="Last Name"
                         // onChange={handleInputChange}
                     />
@@ -101,7 +115,7 @@ export default function BasicInfo() {
                         fullWidth
                         id="middleName"
                         // placeholder="Last Name"
-                        // onChange={handleInputChange}
+                        onChange={handleInputChange}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -124,7 +138,7 @@ export default function BasicInfo() {
                         fullWidth
                         id="streetAddress"
                         // placeholder="Last Name"
-                        // onChange={handleInputChange}
+                        onChange={handleInputChange}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -135,7 +149,7 @@ export default function BasicInfo() {
                         fullWidth
                         id="streetAddress2"
                         // placeholder="Last Name"
-                        // onChange={handleInputChange}
+                        onChange={handleInputChange}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -150,7 +164,7 @@ export default function BasicInfo() {
                         fullWidth
                         id="city"
                         // placeholder="Last Name"
-                        // onChange={handleInputChange}
+                        onChange={handleInputChange}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -165,7 +179,7 @@ export default function BasicInfo() {
                         fullWidth
                         id="state"
                         // placeholder="Last Name"
-                        // onChange={handleInputChange}
+                        onChange={handleInputChange}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -180,7 +194,7 @@ export default function BasicInfo() {
                         fullWidth
                         id="zipCode"
                         // placeholder="Last Name"
-                        // onChange={handleInputChange}
+                        onChange={handleInputChange}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -211,13 +225,22 @@ export default function BasicInfo() {
                             *
                         </Typography>
                     </Typography>
-                    <OutlinedInput
+                    {/* <OutlinedInput
                         required
                         fullWidth
                         id="phoneType"
                         // placeholder="Last Name"
-                        // onChange={handleInputChange}
-                    />
+                        onChange={handleInputChange}
+                    /> */}
+                    <Select
+                        id='phoneType'
+                        sx={{
+                            width: '100%',
+                        }}
+                    >
+                        <MenuItem value={"cell"}>Cell</MenuItem>
+                        <MenuItem value={"work"}>Work</MenuItem>
+                    </Select>
                 </Grid>
                 <Grid item xs={12}>
                     <Typography variant="body1" component="span">

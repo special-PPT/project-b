@@ -18,11 +18,11 @@ mongoose.connect(process.env.MONGODB_URL!)
 
 // CORS配置
 const corsOptions = {
-  // origin: 'http://127.0.0.1:3000', // 允许的源
-  credentials: true, // 允许跨域请求携带凭据
+  origin: '*', // 指定接受请求的源
+  credentials: true // 允许跨源请求发送凭证
 };
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(CookieParser());
 app.use(express.json());
 
