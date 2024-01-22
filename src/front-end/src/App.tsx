@@ -28,7 +28,7 @@ function App() {
     //     {/* <EmergencyContact />
     // <Footer /> */}
     //   </ThemeProvider>
-    <Provider store={store}>
+    // <Provider store={store}>
       <Router>
         <ThemeProvider theme={theme}>
           <Routes>
@@ -108,7 +108,7 @@ function App() {
           </Routes>
         </ThemeProvider>
       </Router>
-    </Provider>
+    // </Provider>
   );
 }
 
