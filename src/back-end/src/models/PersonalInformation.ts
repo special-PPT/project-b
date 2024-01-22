@@ -1,12 +1,12 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-interface IDocumentSubSchema {
+export interface IDocumentSubSchema {
   type: string;
   url: string;
   documentKey: string;
 }
 
-interface IEmergencyContact {
+export interface IEmergencyContact {
   firstName: string;
   lastName: string;
   middleName?: string;
@@ -22,6 +22,7 @@ export interface IPersonalInformation extends Document {
   middleName?: string;
   preferredName?: string;
   profilePicture?: string;
+  ssn: string;
   address: {
     building: string;
     street: string;
@@ -35,6 +36,7 @@ export interface IPersonalInformation extends Document {
   };
   dateOfBirth: Date;
   gender: string;
+  reference: IEmergencyContact;
   emergencyContacts: IEmergencyContact[];
   workAuth: string;
   documents: IDocumentSubSchema[];
@@ -63,6 +65,7 @@ const personalInformationSchema: Schema = new Schema(
     middleName: { type: String },
     preferredName: { type: String },
     profilePicture: { type: String },
+    ssn: { type: String },
     address: {
       building: { type: String, required: true },
       street: { type: String, required: true },
@@ -76,6 +79,7 @@ const personalInformationSchema: Schema = new Schema(
     },
     dateOfBirth: { type: Date, required: true },
     gender: { type: String, required: true },
+    reference: { type: EmergencyContactSchema, require: true },
     emergencyContacts: [EmergencyContactSchema],
     workAuth: { type: String, required: true },
     documents: [DocumentSubSchema],
