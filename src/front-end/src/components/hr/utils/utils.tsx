@@ -1,5 +1,3 @@
-import { saveAs } from "file-saver";
-
 const handleSendClick = (id: number) => {
   console.log("clicked");
 };
@@ -52,6 +50,41 @@ const calculateRemainingDays = (startDate: string, endDate: string): number => {
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 };
 
+async function sendNotificationEmail(
+  email: string,
+  nextStep: string
+): Promise<void> {
+  if (nextStep.startsWith("Submit")) {
+    const subject = nextStep; // Subject with the "Submit" keyword and the document name
+    const text =
+      "Login to your account at 'http://localhost:3000/login' to submit the document.";
+    const html = `<p>Login to your account at <a href='http://localhost:3000/login'>http://localhost:3000/login</a> to submit the document.</p>`;
+
+    try {
+      const response = await fetch(
+        "http://localhost:8000/hr/send-notifications",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ toUser: email, subject, text, html }),
+        }
+      );
+
+      const result = await response.json();
+      if (response.ok) {
+        alert("Notification has been sent");
+      } else {
+        throw new Error(result.message || "Failed to send email");
+      }
+    } catch (error) {
+      console.error("Failed to send email", error);
+      alert("Failed to send notification");
+    }
+  }
+}
+
 export {
   handleSendClick,
   handleLinkClick,
@@ -61,4 +94,5 @@ export {
   actionStyle,
   formatDate,
   calculateRemainingDays,
+  sendNotificationEmail,
 };

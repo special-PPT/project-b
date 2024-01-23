@@ -21,6 +21,30 @@ async function sendEmail(toUser: string, token: string){
     });
     console.log("Message sent: %s", info.messageId);
 } 
+
+async function sendEmailNotifs(
+  toUser: string,
+  subject: string,
+  text: string,
+  html: string
+): Promise<boolean> {
+  try {
+    const info = await transporter.sendMail({
+      from: `"Wok Day" <${process.env.GMAIL_USERNAME}>`,
+      to: toUser,
+      subject: subject,
+      text: text,
+      html: html,
+    });
+    console.log("Notification email sent: %s", info.messageId);
+    return true;
+  } catch (error) {
+    console.error("Error sending notification email: ", error);
+    return false;
+  }
+}
+
 module.exports = {
-    sendEmail
+    sendEmail,
+    sendEmailNotifs
 }

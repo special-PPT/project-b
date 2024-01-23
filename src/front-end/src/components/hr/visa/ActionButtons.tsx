@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import FilesModal from "./FilesModal";
 import { useTheme } from "@mui/material";
+import { useTypedSelector } from "../../../redux/hooks/useTypedSelector";
+import { sendNotificationEmail } from "../utils/utils";
+import CircularProgress from "@mui/material/CircularProgress";
 
 interface ActionButtonsProps {
   employeeId: string;
@@ -13,16 +16,19 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   nextStep,
 }) => {
   const theme = useTheme();
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const employees = useTypedSelector((state) => state.hr.employees);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSendToken = () => {
-    // Placeholder for API call
     alert("Token has been sent");
   };
 
-  const handleSendNotification = () => {
-    // Placeholder for API call
-    alert("Notification has been sent");
+  const handleSendNotification = async () => {
+    setIsLoading(true); 
+    let email = employees[employeeId].email;
+    await sendNotificationEmail(email, nextStep);
+    setIsLoading(false); 
   };
 
   const handlePreview = () => {
@@ -32,6 +38,11 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+  let buttonContent: React.ReactNode = "Send Notification";
+  if (isLoading) {
+    buttonContent = <CircularProgress size={24} />;
+  }
 
   let button;
   const buttonStyle = {
@@ -63,9 +74,10 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
       <Button
         variant="contained"
         onClick={handleSendNotification}
+        disabled={isLoading}
         sx={buttonStyle}
       >
-        Send Notification
+        {buttonContent}
       </Button>
     );
   }

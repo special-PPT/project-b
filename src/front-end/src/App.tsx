@@ -25,6 +25,7 @@ import HrEmployeeApplication from "./components/hr/hiring/HrEmployeeApplication"
 function App() {
   const dispatch = useDispatch();
 
+  // TODO: need route protection here (?)
   useEffect(() => {
     dispatch(fetchEmployeeProfiles());
   }, [dispatch]);

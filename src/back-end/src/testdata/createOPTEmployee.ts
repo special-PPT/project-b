@@ -47,6 +47,7 @@ const generateRandomUserData = (
 
     const user: Partial<IUser> = {
       username: faker.internet.userName({ firstName, lastName }),
+      // email: "chenyanru0812@gmail.com",
       email: faker.internet.email({ firstName, lastName }),
       password: "password",
       role: "Employee",

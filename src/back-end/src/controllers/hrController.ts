@@ -5,7 +5,7 @@ import PersonalInformation from "../models/PersonalInformation";
 import VisaStatus from "../models/VisaStatus";
 import RegistrationToken from "../models/RegistrationToken";
 const { registTokenGen } = require("../config/registTokenGen");
-const { sendEmail } = require("../config/mailConfig");
+const { sendEmail, sendEmailNotifs } = require("../config/mailConfig");
 
 const hrController = {
   // Generate and send a registration token
@@ -47,6 +47,19 @@ const hrController = {
         .json({ message: "Registration token generated and sent" });
     } catch (error) {
       res.status(500).json({ message: "Error generating token", error });
+    }
+  },
+
+  // api for hr to send notification email to employee
+  async sendEmailNotifications(req: Request, res: Response) {
+    try {
+      const { toUser, subject, text, html } = req.body;
+      await sendEmailNotifs(toUser, subject, text, html);
+  
+      res.status(200).json({ message: "Email sent successfully" });
+    } catch (error) {
+      console.error("Error sending email: ", error);
+      res.status(500).json({ message: "Error sending email", error });
     }
   },
 

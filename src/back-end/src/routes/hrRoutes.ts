@@ -6,6 +6,9 @@ const router = express.Router();
 // Generate and send a registration token
 router.post("/generateToken", hrController.generateToken);
 
+// Define the route for sending email notifications
+router.post('/send-notifications', hrController.sendEmailNotifications);
+
 // View all employee profiles
 router.get("/viewProfiles", hrController.viewEmployeeProfiles);
 
