@@ -5,18 +5,21 @@ import axios from 'axios';
 
 interface FileUploadButtonProps {
     documentType: string; // Assuming you're passing this as a prop
+    status: string;
 }
 
-const FileUploadButton: React.FC<FileUploadButtonProps> = ({ documentType }) => {
+const FileUploadButton: React.FC<FileUploadButtonProps> = ({ documentType, status }) => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [filename, setFilename] = useState<string>("");
-    const userId = '65ac512c16b08c4a80c9b78c'; // Replace with actual user ID
+    const userId = '65af03d80b1107824b6b514c'; // Replace with actual user ID
     const [uploadProgress, setUploadProgress] = useState<number>(0);
 
     const uploadFile = async (file: File, userId: string) => {
         const formData = new FormData();
         formData.append('document', file);
-        formData.append('documentType', documentType); // Append document type
+        formData.append('documentType', documentType);
+        formData.append('status', status);
+        formData.append('name', file.name);
 
         try {
             const response = await axios.post(`http://localhost:8000/visa/uploadDocument/${userId}`, formData, {

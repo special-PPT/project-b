@@ -2,11 +2,11 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import { Tabs, Tab, Box, Typography, Stack, Button, Container, useMediaQuery, Card, CardHeader, Chip, IconButton } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import CheckIcon from "@mui/icons-material/Check";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { alpha } from "@mui/material/styles";
+import Divider from '@mui/material/Divider';
 import FileUploadButton from "./common/UploadFileButton";
 import Document from "./common/Document";
 import { CheckCircle, Warning, HourglassEmpty } from '@mui/icons-material';
@@ -102,13 +102,13 @@ const documentTypes = ["OPT Receipt", "OPT EAD", "I-983", "I-20"];
 
 const initializeDocuments = (existingDocuments: DocumentSub[]): DocumentSub[] => {
   return documentTypes.map(type => {
-    const foundDoc = existingDocuments.find(doc => doc.type === type);
+    const foundDoc = existingDocuments.find(doc => doc.docType === type);
     if (foundDoc) return foundDoc;
 
     // If a document of a specific type is not found, create a default one
     return {
-      type,
-      docType: '',
+      type: '',
+      docType: type,
       url: '',
       status: 'Not_Submitted',
       name: '',
@@ -156,33 +156,7 @@ function CustomTabPanel(props: TabPanelProps) {
               <Typography>Drag and drop here</Typography>
             </Stack>
           </Box>
-          {/* <Box sx={{ m: 2 }}>
-            <Button
-              sx={{
-                color: "black",
-                width: 100,
-                backgroundColor: "white",
-                mr: 4,
-                border: "1px solid #3a4d8f",
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              sx={{
-                color: "white",
-                backgroundColor: "#3a4d8f",
-                width: 100,
-                "&:hover": {
-                  backgroundColor: "darkblue",
-                },
-                border: "1px solid #3a4d8f",
-              }}
-            >
-              Submit
-            </Button>
-          </Box> */}
-          <FileUploadButton documentType="Not_Submitted" />
+          <FileUploadButton documentType={document.docType} status='Pending'/>
         </Box>
       ) : (
         <><Box
@@ -214,12 +188,6 @@ function CustomTabPanel(props: TabPanelProps) {
                 right: 0,
               }}
             >
-              {/* <Button>
-                <DownloadIcon />
-              </Button>
-              <Button>
-                <RemoveRedEyeIcon />
-              </Button> */}
               <IconButton href={document.url} download>
             <DownloadIcon sx={{ color: theme.palette.primary.dark }} />
           </IconButton>
@@ -242,39 +210,11 @@ function CustomTabPanel(props: TabPanelProps) {
             </Box>
           </Box>
           <Box sx={{ position: "relative", p: 3 }}>
-            {(document.status === DocumentStatus.Approved) ? (
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  color: "green",
-                  position: "absolute",
-                  bottom: 10,
-                  right: 10,
-                }}
-              >
-                <Typography>Approved</Typography>
-                <CheckIcon />
-              </Box>
-            ) : (
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  color: "red",
-                  position: "absolute",
-                  bottom: 10,
-                  right: 10,
-                }}
-              >
-                <Typography>Rejected</Typography>
-                <ErrorOutlineIcon />
-              </Box>
-            )}
+            <DocStatus doc={document}/>
           </Box>
           {document.status === DocumentStatus.Rejected && (
             <>
-              <FileUploadButton documentType={document.type} />
+              <FileUploadButton documentType={document.type} status={document.status}/>
             </>
 
           )}
@@ -294,7 +234,7 @@ function a11yProps(index: number) {
 export default function EmployeeVisaManagement() {
   const [currentTab, setCurrentTab] = useState(0);
   const [visaStatusData, setVisaStatusData] = useState<VisaStatusData | null>(null);
-  const userId = '65ade685726433669abc7518';
+  const userId = '65af03d80b1107824b6b514c';
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const initializedDocuments: DocumentSub[] = initializeDocuments(visaStatusData?.documents ?? []);
@@ -395,9 +335,13 @@ export default function EmployeeVisaManagement() {
 
 
                 {doc.status === "Rejected" && (
-                  <FileUploadButton documentType={doc.docType} />
+                  <FileUploadButton documentType={doc.docType} status="Pending" />
                 )}
+                <Divider sx={{
+                  mt: '20px'
+                }}/>
               </Box>
+
 
             ))}
             {visaStatusData.documents.length > 0 && visaStatusData.documents.length < 4 && visaStatusData.documents[visaStatusData.documents.length - 1].status === "Approved" && (
@@ -405,7 +349,7 @@ export default function EmployeeVisaManagement() {
                 marginTop: '40px',
               }}>
                 <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{documentTypes[visaStatusData.documents.length]}</Typography>
-                <FileUploadButton documentType="Not_Submitted" />
+                <FileUploadButton documentType={documentTypes[visaStatusData.documents.length]} status="Pending" />
               </Box>
             )}
           </Box>
@@ -430,7 +374,7 @@ export default function EmployeeVisaManagement() {
               initializedDocuments.map((doc, index) => {
                 return (
                   <CustomTabPanel
-                    key={doc.type}
+                    key={doc.docType}
                     value={currentTab}
                     index={index}
                     document={doc}

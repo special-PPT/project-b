@@ -57,13 +57,15 @@ const visaController = {
     const file = req.file as Express.MulterS3.File;
     const userId = req.params.userId;
     const documentType = req.body.documentType; // Assuming this is passed along with the file
+    const status = req.body.status;
     const documentKey = file.key;
+    const fileName = req.body.name;
   
     try {
       // Check if the document of this type already exists for the user
       const existingDocument = await VisaStatus.findOne({
         userID: userId,
-        'documents.type': documentType
+        "documents.docType": documentType
       });
   
       let updatedInfo;
@@ -71,12 +73,14 @@ const visaController = {
       if (existingDocument) {
         // Update the existing document
         updatedInfo = await VisaStatus.findOneAndUpdate(
-          { userID: userId, 'documents.type': documentType },
+          { userID: userId, "documents.docType": documentType },
           {
             $set: {
               'documents.$.url': file.location,
-              'documents.$.name': file.filename,
-              'documents.$.documentKey': documentKey
+              'documents.$.name': fileName,
+              'documents.$.documentKey': documentKey,
+              'documents.$.status': 'Pending',
+              'documents.$.feedback': ''
             },
           },
           { new: true }
@@ -88,10 +92,11 @@ const visaController = {
           {
             $push: {
               documents: {
-                type: documentType,
+                docType: documentType,
                 url: file.location,
-                name: file.filename,
-                documentKey: documentKey
+                name: fileName,
+                documentKey: documentKey,
+                status: status,
               },
             },
           },
