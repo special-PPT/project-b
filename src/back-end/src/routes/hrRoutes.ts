@@ -9,18 +9,12 @@ router.post("/generateToken", hrController.generateToken);
 // Define the route for sending email notifications
 router.post('/send-notifications', hrController.sendEmailNotifications);
 
-// View all employee profiles
-router.get("/viewProfiles", hrController.viewEmployeeProfiles);
-
 // get all employees' information for display
 // used by HR
 router.get("/getAllEmployeeProfiles", hrController.getAllEmployeeProfiles);
 
-// Route for getting personal information of a specific employee by ID
-router.get('/:employeeId/personal-info', hrController.getEmployeePersonalInfoById);
-
-// Route for getting visa status of a specific employee by ID
-router.get('/:employeeId/visa-status', hrController.getEmployeeVisaStatusById);
+// get all information from HRManagement (used by History component)
+router.get("/get-hrmanagement-data", hrController.getAllHRManagementData);
 
 // Update an employee profile
 router.put("/updateProfile", hrController.updateEmployeeProfile);

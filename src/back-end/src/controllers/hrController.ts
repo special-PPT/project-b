@@ -88,18 +88,6 @@ const hrController = {
     }
   },
 
-  // View all employee profiles
-  async viewEmployeeProfiles(req: Request, res: Response) {
-    try {
-      const profiles = await User.find({});
-      res.status(200).json(profiles);
-    } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Error retrieving employee profiles", error });
-    }
-  },
-
   // get all employees' information for display
   // used by HR: id, name, ssn, work auth, phone, email
   async getAllEmployeeProfiles(req: Request, res: Response) {
@@ -113,44 +101,6 @@ const hrController = {
     } catch (error) {
       res.status(500).json({
         message: "Error retrieving all employee personal info",
-        error,
-      });
-    }
-  },
-
-  async getEmployeePersonalInfoById(req: Request, res: Response) {
-    try {
-      const employeeId = req.params.employeeId;
-      const personalInfo = await PersonalInformation.findOne({
-        userID: employeeId,
-      }).populate("documents");
-
-      if (!personalInfo) {
-        return res.status(404).json({ message: "Employee not found" });
-      }
-
-      res.status(200).json(personalInfo);
-    } catch (error) {
-      res.status(500).json({
-        message: "Error retrieving employee personal info",
-        error,
-      });
-    }
-  },
-
-  async getEmployeeVisaStatusById(req: Request, res: Response) {
-    try {
-      const employeeId = req.params.employeeId;
-      const visaStatus = await VisaStatus.findOne({ userID: employeeId });
-
-      if (!visaStatus) {
-        return res.status(404).json({ message: "Employee not found" });
-      }
-
-      res.status(200).json(visaStatus);
-    } catch (error) {
-      res.status(500).json({
-        message: "Error retrieving employee visa status",
         error,
       });
     }
@@ -186,6 +136,25 @@ const hrController = {
     } catch (error) {
       console.error("Error updating document status:", error);
       return res.status(500).send("Internal Server Error");
+    }
+  },
+
+  // get all information from HRManagement
+  async getAllHRManagementData(req: Request, res: Response) {
+    try {
+      const hrUserId = req.query.hrUserId;
+
+      // Find the HRManagement document for the HR user
+      const hrData = await HRManagement.findOne({ userID: hrUserId })
+        .populate("employeeProfiles")
+        .populate("registrationTokens");
+      
+      res.status(200).json(hrData);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error retrieving HR management data",
+        error,
+      });
     }
   },
 

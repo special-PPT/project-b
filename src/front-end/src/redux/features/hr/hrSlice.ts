@@ -69,12 +69,11 @@ const hrSlice = createSlice({
     builder.addCase(fetchEmployeeProfiles.fulfilled, (state, action) => {
       state.employees = action.payload;
       console.log(state.employees);
-      state.error = null; // Clear any existing errors on successful fetch
+      state.error = null;
     });
     builder.addCase(fetchEmployeeProfiles.rejected, (state, action) => {
       state.error = action.error.message || "Failed to fetch employee profiles";
     });
-    // Handle pending state as needed
   },
 });
 

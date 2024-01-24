@@ -107,3 +107,29 @@ export interface HrEmployeeProfileData {
   phone: string;
   email: string;
 }
+
+interface User {
+  createdAt: string;
+  updatedAt: string;
+  email: string;
+  isActive: boolean;
+  onboardingApplication: string;
+  password: string;
+  personalInformation: string;
+  registrationToken: string;
+  role: string;
+  username: string;
+  visaStatus: string;
+  __v: number;
+  _id: string;
+}
+
+export interface HrManagement {
+  createdAt: string;
+  updatedAt: string;
+  userID: string;
+  __v: number;
+  _id: string;
+  employeeProfiles: User[]; 
+  registrationTokens: RegistrationToken[];
+}

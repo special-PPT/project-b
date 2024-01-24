@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from 'react';
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -6,39 +6,20 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-
-interface HistoryRow {
-  email: string;
-  name: string;
-  registrationLink: string;
-  status: string;
-}
-
-function createData(
-  email: string,
-  name: string,
-  registrationLink: string,
-  status: string
-): HistoryRow {
-  return { email, name, registrationLink, status };
-}
-
-const rows = [
-  createData(
-    "john.doe@example.com",
-    "John Doe",
-    "http://example.com/register/123",
-    "Submitted"
-  ),
-  createData(
-    "jane.smith@example.com",
-    "Jane Smith",
-    "http://example.com/register/456",
-    "Not Submitted"
-  ),
-];
+import { getHrManagementData } from "../data/hiring/hiringDataTransformUtils";
+import { HistoryRow } from '../data/hiring/EmployeeDataInterfaces';
 
 export default function History() {
+  // TODO: get hr id from cookie
+  const [rows, setRows] = useState<HistoryRow[]>([]);
+  useEffect(() => {
+    async function fetchData() {
+      const data = await getHrManagementData("65b04d2ea01027291e2cc4d2");
+      setRows(data);
+    }
+
+    fetchData();
+  }, []); 
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
