@@ -6,8 +6,12 @@ import applicationRoutes from './routes/applicationRoutes';
 import visaRoutes from './routes/visaRoutes';
 import hrRoutes from './routes/hrRoutes';
 import cors from 'cors'; 
+import cookieParser from 'cookie-parser';
+
 require('dotenv').config();
 const app = express();
+
+app.use(cookieParser());
 
 
 // Test Email
@@ -20,6 +24,7 @@ mongoose.connect(process.env.MONGODB_URL!)
 
 // Middleware to parse JSON
 const corsOptions = {
+  origin: 'http://localhost:3000',
   credentials: true, // 允许跨域请求携带凭据
 };
 

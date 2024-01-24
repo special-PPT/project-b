@@ -11,7 +11,7 @@ interface FileUploadButtonProps {
 const FileUploadButton: React.FC<FileUploadButtonProps> = ({ documentType, status }) => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [filename, setFilename] = useState<string>("");
-    const userId = '65af03d80b1107824b6b514c'; // Replace with actual user ID
+    const userId = '65af6dea15c6d681995dcd97'; // Replace with actual user ID
     const [uploadProgress, setUploadProgress] = useState<number>(0);
 
     const uploadFile = async (file: File, userId: string) => {
