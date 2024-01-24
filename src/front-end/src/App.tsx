@@ -41,7 +41,8 @@ function App() {
         <ThemeProvider theme={theme}>
           <Routes>
             {/* Auth Routes */}
-            <Route path="/login" element={<AuthLayout />} />
+            <Route path="/login" element={<AuthLayout content="login"/>} />
+            <Route path="/signup/:token" element={<AuthLayout content=""/>} />
             {/* Onboarding routes */}
             <Route path="/onboarding" element={<OnboardingLayout />} />
             {/* Employee routes */}

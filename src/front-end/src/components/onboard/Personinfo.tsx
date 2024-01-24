@@ -1,10 +1,23 @@
 import { Box, Button, Container, Grid, OutlinedInput, Typography } from '@mui/material'
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
+import { UserContext } from './UserContext';
 
 type PersonProps = {
-  tableName: string;
+  tableName: string,
+  index?: number,
 };
-const PersonInfo: React.FC<PersonProps> = ({ tableName }) => {
+const PersonInfo: React.FC<PersonProps> = ({ tableName, index }) => {
+    const [dbname, setDbname] = React.useState('reference');
+    const { userInfo, setUserInfo, handleChange } = useContext(UserContext);
+    useEffect(() => {
+        if(tableName === "Reference"){
+            setDbname('reference')
+        }else if(tableName.includes("Emergency Contact")){
+            setDbname(`emergencyContacts.${index}`)
+        }
+    }
+    , [tableName]);
+
   return (
     <Container>
         <Box
@@ -18,7 +31,7 @@ const PersonInfo: React.FC<PersonProps> = ({ tableName }) => {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                     <Typography variant="h5" component="h1" gutterBottom>
-                        {tableName}
+                        {tableName} {index? index + 1 : null}
                     </Typography>
               </Grid>
               <Grid item xs={12}
@@ -32,7 +45,8 @@ const PersonInfo: React.FC<PersonProps> = ({ tableName }) => {
                     <OutlinedInput
                         required
                         fullWidth
-                        id="firstName"
+                        id={dbname + ".firstName"}
+                        onChange={handleChange}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -45,22 +59,11 @@ const PersonInfo: React.FC<PersonProps> = ({ tableName }) => {
                     <OutlinedInput
                         required
                         fullWidth
-                        id="lastName"
+                        id={dbname + ".lastName"}
+                        onChange={handleChange}
                     />
                 </Grid>
-                <Grid item xs={12}>
-                    <Typography variant="body1" component="span">
-                        Middle Name
-                    </Typography>
-                    <OutlinedInput
-                        required
-                        fullWidth
-                        id="middleName"
-                        // placeholder="Last Name"
-                        // onChange={handleInputChange}
-                    />
-                </Grid>
-                {/* Phone Number Required** */}
+                
                 <Grid item xs={12}>
                     <Typography variant="body1" component="span">
                         Phone Number&nbsp;
@@ -71,7 +74,8 @@ const PersonInfo: React.FC<PersonProps> = ({ tableName }) => {
                     <OutlinedInput
                         required
                         fullWidth
-                        id="phoneNumber"
+                        id={dbname + ".phone"}
+                        onChange={handleChange}
                     />
                   </Grid>
                   {/* Email Required** */}
@@ -85,7 +89,8 @@ const PersonInfo: React.FC<PersonProps> = ({ tableName }) => {
                     <OutlinedInput
                         required
                         fullWidth
-                        id="email"
+                        id={dbname + ".email"}
+                        onChange={handleChange}
                     />
                   </Grid>
                   {/* Relationship Required** */}
@@ -99,7 +104,8 @@ const PersonInfo: React.FC<PersonProps> = ({ tableName }) => {
                     <OutlinedInput
                         required
                         fullWidth
-                        id="relationship"
+                        id={dbname + ".relationship"}
+                        onChange={handleChange}
                     />
                   </Grid>
             </Grid>  
