@@ -9,19 +9,10 @@ import { StyledPaper } from "../../../styles/hr/profile";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 import { visaStyles } from "../../../styles/hr/visaTableMobile";
-
-interface Data {
-  employee_id: number;
-  name: string;
-  work_auth: string;
-  start_day: string;
-  end_day: string;
-  remaining: number;
-  next_step: string;
-}
+import { EmployeeDataInterface } from "../data/visa/EmployeeDataInterfaces";
 
 interface VisaTableProps {
-  rows: Data[];
+  rows: EmployeeDataInterface[];
 }
 
 const VisaTableMobile: React.FC<VisaTableProps> = ({ rows }) => {

@@ -5,7 +5,7 @@ import { Card, CardContent, Typography, Divider } from "@mui/material";
 import { handleRowClick } from "../utils/utils";
 
 interface EmployeeCardProps {
-  employee_id: number;
+  employee_id: string;
   name: string;
   ssn: string;
   work_auth: string;

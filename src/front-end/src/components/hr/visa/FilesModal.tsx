@@ -11,19 +11,12 @@ import CloseIcon from "@mui/icons-material/Close";
 import { visaFileModalStyle } from "../../../styles/hr/visaTableMobile";
 import Document from "../common/Document";
 import DecisionButtons from "../common/FileDecision";
-
-interface FileData {
-  name: string;
-  modifiedDate: string;
-  size: string;
-  canDownload: boolean;
-  canPreview: boolean;
-  documentUrl: string;
-}
+import { useTypedSelector } from "../../../redux/hooks/useTypedSelector";
+import { transformVisaDocuments } from "../data/visa/visaDataTransformUtils";
 
 interface FilesModalProps {
   currTab: string;
-  employee_id: number;
+  employee_id: string;
   open: boolean;
   onClose: () => void;
 }
@@ -34,28 +27,10 @@ const FilesModal: React.FC<FilesModalProps> = ({
   open,
   onClose,
 }) => {
-  const [files, setFiles] = useState<FileData[]>([]);
-
-  const generateRandomFiles = (): FileData[] => {
-    const randomFiles: FileData[] = [];
-    for (let i = 0; i < 5; i++) {
-      randomFiles.push({
-        name: `File_${i + 1}`,
-        modifiedDate: `2023-07-${Math.floor(Math.random() * 30) + 1}`,
-        size: `${Math.floor(Math.random() * 100) + 1}kb`,
-        canDownload: Math.random() < 0.9,
-        canPreview: Math.random() < 0.9,
-        documentUrl: "https://example.com/file.pdf", // TODO:
-      });
-    }
-    return randomFiles;
-  };
-
-  useEffect(() => {
-    if (open) {
-      setFiles(generateRandomFiles());
-    }
-  }, [open]);
+  const employees = useTypedSelector((state) => state.hr.employees);
+  const employee =
+    employee_id && employees[employee_id] ? employees[employee_id] : undefined;
+  const files = employee ? transformVisaDocuments(employee) : [];
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -77,12 +52,14 @@ const FilesModal: React.FC<FilesModalProps> = ({
               <Document
                 documentName={file.name}
                 lastModifiedDate={file.modifiedDate}
-                documentSize={file.size}
+                documentSize={file.status}
                 canDownload={file.canDownload}
                 canPreview={file.canPreview}
                 documentUrl={file.documentUrl}
               />
-              {currTab === "inProgress" && <DecisionButtons />}
+              {currTab === "inProgress" && file.status === "Pending" && (
+                <DecisionButtons employeeId={employee_id} type={file.name} />
+              )}
             </ListItem>
           ))}
         </List>

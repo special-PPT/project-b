@@ -16,6 +16,7 @@ import {
 import DescriptionIcon from "@mui/icons-material/Description";
 import FilesModal from "./FilesModal";
 import ActionButtons from "./ActionButtons";
+import { EmployeeDataInterface } from "../data/visa/EmployeeDataInterfaces";
 
 interface Column {
   id:
@@ -44,18 +45,8 @@ const columns: readonly Column[] = [
   { id: "documents", label: "Documents", minWidth: 50 },
 ];
 
-interface Data {
-  employee_id: number;
-  name: string;
-  work_auth: string;
-  start_day: string;
-  end_day: string;
-  remaining: number;
-  next_step: string;
-}
-
 interface VisaTableProps {
-  rows: Data[];
+  rows: EmployeeDataInterface[];
   currTab: string;
 }
 
@@ -66,7 +57,7 @@ const VisaTable: React.FC<VisaTableProps> = ({ rows, currTab }) => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currSelectedId, setCurrSelectedId] = useState(0);
+  const [currSelectedId, setCurrSelectedId] = useState("");
 
   const handleRowClick = (employeeId: String) => {
     const url = `/hr/employee-profile/${employeeId}`;
@@ -88,7 +79,7 @@ const VisaTable: React.FC<VisaTableProps> = ({ rows, currTab }) => {
     setSearchQuery(query.toLowerCase());
   };
 
-  const handleOpenModal = (id: number) => {
+  const handleOpenModal = (id: string) => {
     setCurrSelectedId(id);
     setIsModalOpen(true);
   };
@@ -96,6 +87,16 @@ const VisaTable: React.FC<VisaTableProps> = ({ rows, currTab }) => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+  const updatedColumns = columns.map((column, index, array) => {
+    if (index === array.length - 1) {
+      return {
+        ...column,
+        label: currTab === "inProgress" ? "Action" : "Documents",
+      };
+    }
+    return column;
+  });
 
   const filteredRows = rows
     .filter((row) => {
@@ -116,7 +117,7 @@ const VisaTable: React.FC<VisaTableProps> = ({ rows, currTab }) => {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              {columns.map((column) => (
+              {updatedColumns.map((column) => (
                 <StyledHeaderCell
                   key={column.id}
                   align={column.align}

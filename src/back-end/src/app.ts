@@ -1,34 +1,35 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import userRoutes from './routes/userRoutes';
-import personalInfoRoutes from './routes/personalInfoRoutes'; 
-import applicationRoutes from './routes/applicationRoutes'; 
+import personalInfoRoutes from './routes/personalInfoRoutes';
+import applicationRoutes from './routes/applicationRoutes';
 import visaRoutes from './routes/visaRoutes';
 import hrRoutes from './routes/hrRoutes';
 import cors from 'cors'; 
 import cookieParser from 'cookie-parser';
 
 require('dotenv').config();
+const CookieParser = require('cookie-parser');
+
 const app = express();
 
 app.use(cookieParser());
 
+app.use(cookieParser());
 
-// Test Email
-// const { sendEmail } = require('./config/mailConfig');
-// sendEmail('zhengmao@pdx.edu', '1234567890');
-// Connect to MongoDB
+// 连接到MongoDB
 mongoose.connect(process.env.MONGODB_URL!)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Could not connect to MongoDB', err));
 
-// Middleware to parse JSON
+// CORS配置
 const corsOptions = {
   origin: 'http://localhost:3000',
   credentials: true, // 允许跨域请求携带凭据
 };
 
 app.use(cors(corsOptions));
+app.use(CookieParser());
 app.use(express.json());
 
 // Built-in middleware for URL-encoded data
@@ -41,10 +42,12 @@ app.use('/application', applicationRoutes);
 app.use('/visa', visaRoutes);
 app.use('/hr', hrRoutes);
 
-// Handling Not Found Routes
+// 处理不存在的路由
 app.use((req, res, next) => {
   res.status(404).send('Sorry, that route does not exist.');
 });
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+export default app;

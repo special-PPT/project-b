@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect } from 'react';
+import { useDispatch } from './redux/hooks/useDispatch';
+import { fetchEmployeeProfiles } from './redux/features/hr/hrSlice';
 import "./App.css";
 // import LoginPage from './components/auth/loginPage';
 import { ThemeProvider } from "@mui/material";
@@ -19,94 +21,102 @@ import ProfileScreen from "./components/hr/profile/ProfileScreen";
 import HrVisaManagement from "./components/hr/visa/HrVisaManagement";
 import HrHiringManagement from "./components/hr/hiring/HrHiringManagement";
 import HrEmployeeApplication from "./components/hr/hiring/HrEmployeeApplication";
-
+import { Provider } from "react-redux";
+import store from "./redux/store/store";
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchEmployeeProfiles());
+  }, [dispatch]);
+
   return (
     //   <ThemeProvider theme={theme}>
     //     <OnBoardingSteper />
     //     {/* <EmergencyContact />
     // <Footer /> */}
     //   </ThemeProvider>
+    // <Provider store={store}>
+      <Router>
+        <ThemeProvider theme={theme}>
+          <Routes>
+            {/* Auth Routes */}
+            <Route path="/login" element={<AuthLayout />} />
+            {/* Onboarding routes */}
+            <Route path="/onboarding" element={<OnboardingLayout />} />
+            {/* Employee routes */}
+            <Route
+              path="/employee/home"
+              element={
+                <DashboardLayout role="employee">
+                  <EmployeeHome />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/employee/profile"
+              element={
+                <DashboardLayout role="employee">
+                  <EmployeeProfile />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/employee/visa-management"
+              element={
+                <DashboardLayout role="employee">
+                  <EmployeeVisaManagement />
+                </DashboardLayout>
+              }
+            />
 
-    <Router>
-      <ThemeProvider theme={theme}>
-        <Routes>
-          {/* Auth Routes */}
-          <Route path="/login" element={<AuthLayout />} />
-          {/* Onboarding routes */}
-          <Route path="/onboarding" element={<OnboardingLayout />} />
-          {/* Employee routes */}
-          <Route
-            path="/employee/home"
-            element={
-              <DashboardLayout role="employee">
-                <EmployeeHome />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/employee/profile"
-            element={
-              <DashboardLayout role="employee">
-                <EmployeeProfile />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/employee/visa-management"
-            element={
-              <DashboardLayout role="employee">
-                <EmployeeVisaManagement />
-              </DashboardLayout>
-            }
-          />
+            {/* HR routes */}
+            <Route
+              path="/hr/home"
+              element={
+                <DashboardLayout role="hr">
+                  <HrEmployeeProfiles />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/hr/employee-profiles"
+              element={
+                <DashboardLayout role="hr">
+                  <HrEmployeeProfiles />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/hr/visa-management"
+              element={
+                <DashboardLayout role="hr">
+                  <HrVisaManagement />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/hr/hiring-management"
+              element={
+                <DashboardLayout role="hr">
+                  <HrHiringManagement />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/hr/employee-profile/:employeeId"
+              element={<ProfileScreen />}
+            />
+            <Route
+              path="/hr/employee-application/:employeeId"
+              element={<HrEmployeeApplication />}
+            />
 
-          {/* HR routes */}
-          <Route
-            path="/hr/home"
-            element={
-              <DashboardLayout role="hr">
-                <HrEmployeeProfiles />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/hr/employee-profiles"
-            element={
-              <DashboardLayout role="hr">
-                <HrEmployeeProfiles />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/hr/visa-management"
-            element={
-              <DashboardLayout role="hr">
-                <HrVisaManagement />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/hr/hiring-management"
-            element={
-              <DashboardLayout role="hr">
-                <HrHiringManagement />
-              </DashboardLayout>
-            }
-          />
-          <Route
-            path="/hr/employee-profile/:employeeId"
-            element={<ProfileScreen />}
-          />
-          <Route
-            path="/hr/employee-application/:employeeId"
-            element={<HrEmployeeApplication />}
-          />
-
-          {/* Other Routes */}
-        </Routes>
-      </ThemeProvider>
-    </Router>
+            {/* Other Routes */}
+          </Routes>
+        </ThemeProvider>
+      </Router>
+    // </Provider>
   );
 }
 

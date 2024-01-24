@@ -10,7 +10,7 @@ import Document from "../common/Document";
 import {
   EmployeeDataInterface,
   DocumentInterface,
-} from "../data/EmployeeDataInterfaces";
+} from "../data/profile/EmployeeDataInterfaces";
 
 interface InfoBoxProps {
   children: React.ReactNode;
