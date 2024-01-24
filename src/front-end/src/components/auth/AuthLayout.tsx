@@ -3,6 +3,7 @@ import AuthTopBar from './AuthTopBar';
 import LoginPage from './LoginPage';
 import Footer from '../common/Footer';
 import CreatePage from './CreateAccPage';
+import RouteProtector from './RouteProtector';
 interface AuthLayoutProps {
   content: string 
 }
