@@ -13,6 +13,9 @@ router.post('/uploadDocument/:userId', upload.single('document'), visaController
 // Route for getting a document
 router.get('/document/:userId/:documentKey', visaController.getDocument);
 
+// Route for getting a visastatus
+router.get('/:userId', visaController.getVisaStatus);
+
 // Other visa-related routes...
 
 export default router;

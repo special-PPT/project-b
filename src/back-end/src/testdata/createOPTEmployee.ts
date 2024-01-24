@@ -31,6 +31,7 @@ const createContact = (): IEmergencyContact => ({
 
 const createDocument = (type: string): IDocumentSubSchema => ({
   type,
+  name: 'example.pdf',
   url: "www.google.com",
   documentKey: "example-key",
 });
@@ -159,7 +160,9 @@ const generateVisaStatusData = (
 
     const document = {
       type: docType,
+      docType: docType,
       url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+      name: "example.pdf",
       status: status,
       feedback: status === "Rejected" ? "feedback is here..." : "",
     };
