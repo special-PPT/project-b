@@ -12,3 +12,10 @@ export interface HistoryRow {
   registrationLink: string;
   status: string;
 }
+
+export interface OnboardData {
+  employee_id: string;
+  name: string;
+  email: string;
+  status: string;
+}

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { Employee, HrEmployeeProfileData } from "./hrTypes";
+import { Employee, OnboardingApplication } from "./hrTypes";
 import axios from "axios";
 
 type EmployeeDictionary = {

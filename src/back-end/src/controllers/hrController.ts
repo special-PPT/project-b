@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import HRManagement from "../models/HRManagement";
 import User from "../models/User";
+import OnboardingApplication from "../models/OnboardingApplication";
 import PersonalInformation from "../models/PersonalInformation";
 import VisaStatus from "../models/VisaStatus";
 import RegistrationToken from "../models/RegistrationToken";
@@ -148,13 +149,29 @@ const hrController = {
       const hrData = await HRManagement.findOne({ userID: hrUserId })
         .populate("employeeProfiles")
         .populate("registrationTokens");
-      
+
       res.status(200).json(hrData);
     } catch (error) {
       res.status(500).json({
         message: "Error retrieving HR management data",
         error,
       });
+    }
+  },
+
+  // get all onboarding applications
+  async getAllOnboardingApps(req: Request, res: Response) {
+    try {
+      const applications = await OnboardingApplication.find()
+        .populate("userID")
+        .populate("applicationData");
+
+      res.status(200).json(applications);
+    } catch (error) {
+      console.error("Error fetching onboarding applications:", error);
+      res
+        .status(500)
+        .json({ message: "Error retrieving onboarding applications", error });
     }
   },
 

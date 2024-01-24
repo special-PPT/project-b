@@ -1,6 +1,14 @@
 import axios from "axios";
-import { Employee, HrManagement } from "../../../../redux/features/hr/hrTypes";
-import { RegDataInterface, HistoryRow } from "./EmployeeDataInterfaces";
+import {
+  Employee,
+  HrManagement,
+  OnboardingApplication,
+} from "../../../../redux/features/hr/hrTypes";
+import {
+  RegDataInterface,
+  HistoryRow,
+  OnboardData,
+} from "./EmployeeDataInterfaces";
 
 export const transformEmployeeToRegData = (
   employee: Employee
@@ -49,6 +57,21 @@ function transformHrToHistoryData(hrData: HrManagement): HistoryRow[] {
       name: token.name,
       registrationLink: `http://localhost:3000/${token.token}`,
       status: isExpired ? "Expired" : "Active",
+    };
+  });
+}
+
+export function transformToOnboardData(
+  applications: OnboardingApplication[]
+): OnboardData[] {
+  return applications.map((application) => {
+    const name = `${application.applicationData.firstName} ${application.applicationData.lastName}`;
+
+    return {
+      employee_id: application.userID._id,
+      name: name,
+      email: application.userID.email,
+      status: application.status,
     };
   });
 }

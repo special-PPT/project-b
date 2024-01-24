@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from './redux/hooks/useDispatch';
 import { fetchEmployeeProfiles } from './redux/features/hr/hrSlice';
+import { fetchOnboardingApplications } from './redux/features/hr/onboardSlice';
 import "./App.css";
 // import LoginPage from './components/auth/loginPage';
 import { ThemeProvider } from "@mui/material";
@@ -28,6 +29,7 @@ function App() {
   // TODO: need route protection here (?)
   useEffect(() => {
     dispatch(fetchEmployeeProfiles());
+    dispatch(fetchOnboardingApplications());
   }, [dispatch]);
 
   return (

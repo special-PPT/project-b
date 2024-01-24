@@ -133,3 +133,13 @@ export interface HrManagement {
   employeeProfiles: User[]; 
   registrationTokens: RegistrationToken[];
 }
+
+export interface OnboardingApplication {
+  _id: string;
+  userID: User;
+  status: string;
+  applicationData: PersonalInformation;
+  feedback?: string;
+  submittedDate: Date;
+  reviewedDate?: Date;
+}

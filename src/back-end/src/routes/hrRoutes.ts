@@ -7,7 +7,7 @@ const router = express.Router();
 router.post("/generateToken", hrController.generateToken);
 
 // Define the route for sending email notifications
-router.post('/send-notifications', hrController.sendEmailNotifications);
+router.post("/send-notifications", hrController.sendEmailNotifications);
 
 // get all employees' information for display
 // used by HR
@@ -16,11 +16,14 @@ router.get("/getAllEmployeeProfiles", hrController.getAllEmployeeProfiles);
 // get all information from HRManagement (used by History component)
 router.get("/get-hrmanagement-data", hrController.getAllHRManagementData);
 
+// get all onboarding applications
+router.get("/onboarding-applications", hrController.getAllOnboardingApps);
+
 // Update an employee profile
 router.put("/updateProfile", hrController.updateEmployeeProfile);
 
 // Route for updating visa document status
-router.put('/updateVisaDocStatus', hrController.updateVisaDocStatus);
+router.put("/updateVisaDocStatus", hrController.updateVisaDocStatus);
 
 // Default route for documentation
 router.get("/", (req, res) => {
