@@ -1,71 +1,35 @@
-// import RegistrationToken from "../models/RegistrationToken";
-// import User from "../models/User";
-// import mongoose from "mongoose";
+import RegistrationToken from "../models/RegistrationToken";
+import User from "../models/User";
+import { v4 as uuidv4 } from 'uuid';
 
-// require('dotenv').config();
+require('dotenv').config();
 
-// // Connect to MongoDB
-// mongoose
-//   .connect(process.env.MONGODB_URL!)
-//   .then(() => console.log("Connected to MongoDB"))
-//   .catch((err) => console.error("Could not connect to MongoDB", err));
+export async function insertRegistrationTokens() {
+  try {
+    // Fetch users with the role 'Employee' and isActive false
+    const users = await User.find({ role: 'Employee', isActive: false });
 
+    for (const user of users) {
+      // Create a new registration token for each user
+      const tokenData = {
+        name: user.username,
+        token: uuidv4(), 
+        email: user.email,
+        expiry: new Date(new Date().getTime() + 10 * 24 * 60 * 60 * 1000),
+        status: "Sent",
+        userId: user._id,
+      };
 
-// const registrationTokensData = [
-//   {
-//     name: "hrUser",
-//     token: "token1",
-//     email: "hr@example.com",
-//     expiry: new Date(),
-//     status: "Sent",
-//     userId: "65a5fdd9254cf443d0fc92e4",
-//   },
-//   {
-//     name: "aliceJohnson",
-//     token: "token2",
-//     email: "alice.johnson@example.com",
-//     expiry: new Date(),
-//     status: "Sent",
-//     userId: "65a734bd46019f5d95cc2f93",
-//   },
-//   {
-//     name: "bobSmith",
-//     token: "token3",
-//     email: "bob.smith@example.com",
-//     expiry: new Date(),
-//     status: "Sent",
-//     userId: "65a734be46019f5d95cc2fa5",
-//   },
-//   {
-//     name: "carolWhite",
-//     token: "token4",
-//     email: "carol.white@example.com",
-//     expiry: new Date(),
-//     status: "Sent",
-//     userId: "65a734bf46019f5d95cc2fb5",
-//   },
-// ];
+      const token = new RegistrationToken(tokenData);
+      await token.save();
 
-// async function insertRegistrationTokens() {
-//     try {
-//       for (const tokenData of registrationTokensData) {
-//         // Create and save the RegistrationToken
-//         const token = new RegistrationToken(tokenData);
-//         await token.save();
-  
-//         // Find the corresponding user and update their registrationToken field
-//         await User.findByIdAndUpdate(tokenData.userId, {
-//           $set: { registrationToken: token._id }
-//         });
-  
-//         console.log("Registration token inserted and user updated:", token);
-//       }
-//     } catch (error) {
-//       console.error("Failed to insert registration tokens:", error);
-//     } finally {
-//       await mongoose.disconnect();
-//       console.log("Disconnected from MongoDB");
-//     }
-//   }
+      // Update user with the new registration token
+      await User.findByIdAndUpdate(user._id, { $set: { registrationToken: token._id } });
 
-// insertRegistrationTokens();
+      console.log("Registration token inserted and user updated:", token);
+    }
+  } catch (error) {
+    console.error("Failed to insert registration tokens:", error);
+  } finally {
+  }
+}

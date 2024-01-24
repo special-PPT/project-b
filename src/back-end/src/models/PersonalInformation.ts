@@ -69,7 +69,7 @@ const personalInformationSchema: Schema = new Schema(
     preferredName: { type: String },
     profilePicture: { type: String },
     ssn: { type: String },
-    email: { type: String }
+    email: { type: String },
     address: {
       building: { type: String, required: true },
       street: { type: String, required: true },

@@ -7,13 +7,7 @@ import OnboardingApplication, {
 } from "../models/OnboardingApplication"; // Adjust the import path
 
 
-// require('dotenv').config();
-
-// Connect to MongoDB
-mongoose
-  .connect(process.env.MONGODB_URL!)
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("Could not connect to MongoDB", err));
+require('dotenv').config();
 
 // HR User details
 const hrUserInfo: Partial<IUser> = {
@@ -31,6 +25,7 @@ const hrPersonalInfo: Partial<IPersonalInformation> = {
   middleName: "HR",
   preferredName: "Johnny",
   profilePicture: "url-to-profile-picture",
+  ssn: "11-1111-11",
   address: {
     building: "100",
     street: "Main St",
@@ -58,60 +53,57 @@ const hrPersonalInfo: Partial<IPersonalInformation> = {
   documents: [
     {
       type: "Passport",
+      name: "passport.pdf",
       url: "url-to-passport-doc",
       documentKey: "example-key-1"
     },
     {
       type: "Visa",
+      name: "visa.pdf",
       url: "url-to-visa-doc",
       documentKey: "example-key-2"
     },
   ],
 };
 
-// const hrOnboardingApplication: Partial<IOnboardingApplication> = {
-//   status: "Approved",
-//   feedback: "All documents are in order.",
-//   submittedDate: new Date(),
-//   reviewedDate: new Date(),
-// };
+const hrOnboardingApplication: Partial<IOnboardingApplication> = {
+  status: "Approved",
+  feedback: "All documents are in order.",
+  submittedDate: new Date(),
+  reviewedDate: new Date(),
+};
 
-async function createHRUser() {
+export async function createHRUser() {
   try {
     // Create User with references to PersonalInformation and OnboardingApplication
     const user = new User(hrUserInfo);
     await user.save();
     console.log(user);
 
-//     // Create PersonalInformation
-//     hrPersonalInfo.userID = user._id;
-//     const personalInfo = new PersonalInformation(hrPersonalInfo);
-//     await personalInfo.save();
-//     console.log(personalInfo);
+    // Create PersonalInformation
+    hrPersonalInfo.userID = user._id;
+    const personalInfo = new PersonalInformation(hrPersonalInfo);
+    await personalInfo.save();
+    console.log(personalInfo);
 
-//     // Create OnboardingApplication
-//     hrOnboardingApplication.userID = user._id;
-//     hrOnboardingApplication.applicationData = personalInfo._id;
-//     const onboardingApplication = new OnboardingApplication(
-//       hrOnboardingApplication
-//     );
-//     await onboardingApplication.save();
-//     console.log(onboardingApplication);
+    // Create OnboardingApplication
+    hrOnboardingApplication.userID = user._id;
+    hrOnboardingApplication.applicationData = personalInfo._id;
+    const onboardingApplication = new OnboardingApplication(
+      hrOnboardingApplication
+    );
+    await onboardingApplication.save();
+    console.log(onboardingApplication);
 
-//     // Update the personalInfo and onboardingApplication for a new user
-//     user.personalInformation = personalInfo._id;
-//     user.onboardingApplication = onboardingApplication._id;
-//     await user.save();
-//     console.log(user);
+    // Update the personalInfo and onboardingApplication for a new user
+    user.personalInformation = personalInfo._id;
+    user.onboardingApplication = onboardingApplication._id;
+    await user.save();
+    console.log(user);
 
-//     console.log("HR user created successfully:", user);
+    console.log("HR user created successfully:", user);
 
-    await mongoose.disconnect();
-    console.log("Disconnected from MongoDB");
   } catch (error) {
     console.error("Failed to create HR user:", error);
   }
 }
-
-// Execute the function
-createHRUser();
