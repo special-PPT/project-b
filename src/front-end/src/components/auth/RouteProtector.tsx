@@ -14,7 +14,6 @@ export default function RouteProtector({ children, allowedRoles }: RouteProtecto
     else if(!userRole) {
         return <Navigate to="/login" />
     }else{
-
         return <Navigate to={`/${userRole.toLowerCase()}/home`} />
     }
 }
