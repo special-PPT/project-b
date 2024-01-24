@@ -1,9 +1,12 @@
-import { Container, Grid, Paper, Typography } from '@mui/material'
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../redux/store/store';
+import { Button, Container, Grid, Paper, Typography } from '@mui/material'
+import React, { useContext } from 'react'
+import { UserContext } from './UserContext';
 export default function Summary() {
-    const user = useSelector((state: RootState) => state.user);
+    // const user = useSelector((state: RootState) => state.user);
+    const {userInfo} = useContext(UserContext);
+    const handleSumbit = () =>{
+        
+    }
   return (
     <Container>
         <Grid item xs={12}>
@@ -17,10 +20,10 @@ export default function Summary() {
                     Basic Information
                 </Typography>
                 <Typography variant="h6" component="h3" gutterBottom>
-                    {user.firstName} ({user.middleName}) {user.lastName} 
+                    {userInfo.firstName} {userInfo.middleName === ""? (userInfo.middleName): null} {userInfo.lastName} {userInfo.gender}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                    {user.address.building} {user.address.street} {user.address.city}, {user.address.state}, {user.address.zip}
+                    {userInfo.address.street} {userInfo.address.building}, {userInfo.address.city}, {userInfo.address.state}, {userInfo.address.zip}
                 </Typography>
             </Paper>
         </Grid>
@@ -30,12 +33,49 @@ export default function Summary() {
                     Contact Information
                 </Typography>
                 <Typography variant="h6" component="h3" gutterBottom>
-                    CellPhone: {user.phoneNumbers.cell}
-                </Typography>
-                <Typography variant="h6" component="h3" gutterBottom>
-                    HomePhone: {user.phoneNumbers.work}
+                    Phone Number: {userInfo.phoneNumbers.cell} &nbsp; {userInfo.phoneNumbers.work}
                 </Typography>
             </Paper>
+        </Grid>
+        {   userInfo.reference &&
+            <Grid item xs={12}>
+                <Paper elevation={3}>
+                    <Typography variant="h4" component="h3" gutterBottom>
+                        Reference
+                    </Typography>
+                    <Typography variant="h6" component="h3" gutterBottom>
+                        {userInfo.reference.firstName} {userInfo.reference.middleName === ""? (userInfo.reference.middleName): null} {userInfo.reference.lastName} 
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
+                        {userInfo.reference.email}
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
+                        {userInfo.reference.phone}
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
+                        {userInfo.reference.relationship}
+                    </Typography>
+                </Paper>
+            </Grid>
+        }
+        
+        <Grid item xs={12}>
+            <Paper elevation={3}>
+                <Typography variant="h4" component="h3" gutterBottom>
+                    Work Authorization
+                </Typography>
+                <Typography variant="h6" component="h3" gutterBottom>
+                    {userInfo.workAuthorization}
+                </Typography>
+            </Paper>
+        </Grid>
+        <Grid item xs={12}>
+            <Button variant='contained' color='primary'
+                fullWidth
+                
+            >
+                Submit
+            </Button>
         </Grid>
     </Container>
   )

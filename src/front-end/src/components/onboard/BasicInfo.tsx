@@ -1,27 +1,61 @@
-import { Box, Button, Container, Divider, Grid, MenuItem, OutlinedInput, Paper, Select, SelectChangeEvent, Typography, useMediaQuery } from '@mui/material'
+import { Box, Button, Container, Divider, Grid, MenuItem, OutlinedInput, Paper, Select, SelectChangeEvent, TextField, Typography, useMediaQuery } from '@mui/material'
 import React, { useContext } from 'react'
 import theme from '../../theme'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { UserContext } from './UserContext';
+import dayjs, { Dayjs } from 'dayjs';
 
 
 export default function BasicInfo() {
     const { userInfo, setUserInfo, handleChange } = useContext(UserContext);
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const [gender, setGender] = React.useState<string>('male');
     const [isFreetoWork, setIsFreetoWork] = React.useState<string>('');
     const [isOPT, setIsOPT] = React.useState<boolean>(false);
     const [phoneType, setPhoneType] = React.useState<string>('cell');
+    const [dateOfBirth, setDateOfBirth] = React.useState< Dayjs | null>(dayjs());
+    const handleGenderChange = (event: SelectChangeEvent<string>) => {
+        setGender(event.target.value);
+        const tempgender = gender === "male"? "female": "male";
+        setUserInfo(
+            {
+                ...userInfo,
+                gender: tempgender,
+            }
+        );
+        console.log(userInfo);
+    }
     const handleOPTChange = (event: SelectChangeEvent<string>) => {
         const { value } = event.target;
         if (value === 'opt') {
             setIsOPT(true);
+            setUserInfo(
+                {
+                    ...userInfo,
+                    workAuthorization: "H1B",
+                }
+            )
+
         } else {
             setIsOPT(false);
+            setUserInfo(
+                {
+                    ...userInfo,
+                    workAuthorization: "F1(CPT/OPT)",
+                }
+            )
         }
+        console.log(userInfo);
     }   
     const handleFreetoWorkChange = (event: SelectChangeEvent<string>) => {
         setIsFreetoWork(event.target.value);
+        setUserInfo(
+            {
+                ...userInfo,
+                workAuthorization: isFreetoWork? "citizen": "H1B",
+            }
+        );
     }
   return (
     <Container>
@@ -134,7 +168,8 @@ export default function BasicInfo() {
                         required
                         fullWidth
                         id="address.building"
-                        defaultValue={userInfo.address.building}
+                        // defaultValue={userInfo.address.building}
+                        value={userInfo.address.building}
                         onChange={handleChange}
                         // placeholder="Last Name"
                         // onChange={handleInputChange}
@@ -149,8 +184,6 @@ export default function BasicInfo() {
                         id="address.street"
                         defaultValue={userInfo.address.street}
                         onChange={handleChange}
-                        // placeholder="Last Name"
-                        // onChange={handleInputChange}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -315,6 +348,20 @@ export default function BasicInfo() {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                         sx={{width:'100%'}}
+                        value={dateOfBirth}
+                        onChange={(newValue) => {
+                            setDateOfBirth(newValue);
+                            // console.log(dateOfBirth?.toDate());
+                            const newDateOfBirth = newValue ? newValue.toDate() : userInfo.dateOfBirth;
+                            setUserInfo(
+                                {
+                                    ...userInfo,
+                                    dateOfBirth: newDateOfBirth,
+                                }
+                            );
+                            console.log(userInfo);
+                            
+                        }}
                         />
                     </LocalizationProvider>
                     </Box>
@@ -329,10 +376,11 @@ export default function BasicInfo() {
                         sx={{
                             width: '100%',
                         }}
+                        onChange={handleGenderChange}
                     >
                         <MenuItem value={"male"}>Male</MenuItem>
                         <MenuItem value={"female"}>Female</MenuItem>
-                        <MenuItem value={"dontwish"}>I do not wish to answer</MenuItem>
+                        {/* <MenuItem value={"dontwish"}>I do not wish to answer</MenuItem> */}
                     </Select>
                 </Grid>
                 <Grid item xs={12}>
@@ -505,13 +553,13 @@ export default function BasicInfo() {
                     </Button>
                 </Grid>
                 <Grid item xs={12}>
-                    <Button 
+                    {/* <Button 
                     sx={{
                         width: isMobile? '100%':'15%',
                     }}
                     variant="contained" color="primary" >
                         Save
-                    </Button>
+                    </Button> */}
                 </Grid>
             </Grid>
         </Box>

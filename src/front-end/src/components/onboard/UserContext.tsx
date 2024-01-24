@@ -25,8 +25,22 @@ interface AllInfoData {
   socialSecurityNumber: string;
   dateOfBirth: Date;
   gender: string;
-  reference?: {};
-  emergencyContacts?: [];
+  reference: {
+    firstName: string;
+    lastName: string;
+    middleName: string;
+    email: string;
+    phone: string;
+    relationship: string;
+  };
+  emergencyContacts?:{
+    firstName: string;
+    lastName: string;
+    middleName: string;
+    email: string;
+    phone: string;
+    relationship: string;
+  }[];
   workAuthorization: string;
   documents?: [];
 }
@@ -39,12 +53,12 @@ interface UserContextType {
 
 // Initial state
 const initialState: AllInfoData = {
-  firstName: 'Zhengmao Zhang Context',
+  firstName: '',
   lastName: '',
   middleName: '',
   profilePicture: '',
   address: {
-    building: '5692 SW Lee Ave',
+    building: '',
     street: '',
     city: '',
     state: '',
@@ -54,10 +68,19 @@ const initialState: AllInfoData = {
     cell: '',
     work: '',
   },
+  reference: {
+    firstName: '',
+    lastName: '',
+    middleName: '',
+    email: '',
+    phone: '',
+    relationship: '',
+  },
+  // emergencyContacts?: [],
   socialSecurityNumber: '',
   dateOfBirth: new Date(),
   gender: '',
-  workAuthorization: '',
+  workAuthorization: 'H1B',
 };
 
 // Context creation
@@ -71,33 +94,25 @@ export const UserContext = createContext<UserContextType>({
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [userInfo, setUserInfo] = useState<AllInfoData>(initialState);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = event.target;
-    const keys = id.split('.'); // 将 id 分割成路径数组
-  
-    setUserInfo((userInfo: AllInfoData) => {
-      let updatedInfo = { ...userInfo }; // 创建 userInfo 的浅拷贝
-  
-      if (keys.length > 1) {
-        // 深度遍历和更新嵌套对象
-        let temp = updatedInfo; // 使用临时变量来逐层深入
-        for (let i = 0; i < keys.length - 1; i++) {
-          const key = keys[i];
-          if (!temp[key]) temp[key] = {}; // 如果路径不存在，则初始化为空对象
-          if (i === keys.length - 2) {
-            temp[key][keys[keys.length - 1]] = value; // 在最深层设置值
-          } else {
-            temp = temp[key]; // 向下钻取到下一层
-          }
-        }
-      } else {
-        // 非嵌套属性直接更新
-        updatedInfo[keys[0]] = value;
-      }
-  
-      return updatedInfo;
-    });
-    console.log(userInfo);
-  };
+        const { id, value } = event.target;
+        const keys = id.split('.');
+
+        setUserInfo((prev: AllInfoData) => {
+            const updatedInfo = { ...prev };
+            let temp: any = updatedInfo;
+
+            for (let i = 0; i < keys.length - 1; i++) {
+                if (!temp[keys[i]]) {
+                    temp[keys[i]] = {};
+                }
+                temp = temp[keys[i]];
+            }
+
+            temp[keys[keys.length - 1]] = value;
+            console.log(updatedInfo);
+            return updatedInfo;
+        });
+    };
   return (
     <UserContext.Provider value={{ userInfo, setUserInfo, handleChange: handleInputChange }}>
       {children}

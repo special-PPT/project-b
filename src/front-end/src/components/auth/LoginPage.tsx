@@ -50,7 +50,7 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
 
-
+    // const hashedPasswd = CryptoJS.SHA256(loginData.password).toString();
     const response = await fetch('http://localhost:8000/user/login', {
         method: 'POST',
         headers: {

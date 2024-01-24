@@ -17,7 +17,7 @@ async function sendEmail(toUser: string, token: string){
         to: toUser,
         subject: "Please verify your email",
         text: `Please verify your email \n ${token}`,
-        html: `<a href='http://localhost:3000/${token}'>Click here to verify your email</a>`
+        html: `<a href='http://localhost:3000/signup/${token}'>Click here to verify your email</a>`
     });
     console.log("Message sent: %s", info.messageId);
 } 
