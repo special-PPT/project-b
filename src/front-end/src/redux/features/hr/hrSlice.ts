@@ -10,13 +10,18 @@ export const fetchEmployeeProfiles = createAsyncThunk(
   "hr/fetchEmployeeProfiles",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get<Employee[]>("http://localhost:8000/hr/getAllEmployeeProfiles");
+      const response = await axios.get<Employee[]>(
+        "http://localhost:8000/hr/getAllEmployeeProfiles"
+      );
 
       // Transform the array into an object
-      const transformedData = response.data.reduce<EmployeeDictionary>((acc, employee) => {
-        acc[employee._id] = employee;
-        return acc;
-      }, {});
+      const transformedData = response.data.reduce<EmployeeDictionary>(
+        (acc, employee) => {
+          acc[employee._id] = employee;
+          return acc;
+        },
+        {}
+      );
 
       return transformedData;
     } catch (error) {
@@ -30,7 +35,6 @@ export const fetchEmployeeProfiles = createAsyncThunk(
     }
   }
 );
-
 
 interface EmployeeState {
   employees: EmployeeDictionary;
@@ -51,7 +55,9 @@ const hrSlice = createSlice({
       const { employee_id, type, status, feedback } = action.payload;
       const employee = state.employees[employee_id];
       if (employee && employee.visaStatus && employee.visaStatus.documents) {
-        const documentIndex = employee.visaStatus.documents.findIndex(doc => doc.type === type);
+        const documentIndex = employee.visaStatus.documents.findIndex(
+          (doc) => doc.type === type
+        );
         if (documentIndex !== -1) {
           employee.visaStatus.documents[documentIndex].status = status;
           employee.visaStatus.documents[documentIndex].feedback = feedback;
@@ -62,6 +68,7 @@ const hrSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchEmployeeProfiles.fulfilled, (state, action) => {
       state.employees = action.payload;
+      console.log(state.employees);
       state.error = null; // Clear any existing errors on successful fetch
     });
     builder.addCase(fetchEmployeeProfiles.rejected, (state, action) => {

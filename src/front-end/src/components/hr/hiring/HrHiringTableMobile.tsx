@@ -7,7 +7,7 @@ import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 
 interface Data {
-  employee_id: number;
+  employee_id: string;
   name: string;
   email: string;
   generate_token_and_send_email?: boolean;

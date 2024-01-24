@@ -1,5 +1,23 @@
-const handleSendClick = (id: number) => {
-  console.log("clicked");
+import axios from 'axios';
+
+const handleSendClick = async (id: string, name: string, email: string): Promise<boolean> => {
+  try {
+    console.log("Sending request to generate token...");
+
+    const response = await axios.post('http://localhost:8000/hr/generateToken', {
+      userId: id,
+      name: name,
+      email: email,
+    });
+
+    console.log("Token generated and sent to:", email);
+    alert(`Token generated and sent to ${email}`);
+    return true;
+  } catch (error) {
+    console.error("Error in generating token:", error);
+    alert("Failed to generate token");
+    return false;
+  }
 };
 
 const handleLinkClick = (link: string) => {
@@ -7,7 +25,7 @@ const handleLinkClick = (link: string) => {
 };
 
 const handleClickHistory = () => {
-  console.log();
+  window.open("/hr/hiring-management/history", "_blank");
 };
 
 const handleRowClick = (employeeId: string) => {

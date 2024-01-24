@@ -35,7 +35,7 @@ const columns: readonly Column[] = [
 ];
 
 interface Data {
-  employee_id: number;
+  employee_id: string;
   name: string;
   email: string;
   status: string;

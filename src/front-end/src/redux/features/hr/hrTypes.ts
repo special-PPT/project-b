@@ -11,7 +11,20 @@ export interface Employee {
   createdAt: string;
   updatedAt: string;
   __v: number;
-  registrationToken: string;
+  registrationToken: RegistrationToken;
+}
+
+interface RegistrationToken {
+  _id: string;
+  createdAt: string;  // ISO date string format
+  email: string;
+  expiry: string;     // ISO date string format
+  name: string;
+  status: string;
+  token: string;
+  updatedAt: string;  // ISO date string format
+  userId: string;
+  __v: number;
 }
 
 interface PersonalInformation {
