@@ -4,6 +4,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { set } from 'mongoose';
 
 export default function CreatePage() {
   const token = useParams<{token: string}>();
@@ -25,10 +26,12 @@ export default function CreatePage() {
     console.log(loginData);
   }
   const verifyToken = async () => {
-    await axios.get(`http://localhost:8000/user/verify/${token.token}`)
+    await axios.get(`http://localhost:8000/verify/${token.token}`)
     .then(res => {
-      setLoginData({username: res.data.username, email: res.data.email, password: res.data.password});
-      console.log(res.data);
+      // setLoginData({username: res.data.user.username, email: res.data.user.email, password: res.data.user.password});
+      console.log(res.data.user);
+      setLoginData({username: res.data.user.username, email: res.data.user.email, password: res.data.user.password});
+      console.log(loginData);
     })
     .catch(err => {
       // navigate('/login');
@@ -71,20 +74,24 @@ export default function CreatePage() {
             <Grid item xs={12}>
               <span>Username</span>
               <OutlinedInput
+                disabled
                 required
                 fullWidth
                 id="username"
                 placeholder="Username"
+                value={loginData.username}
                 onChange={handleInputChange}
               />
             </Grid>
             <Grid item xs={12}>
               <span>Email</span>
               <OutlinedInput
+                disabled
                 required
                 fullWidth
                 id="email"
                 placeholder="Email"
+                value={loginData.email}
                 onChange={handleInputChange}
               />
             </Grid>
@@ -93,9 +100,11 @@ export default function CreatePage() {
               <TextField
                 required
                 fullWidth
+                disabled
                 id="password"
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Password"
+                value={loginData.password}
                 onChange={handleInputChange}
                 InputProps={{
                   endAdornment: (
