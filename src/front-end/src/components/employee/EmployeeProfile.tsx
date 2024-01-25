@@ -26,6 +26,18 @@ import EditButton from "./common/EditButton";
 import FileUploadButton from "./common/UploadFileButton";
 import { useCookies } from 'react-cookie';
 
+// Email validation function
+const validateEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+// SSN validation function (format XXX-XX-XXXX)
+const validateSSN = (ssn: string): boolean => {
+  const ssnRegex = /^\d{3}-\d{2}-\d{4}$/;
+  return ssnRegex.test(ssn);
+};
+
 
 
 
@@ -55,6 +67,7 @@ interface PersonalInformation {
   preferredName?: string;
   profilePicture?: string;
   email: string;
+  ssn: string;
   address: {
     building: string;
     street: string;
@@ -75,8 +88,10 @@ interface PersonalInformation {
 
 
 export default function EmployeeProfile() {
-  const [cookies] = useCookies(['userId']);
+  const [cookies] = useCookies(['userId', 'email']);
   const userId = cookies.userId;
+  const email = cookies.email;
+  console.log(email);
 
   const [personalInfoData, setPersonalInfoData] = useState<PersonalInformation | null>(null);
   const [alertMessage, setAlertMessage] = useState<string>('');
@@ -131,7 +146,6 @@ export default function EmployeeProfile() {
   const [state, setState] = useState("CA");
   const [zip, setZip] = useState("666666");
 
-  const [email, setEmail] = useState("example@example.com");
   const [cellPhone, setCellPhone] = useState("122-222-2221");
   const [workingPhone, setWorkingPhone] = useState("669-999-6666");
 
@@ -170,6 +184,9 @@ export default function EmployeeProfile() {
   const [profilePicture, setProfilePicture] = useState('path-to-file');
   const [documents, setDocuments] = useState(fileTable);
 
+  const [emailValid, setEmailValid] = useState(true);
+  const [ssnValid, setSsnValid] = useState(true);
+
 
   useEffect(() => {
     const fetchPersonalInfoData = async () => {
@@ -194,7 +211,6 @@ export default function EmployeeProfile() {
         setPreferredName(data.preferredName || "");
         setDOB(data.dateOfBirth ? data.dateOfBirth.toString().split('T')[0] : ""); // Format date
         setGender(data.gender);
-        setEmail(data.email);
         // Continue for other fields...
 
         // Address fields
@@ -233,6 +249,7 @@ export default function EmployeeProfile() {
         if (data.documents) {
           setDocuments(data.documents);
         }
+        setSSN(data.ssn);
 
 
 
@@ -259,7 +276,7 @@ export default function EmployeeProfile() {
       middleName: middleName,
       preferredName: preferredName,
       // Assuming you have a way to set profilePicture
-      profilePicture: 'path/to/profilePicture',
+      profilePicture: profilePicture,
       email: email,
       address: {
         building: buildingOrApt,
@@ -268,6 +285,7 @@ export default function EmployeeProfile() {
         state: state,
         zip: zip,
       },
+      ssn: SSN,
       phoneNumbers: {
         cell: cellPhone,
         work: workingPhone,
@@ -334,7 +352,7 @@ export default function EmployeeProfile() {
       <Typography variant="h3" sx={{ mb: 4 }}>
         Personal Details
       </Typography>
-      <Stack  spacing={5}>
+      <Stack spacing={5}>
         <Box
           sx={{
             display: 'flex',
@@ -409,10 +427,14 @@ export default function EmployeeProfile() {
                   }}
                 />
                 <TextField
+                  error={!ssnValid}
+                  helperText={!ssnValid ? "Please enter a valid SSN (XXX-XX-XXXX)." : ""}
                   value={SSN}
                   label="Social Security Number"
                   onChange={(e) => {
                     setSSN(e.target.value);
+                    setSsnValid(validateSSN(e.target.value));
+
                   }}
                   InputProps={{
                     readOnly: !editModes.basicInfo,
@@ -566,13 +588,16 @@ export default function EmployeeProfile() {
           <Grid item xs={12} sm={6} sx={{ px: 3 }}>
             <Stack spacing={2}>
               <TextField
+               error={!emailValid}
+               helperText={!emailValid ? "Please enter a valid email." : ""}
+               
                 value={email}
                 label="Email"
                 onChange={(e) => {
-                  setEmail(e.target.value);
+                  setEmailValid(validateEmail(e.target.value));
                 }}
                 InputProps={{
-                  readOnly: !editModes.contact,
+                  readOnly: true,
                 }}
               />
               <TextField

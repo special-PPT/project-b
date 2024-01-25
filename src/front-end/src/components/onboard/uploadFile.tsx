@@ -10,8 +10,8 @@ interface FileUploadButtonProps {
 }
 
 const FileUploadButton: React.FC<FileUploadButtonProps> = ({ documentType, status }) => {
-    const [cookies] = useCookies(['userId']);
-    const userId = cookies.userId;
+    const [cookies] = useCookies(['userID']);
+    const userId = cookies.userID;
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [filename, setFilename] = useState<string>("");
 
@@ -53,7 +53,6 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({ documentType, statu
 
             console.log(response.data);
             setUploadProgress(0);
-            window.location.reload();
             // Additional success handling
         } catch (error) {
             console.error('Error during file upload:', error);
@@ -99,7 +98,7 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({ documentType, statu
                     <input type="file" name="image" accept="image/*" hidden onChange={handleFileChange} />
 
                 ) : (
-                    <input type="file" name="document" accept=".pdf, images/*" hidden onChange={handleFileChange} />
+                    <input type="file" name="document" accept=".pdf, image/*" hidden onChange={handleFileChange} />
 
                 )}
             </Button>
