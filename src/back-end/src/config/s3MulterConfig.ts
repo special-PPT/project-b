@@ -22,8 +22,9 @@ const upload = multer({
             cb(null, { fieldName: file.fieldname });
         },
         key: function (req: Request, file, cb) {
-            const docType = req.body.documentType;
-            const fileName = `${docType}-${Date.now()}`;
+            // const docType = req.body.documentType;
+            // const fileName = `${docType}-${Date.now()}`;
+            const fileName = `${Date.now()}`;
             cb(null, fileName);
         }
     })
