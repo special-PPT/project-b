@@ -23,7 +23,9 @@ interface DocStatusProps {
 }
 
 const DocStatus: React.FC<DocStatusProps> = ({ doc }) => {
+
   const getStatusChip = () => {
+    console.log(doc.status)
     switch (doc.status) {
       case 'Approved':
         return (

@@ -97,10 +97,8 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({ documentType, statu
                 Upload File
                 {documentType === 'image' ? (
                     <input type="file" name="image" accept="image/*" hidden onChange={handleFileChange} />
-
                 ) : (
-                    <input type="file" name="document" accept=".pdf, images/*" hidden onChange={handleFileChange} />
-
+                    <input type="file" name="document" accept=".pdf,image/*" hidden onChange={handleFileChange} />
                 )}
             </Button>
 
