@@ -23,13 +23,19 @@ import userImage from "./dashboard/user.png";
 import Document from "./common/Document";
 import { useState, useEffect } from "react";
 import EditButton from "./common/EditButton";
+import FileUploadButton from "./common/UploadFileButton";
+import { useCookies } from 'react-cookie';
+
+
 
 
 interface DocumentSub {
-  type: string;
+  name: string;
+  modifiedTime: string;
+  size: string;         // Make sure this property exists
   url: string;
   documentKey: string;
-  name: string;
+  type: string;
 }
 
 interface EmergencyContact {
@@ -41,7 +47,7 @@ interface EmergencyContact {
   relationship: string;
 }
 
-interface PersonalInformation extends Document {
+interface PersonalInformation {
   userID: string;
   firstName: string;
   lastName: string;
@@ -69,9 +75,11 @@ interface PersonalInformation extends Document {
 
 
 export default function EmployeeProfile() {
+  const [cookies] = useCookies(['userId']);
+  const userId = cookies.userId;
+
   const [personalInfoData, setPersonalInfoData] = useState<PersonalInformation | null>(null);
-  const userId = '65adc821e964d3357d77c4dd';
-  const [alertMessage, setAlertMessage] = useState<String>('');
+  const [alertMessage, setAlertMessage] = useState<string>('');
 
   const [editModes, setEditModes] = useState<{ [key: string]: boolean; }>({
     basicInfo: false,
@@ -87,31 +95,25 @@ export default function EmployeeProfile() {
       [section]: !prevModes[section],
     }));
   };
-  
 
-  useEffect(() => {
-    const fetchPersonalInfoData = async () => {
-      try {
-        const response = await fetch(`http://localhost:8000/personalInfo/get/${userId}`);
-        if (!response.ok) {
-          setAlertMessage(`HTTP error! status: ${response.status}`);
-          return;
-        }
-        const data = await response.json() as PersonalInformation;
-        setPersonalInfoData(data);
-      } catch (e) {
-        if (e instanceof Error) {
-          setAlertMessage(e.message);
-        } else {
-          setAlertMessage('An unknown error occurred');
-        }
-      }
-    };
-
-    fetchPersonalInfoData();
-    console.log(personalInfoData);
-
-  }, []);
+  const fileTable = [
+    {
+      name: "Receipt",
+      modifiedTime: "Dec, 14, 2023",
+      size: "5kb",
+      url: "www.google.com",
+      documentKey: "12323123",
+      type: "Receipt"
+    },
+    {
+      name: "driver-licence",
+      modifiedTime: "Nov, 21, 2023",
+      size: "18kb",
+      url: "www.google.com",
+      documentKey: "12323123",
+      type: "Driver License"
+    },
+  ];
 
   const isMobile = useMediaQuery("(max-width:1000px)");
 
@@ -165,20 +167,163 @@ export default function EmployeeProfile() {
   const [emergencyContact2Relationship, setEmergencyContact2Relationship] =
     useState("friend");
 
-  const fileTable = [
-    {
-      name: "profile-image",
-      modifiedTime: "Dec, 14, 2023",
-      size: "5kb",
-      src: "www.google.com",
-    },
-    {
-      name: "driver-licence",
-      modifiedTime: "Nov, 21, 2023",
-      size: "18kb",
-      src: "www.google.com",
-    },
-  ];
+  const [profilePicture, setProfilePicture] = useState('path-to-file');
+  const [documents, setDocuments] = useState(fileTable);
+
+
+  useEffect(() => {
+    const fetchPersonalInfoData = async () => {
+      try {
+        console.log(userId);
+        const response = await fetch(`http://localhost:8000/personalInfo/get/${userId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include'
+        });
+        if (!response.ok) {
+          setAlertMessage(`HTTP error! status: ${response.status}`);
+          return;
+        }
+        const data = await response.json() as PersonalInformation;
+        // Now, set the form fields based on the fetched data
+        setFirstName(data.firstName);
+        setLastName(data.lastName);
+        setMiddleName(data.middleName || ""); // Use || to handle potentially undefined values
+        setPreferredName(data.preferredName || "");
+        setDOB(data.dateOfBirth ? data.dateOfBirth.toString().split('T')[0] : ""); // Format date
+        setGender(data.gender);
+        setEmail(data.email);
+        // Continue for other fields...
+
+        // Address fields
+        if (data.address) {
+          setStreet(data.address.street);
+          setBuildingOrApp(data.address.building);
+          setCity(data.address.city);
+          setState(data.address.state);
+          setZip(data.address.zip);
+        }
+
+        // Phone numbers
+        if (data.phoneNumbers) {
+          setCellPhone(data.phoneNumbers.cell);
+          setWorkingPhone(data.phoneNumbers.work || "");
+        }
+
+        // Assuming you handle emergency contacts similarly
+        if (data.emergencyContacts && data.emergencyContacts.length > 0) {
+          // Update fields for the first emergency contact
+          const ec1 = data.emergencyContacts[0];
+          setEmergencyContact1FirstName(ec1.firstName);
+          setEmergencyContact1LastName(ec1.lastName);
+          setEmergencyContact1MiddleName(ec1.middleName || "");
+          setEmergencyContact1PhoneName(ec1.phone);
+          setEmergencyContact1Email(ec1.email);
+          setEmergencyContact1Relationship(ec1.relationship);
+        }
+
+        if (data.profilePicture) {
+          setProfilePicture(data.profilePicture);
+        }
+
+        setVisaType(data.workAuth);
+
+        if (data.documents) {
+          setDocuments(data.documents);
+        }
+
+
+
+      } catch (e) {
+        if (e instanceof Error) {
+          setAlertMessage(e.message);
+        } else {
+          setAlertMessage('An unknown error occurred');
+        }
+      }
+    };
+
+    fetchPersonalInfoData();
+    console.log(personalInfoData);
+
+  }, []);
+
+
+  const handleSubmitProfile = async () => {
+    const personalInfo: PersonalInformation = {
+      userID: userId,
+      firstName: firstName,
+      lastName: lastName,
+      middleName: middleName,
+      preferredName: preferredName,
+      // Assuming you have a way to set profilePicture
+      profilePicture: 'path/to/profilePicture',
+      email: email,
+      address: {
+        building: buildingOrApt,
+        street: street,
+        city: city,
+        state: state,
+        zip: zip,
+      },
+      phoneNumbers: {
+        cell: cellPhone,
+        work: workingPhone,
+      },
+      dateOfBirth: new Date(DOB),
+      gender: gender,
+      emergencyContacts: [
+        {
+          firstName: emergencyContact1FirstName,
+          lastName: emergencyContact1LastName,
+          middleName: emergencyContact1MiddleName,
+          phone: emergencyContact1PhoneName,
+          email: emergencyContact1Email,
+          relationship: emergencyContact1Relationship
+        },
+        {
+          firstName: emergencyContact2FirstName,
+          lastName: emergencyContact2LastName,
+          middleName: emergencyContact2MiddleName,
+          phone: emergencyContact2PhoneName,
+          email: emergencyContact2Email,
+          relationship: emergencyContact2Relationship
+        }
+      ],
+      workAuth: visaType,
+      // Assuming documents are handled separately
+      documents: fileTable as DocumentSub[],
+    };
+
+    try {
+      const response = await fetch(`http://localhost:8000/personalInfo/update/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(personalInfo),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Profile updated successfully", data);
+      setAlertMessage("Profile updated successfully!");
+    } catch (e) {
+      if (e instanceof Error) {
+        console.error("Failed to update profile", e.message);
+        setAlertMessage(e.message);
+      } else {
+        console.error("An unknown error occurred");
+        setAlertMessage("An unknown error occurred");
+      }
+    }
+  };
 
   return (
     <Container
@@ -189,9 +334,10 @@ export default function EmployeeProfile() {
       <Typography variant="h3" sx={{ mb: 4 }}>
         Personal Details
       </Typography>
-      <Stack spacing={5}>
+      <Stack  spacing={5}>
         <Box
           sx={{
+            display: 'flex',
             position: "relative",
             width: 200,
             height: 200,
@@ -199,26 +345,12 @@ export default function EmployeeProfile() {
           }}
         >
           <img
-            src={userImage}
+            src={profilePicture ? profilePicture : userImage}
             alt="user's img"
             style={{ width: "200px", height: "200px" }}
           />
-          <Box
-            sx={{
-              position: "absolute",
-              top: -10,
-              right: -10,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "white", // Circle color
-              color: "black", // Icon color
-              borderRadius: "50%", // Makes the Box a circle
-              width: 40, // Width of the circle
-              height: 40, // Height of the circle
-            }}
-          >
-            <EditIcon />
+          <Box>
+            <FileUploadButton documentType="image" status="submitted" />
           </Box>
         </Box>
         <Box
@@ -248,7 +380,7 @@ export default function EmployeeProfile() {
                   label="First Name"
                   onChange={(e) => {
                     setFirstName(e.target.value);
-                    
+
                   }}
                   InputProps={{
                     readOnly: !editModes.basicInfo,
@@ -429,7 +561,7 @@ export default function EmployeeProfile() {
             <Typography variant="h5" sx={{ m: 2 }}>
               Contact
             </Typography>
-            <EditButton onClick={() => toggleEditMode('contact')}  />
+            <EditButton onClick={() => toggleEditMode('contact')} />
           </Container>
           <Grid item xs={12} sm={6} sx={{ px: 3 }}>
             <Stack spacing={2}>
@@ -545,7 +677,7 @@ export default function EmployeeProfile() {
             <Typography variant="h5" sx={{ m: 2 }}>
               Emergency Contact 1
             </Typography>
-            <EditButton onClick={() => toggleEditMode('emergencyContact')}/>
+            <EditButton onClick={() => toggleEditMode('emergencyContact')} />
           </Container>
           <Box>
             <Typography variant="h6" sx={{ m: 3 }}>
@@ -716,15 +848,15 @@ export default function EmployeeProfile() {
           <Box sx={{ m: 2 }}>
             {isMobile ? (
               <>
-                {fileTable.map((doc, index) => (
+                {documents.map((doc, index) => (
                   <Document
                     key={index}
-                    documentName={doc.name}
-                    lastModifiedDate={doc.modifiedTime}
-                    documentSize={doc.size}
+                    documentName={doc.name ? doc.name : 'example'}
+                    lastModifiedDate={doc.modifiedTime ? doc.modifiedTime : 'Dec 05 2023'}
+                    documentSize={doc.size ? doc.size : '10kb'}
                     canDownload={true}
                     canPreview={true}
-                    documentUrl={doc.src}
+                    documentUrl={doc.url ? doc.url : 'www.google.com'}
                   />
                 ))}
               </>
@@ -750,16 +882,16 @@ export default function EmployeeProfile() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {fileTable.map((row) => (
+                      {documents.map((row) => (
                         <TableRow
                           key={row.name}
                           sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                         >
                           <TableCell component="th" scope="row">
-                            {row.name}
+                            {row.name ? row.name : 'exampleTab'}
                           </TableCell>
-                          <TableCell align="right">{row.modifiedTime}</TableCell>
-                          <TableCell align="right">{row.size}</TableCell>
+                          <TableCell align="right">{row.modifiedTime ? row.modifiedTime : 'Dec 06 2022'}</TableCell>
+                          <TableCell align="right">{row.size ? row.size : '9kb'}</TableCell>
                           <TableCell align="right">
                             <Button>
                               <DownloadIcon />
@@ -783,6 +915,18 @@ export default function EmployeeProfile() {
 
         </Box>
       </Stack>
+      <Button sx={{
+        color: "white",
+        backgroundColor: "#3a4d8f",
+        width: '50%',
+        fontSize: 20,
+        "&:hover": {
+          backgroundColor: "darkblue",
+        },
+        border: "1px solid #3a4d8f",
+        mt: 4,
+        // ml: 20
+      }} onClick={handleSubmitProfile}>Submit</Button>
     </Container >
   );
 }

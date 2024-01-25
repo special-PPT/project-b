@@ -66,13 +66,13 @@ const userController = {
       );
       res.cookie("authToken", token, { httpOnly: true, maxAge: 3 * 60 * 60 * 1000 });
       res.cookie("username", username, { maxAge: 3 * 60 * 60 * 1000 });
+      res.cookie("userId", user._id, { maxAge: 3 * 60 * 60 * 1000 });
       res.cookie("role", user.role, { maxAge: 3 * 60 * 60 * 1000 });
       res.status(200).json({ user });
     } catch (error) {
       res.status(500).json({ message: "Error logging in user", error });
     }
   },
-
 
 
   // Update user status

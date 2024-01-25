@@ -17,7 +17,6 @@ const app = express();
 
 app.use(cookieParser());
 
-app.use(cookieParser());
 
 // 连接到MongoDB
 mongoose.connect(process.env.MONGODB_URL!)
@@ -45,6 +44,7 @@ app.use('/visa', visaRoutes);
 app.use('/hr', hrRoutes);
 // /verify/${token.token}
 app.use('/verify', verifyRoutes);
+
 
 
 

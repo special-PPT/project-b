@@ -11,7 +11,7 @@ declare global {
 
 export function authenticateToken(req: Request, res: Response, next: NextFunction) {
   // Get the token from the cookies
-  const token = req.cookies["auth-token"];
+  const token = req.cookies["authToken"];
 
   // If no token is found, return an unauthorized error
   if (!token) {

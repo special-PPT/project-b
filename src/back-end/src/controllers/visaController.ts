@@ -56,7 +56,7 @@ const visaController = {
   async uploadDocument(req: Request, res: Response) {
     const file = req.file as Express.MulterS3.File;
     const userId = req.params.userId;
-    const documentType = req.body.documentType; // Assuming this is passed along with the file
+    const type = req.body.type; // Assuming this is passed along with the file
     const status = req.body.status;
     const documentKey = file.key;
     const fileName = req.body.name;
@@ -65,7 +65,7 @@ const visaController = {
       // Check if the document of this type already exists for the user
       const existingDocument = await VisaStatus.findOne({
         userID: userId,
-        "documents.docType": documentType
+        "documents.type": type
       });
   
       let updatedInfo;
@@ -73,12 +73,11 @@ const visaController = {
       if (existingDocument) {
         // Update the existing document
         updatedInfo = await VisaStatus.findOneAndUpdate(
-          { userID: userId, "documents.docType": documentType },
+          { userID: userId, "documents.type": type },
           {
             $set: {
               'documents.$.url': file.location,
               'documents.$.name': fileName,
-              'documents.$.documentKey': documentKey,
               'documents.$.status': 'Pending',
               'documents.$.feedback': ''
             },
@@ -92,7 +91,7 @@ const visaController = {
           {
             $push: {
               documents: {
-                docType: documentType,
+                type: type,
                 url: file.location,
                 name: fileName,
                 documentKey: documentKey,
@@ -103,6 +102,8 @@ const visaController = {
           { new: true }
         );
       }
+
+      console.log(updatedInfo);
   
       res.status(200).json({ message: "Document uploaded successfully", updatedInfo });
     } catch (error) {
