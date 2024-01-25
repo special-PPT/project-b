@@ -6,7 +6,7 @@ import { authenticateToken } from '../config/authToken';
 const router = express.Router();
 
 // Update personal information route
-router.put('/update/:userId', authenticateToken, personalInfoController.updatePersonalInfo);
+router.put('/update/:userId', personalInfoController.updatePersonalInfo);
 
 // Get personal information route
 router.get('/get/:userId', authenticateToken, personalInfoController.getPersonalInfo);

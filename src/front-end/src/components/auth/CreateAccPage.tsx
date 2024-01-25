@@ -35,20 +35,51 @@ export default function CreatePage() {
     })
     .catch(err => {
       // navigate('/login');
+      alert(err)
       console.log(err);
     });
+    // const resp = await fetch(`http://localhost:8000/verify/${token.token}`,
+    // {
+    //   method: 'GET',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   credentials: 'include',
+    // });
+    // if(resp.status === 200){
+    //   const data = await resp.json();
+    //   setLoginData({username: data.user.username, email: data.user.email, password: data.user.password});
+    // }
+    // else{
+    //   alert('Invalid token!');
+    // }
   }
   const handleSignup = async () => {
-    await axios.post('http://localhost:8000/user/register', loginData)
-    .then(res => {
-      console.log(res.data);
-      alert('Account created successfully!');
-      navigate('/login');
-    })
-    .catch(err => {
-      alert('Account creation failed!');
-      console.log(err);
+    // await axios.post('http://localhost:8000/user/register', loginData)
+    // .then(res => {
+    //   console.log(res.data);
+    //   alert('Account created successfully!');
+    //   navigate('/onboarding');
+    // })
+    // .catch(err => {
+    //   alert('Account creation failed!');
+    //   console.log(err);
+    // });
+    const resp = await fetch('http://localhost:8000/user/register',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(loginData)
     });
+    if(resp.ok){
+      alert('Account created successfully!');
+      navigate('/onboarding');
+    }else{
+      alert('Account creation failed!');
+    }
   }
   useEffect(() => {
     verifyToken();

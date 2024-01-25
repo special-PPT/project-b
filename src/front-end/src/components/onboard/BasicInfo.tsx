@@ -5,9 +5,12 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { UserContext } from './UserContext';
 import dayjs, { Dayjs } from 'dayjs';
+import { useCookies } from 'react-cookie';
 import FileUploadButton from './uploadFile';
 
 export default function BasicInfo() {
+    const [cookies] = useCookies(['email']);
+    const email = cookies.email;
     const { userInfo, setUserInfo, handleChange } = useContext(UserContext);
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [gender, setGender] = React.useState<string>('male');
@@ -231,6 +234,7 @@ export default function BasicInfo() {
                     <OutlinedInput
                         required
                         fullWidth
+                        type='number'
                         id="address.zip"
                         defaultValue={userInfo.address.zip}
                         onChange={handleChange}
@@ -246,7 +250,8 @@ export default function BasicInfo() {
                 {/* </Grid>
                 <Grid item xs={12}> */}
                     <Typography variant="body1" component="span">
-                        example@example.com
+                        {/* example@example.com */}
+                        {email}
                     </Typography>
                 </Grid>  
                 <Grid item xs={12}>
@@ -332,6 +337,7 @@ export default function BasicInfo() {
                         id="socialSecurityNumber"
                         defaultValue={userInfo.socialSecurityNumber}
                         onChange={handleChange}
+                        type='number'
                         // placeholder="Last Name"
                         // onChange={handleInputChange}
                     />

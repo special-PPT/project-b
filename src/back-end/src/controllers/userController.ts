@@ -29,7 +29,8 @@ const userController = {
       if (user.email !== email) {
         return res.status(400).send("Email is not correct");
       }
-
+      res.cookie("email", user.email, { maxAge: 3 * 60 * 60 * 1000 });
+      res.cookie("userID", user._id, { maxAge: 3 * 60 * 60 * 1000 });
       res.status(200).json({ message: "User can go to registration page" });
     } catch (error) {
       res.status(500).json({ message: "Error registering new user", error });
