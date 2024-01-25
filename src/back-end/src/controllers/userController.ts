@@ -9,7 +9,7 @@ const userController = {
   async register(req: Request, res: Response) {
     try {
       const { username, email, password } = req.body;
-
+      console.log(username, email, password);
       // Check if the user already exists
       const user = await User.findOne({ username });
       if (!user) {

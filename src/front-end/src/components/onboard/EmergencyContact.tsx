@@ -1,9 +1,10 @@
 import { Button, Container, Divider, Grid } from '@mui/material'
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useContext, useState } from 'react'
 import PersonInfo from './Personinfo';
 
 export default function EmergencyContact() {
     const [contactNumber, setContactNumber] = useState<number>(1);
+    // const { userInfo, setUserInfo, handleChange } = useContext(UserContext);
   return (
     <Container>
         <Grid container spacing={3}>
@@ -11,7 +12,7 @@ export default function EmergencyContact() {
                 Array.from(Array(contactNumber).keys()).map((item, index) => (
                     <Fragment key={index}>
                         <Grid item xs={12} key={index}>
-                            <PersonInfo tableName={`Emergency Contact ${item + 1}`}/>
+                            <PersonInfo tableName={`Emergency Contact`} index={index} />
                         </Grid>
                         <Grid item xs={12}>
                             <Divider />
@@ -30,16 +31,6 @@ export default function EmergencyContact() {
                     Add Emergency Contact
                 </Button>
             </Grid>
-            {/* <Grid item xs={12} sm={6}>
-                <Button variant="outlined" color="primary" fullWidth>
-                    Back
-                </Button>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <Button variant="contained" color="primary" fullWidth>
-                    Save
-                </Button>
-            </Grid>                 */}
         </Grid>
     </Container>
   )
