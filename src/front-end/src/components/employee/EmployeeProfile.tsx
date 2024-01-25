@@ -43,7 +43,7 @@ const validateSSN = (ssn: string): boolean => {
 
 interface DocumentSub {
   name: string;
-  modifiedTime: string;
+  updatedAt: string;
   size: string;         // Make sure this property exists
   url: string;
   documentKey: string;
@@ -114,7 +114,7 @@ export default function EmployeeProfile() {
   const fileTable = [
     {
       name: "Receipt",
-      modifiedTime: "Dec, 14, 2023",
+      updatedAt: "Dec, 14, 2023",
       size: "5kb",
       url: "www.google.com",
       documentKey: "12323123",
@@ -122,7 +122,7 @@ export default function EmployeeProfile() {
     },
     {
       name: "driver-licence",
-      modifiedTime: "Nov, 21, 2023",
+      updatedAt: "Nov, 21, 2023",
       size: "18kb",
       url: "www.google.com",
       documentKey: "12323123",
@@ -877,7 +877,7 @@ export default function EmployeeProfile() {
                   <Document
                     key={index}
                     documentName={doc.name ? doc.name : 'example'}
-                    lastModifiedDate={doc.modifiedTime ? doc.modifiedTime : 'Dec 05 2023'}
+                    lastModifiedDate={doc.updatedAt ? doc.updatedAt : 'Dec 05 2023'}
                     documentSize={doc.size ? doc.size : '10kb'}
                     canDownload={true}
                     canPreview={true}
@@ -915,7 +915,7 @@ export default function EmployeeProfile() {
                           <TableCell component="th" scope="row">
                             {row.name ? row.name : 'exampleTab'}
                           </TableCell>
-                          <TableCell align="right">{row.modifiedTime ? row.modifiedTime : 'Dec 06 2022'}</TableCell>
+                          <TableCell align="right">{row.updatedAt ? row.updatedAt : 'Dec 06 2022'}</TableCell>
                           <TableCell align="right">{row.size ? row.size : '9kb'}</TableCell>
                           <TableCell align="right">
                             <Button>
