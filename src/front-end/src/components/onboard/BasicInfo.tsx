@@ -476,9 +476,7 @@ export default function BasicInfo() {
                                 </Typography>
                             </Grid>
                             <Grid item xs={12}>
-                            <Button variant="outlined" color="primary">
-                                Select File
-                            </Button>
+                                <FileUploadButton documentType='document' status='upload'/>
                             </Grid>
                         </Grid>
                     }
