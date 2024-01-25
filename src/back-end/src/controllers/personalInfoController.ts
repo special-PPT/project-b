@@ -65,7 +65,7 @@ const personalInfoController = {
   async uploadDocument(req: Request, res: Response) {
     const file = req.file as Express.MulterS3.File;
     const userId = req.params.userId;
-    const documentKey = file.key;
+    // const documentKey = file.key;
 
     try {
       // Update user's document with the S3 file URL
@@ -75,8 +75,7 @@ const personalInfoController = {
           $push: {
             documents: {
               url: file.location,
-              type: file.mimetype,
-              documentKey: documentKey,
+              // type: file.mimetype,
             },
           },
         },
@@ -91,19 +90,48 @@ const personalInfoController = {
     }
   },
 
-  async getDocument(req: Request, res: Response) {
-    const { userId, documentKey } = req.params;
+  async updateProfileImage(req: Request, res: Response) {
+    const file = req.file as Express.MulterS3.File;
+    const userId = req.params.userId;
+    // const documentType = req.body.documentType; // Assuming this is passed along with the file
+    // const status = req.body.status;
+    // const documentKey = file.key;
+    // const fileName = req.body.name;
+  
+    try {
+      // Assuming userID is stored as a string that matches the ObjectId format
+      const updatedInfo = await PersonalInformation.findOneAndUpdate(
+        { userID: userId },
+        { $set: { profilePicture: file.location } }, // Correctly set the profilePicture field
+        { new: true } // Return the updated document
+      );
+  
+      if (updatedInfo) {
+        res.status(200).json({ updatedInfo });
+      } else {
+        res.status(404).json({ message: "User not found" });
+      }
+    } catch (error) {
+      console.error(error); // Logging the error can help with debugging
+      res.status(500).json({ message: "Error updating profile picture", error });
+    }
+  },
+
+  async getProfileImage() {
+
+  },
+
+  async getDocuments(req: Request, res: Response) {
+    const { userId, docId } = req.params;
 
     try {
       // Retrieve the document URL from the database
       // (Assuming 'documents' is an array in your schema and each document has a 'key' and 'url' property)
       const userInfo = await PersonalInformation.findOne({ userID: userId });
-      const document = userInfo?.documents.find(
-        (doc) => doc.documentKey === documentKey
-      );
+      const documents = userInfo?.documents;
 
       if (document) {
-        res.status(200).json({ documentUrl: document.url });
+        res.status(200).json({ documents });
       } else {
         res.status(404).json({ message: "Document not found" });
       }

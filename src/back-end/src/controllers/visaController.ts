@@ -78,7 +78,6 @@ const visaController = {
             $set: {
               'documents.$.url': file.location,
               'documents.$.name': fileName,
-              'documents.$.documentKey': documentKey,
               'documents.$.status': 'Pending',
               'documents.$.feedback': ''
             },

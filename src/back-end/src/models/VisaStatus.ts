@@ -6,7 +6,6 @@ interface IDocumentSub {
   url: string;
   status: string;
   name: string;
-  documentKey?: string;
   feedback?: string;
 }
 
@@ -25,7 +24,6 @@ const DocumentSubSchema = new Schema({
   url: { type: String, required: true },
   status: { type: String, required: true },
   name: { type: String, require: true },
-  documentKey: { type: String, default: null },
   feedback: { type: String, default: null },
 },{ timestamps: true });
 

@@ -15,7 +15,6 @@ const app = express();
 
 app.use(cookieParser());
 
-app.use(cookieParser());
 
 // 连接到MongoDB
 mongoose.connect(process.env.MONGODB_URL!)

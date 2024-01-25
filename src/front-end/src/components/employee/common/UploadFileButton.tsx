@@ -3,6 +3,23 @@ import { Button, Box, Container } from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import axios from 'axios';
 
+function extractUserIdFromCookie(): string | null {
+    const cookies = document.cookie; // Get the cookie string
+    const userIdCookie = cookies.split('; ').find(row => row.startsWith('userId=')); // Find the userId cookie
+
+    if (userIdCookie) {
+        const encodedValue = userIdCookie.split('=')[1]; // Get the encoded value of userId
+        const decodedValue = decodeURIComponent(encodedValue); // Decode the value
+        const trimmedValue = decodedValue.substring(3, decodedValue.length - 1); // Trim "j%3A" and the last "%22"
+        return trimmedValue;
+    }
+
+    return null; // Return null if userId cookie is not found
+}
+
+const userId = extractUserIdFromCookie() as string;
+console.log(userId);
+
 interface FileUploadButtonProps {
     documentType: string; // Assuming you're passing this as a prop
     status: string;
@@ -11,23 +28,42 @@ interface FileUploadButtonProps {
 const FileUploadButton: React.FC<FileUploadButtonProps> = ({ documentType, status }) => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [filename, setFilename] = useState<string>("");
-    const userId = '65af6dea15c6d681995dcd97'; // Replace with actual user ID
+
     const [uploadProgress, setUploadProgress] = useState<number>(0);
 
     const uploadFile = async (file: File, userId: string) => {
-        const formData = new FormData();
-        formData.append('document', file);
-        formData.append('documentType', documentType);
-        formData.append('status', status);
-        formData.append('name', file.name);
+        let formData = new FormData();
+
+        if (documentType === 'image') {
+            formData.append("profileImage", file);
+        } else {
+            formData.append('document', file);
+            formData.append('documentType', documentType);
+            formData.append('status', status);
+            formData.append('name', file.name);
+        }
+
 
         try {
-            const response = await axios.post(`http://localhost:8000/visa/uploadDocument/${userId}`, formData, {
-                onUploadProgress: (progressEvent: any) => {
-                    const percentCompleted = progressEvent.total ? Math.round((progressEvent.loaded * 100) / progressEvent.total) : 0;
-                    setUploadProgress(percentCompleted);
-                },
-            });
+            let response;
+            if (documentType === 'image') {
+                response = await axios.put(`http://localhost:8000/personalInfo/updateImage/${userId}`, formData, {
+                    withCredentials: true,
+                    onUploadProgress: (progressEvent: any) => {
+                        const percentCompleted = progressEvent.total ? Math.round((progressEvent.loaded * 100) / progressEvent.total) : 0;
+                        setUploadProgress(percentCompleted);
+                    },
+                });
+            } else {
+                response = await axios.post(`http://localhost:8000/visa/uploadDocument/${userId}`, formData, {
+                    withCredentials: true,
+                    onUploadProgress: (progressEvent: any) => {
+                        const percentCompleted = progressEvent.total ? Math.round((progressEvent.loaded * 100) / progressEvent.total) : 0;
+                        setUploadProgress(percentCompleted);
+                    },
+                });
+            }
+
 
             console.log(response.data);
             setUploadProgress(0);
@@ -63,18 +99,24 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({ documentType, statu
             mt: '20px',
             ml: '20px',
             // mb: "20px"
-            
+
         }}>
             <Button
                 component="label"
                 variant="outlined"
                 startIcon={<UploadFileIcon />}
-                sx={{ m: 1, width: 200}}
+                sx={{ m: 1, width: 200 }}
             >
                 Upload File
-                <input type="file" accept=".pdf" hidden onChange={handleFileChange} />
+                {documentType === 'image' ? (
+                    <input type="file" name="image" accept="image/*" hidden onChange={handleFileChange} />
+
+                ) : (
+                    <input type="file" name="document" accept=".pdf" hidden onChange={handleFileChange} />
+
+                )}
             </Button>
-            
+
             <Button
                 sx={{
                     color: "white",
@@ -90,7 +132,7 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({ documentType, statu
             >
                 Submit
             </Button>
-            {filename && <Box sx={{m: 2}}>Selected file: {filename}</Box>}
+            {filename && <Box sx={{ m: 2 }}>Selected file: {filename}</Box>}
             {uploadProgress > 0 && (
                 <Box>
                     <p>Uploading: {uploadProgress}%</p>

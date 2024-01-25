@@ -6,6 +6,7 @@ export interface IRegistrationToken extends Document {
   email: string;
   expiry?: Date;
   status: string;
+  password: string;
   userId: mongoose.Types.ObjectId;
 }
 
@@ -13,6 +14,7 @@ const registrationTokenSchema: Schema = new Schema({
   name: { type: String, required: true },
   token: { type: String, default: null },
   email: { type: String, required: true },
+  password: { type: String },
   expiry: { type: Date },
   status: { type: String, required: true, default: 'not send' },
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true }
