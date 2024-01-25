@@ -10,7 +10,7 @@ import theme from "./theme";
 // import Reference from "./components/onboard/Reference";
 // import EmergencyContact from "./components/onboard/EmergencyContact";
 // import Footer from "./components/common/Footer";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import DashboardLayout from "./components/employee/dashboard/layout";
 import EmployeeHome from "./components/employee/EmployeeHome";
 import EmployeeProfile from "./components/employee/EmployeeProfile";
@@ -43,6 +43,7 @@ function App() {
         <ThemeProvider theme={theme}>
           <Routes>
             {/* Auth Routes */}
+            <Route path="/" element={<AuthLayout content="login"/>} />
             <Route path="/login" element={<AuthLayout content="login"/>} />
             <Route path="/signup/:token" element={<AuthLayout content=""/>} />
             {/* Onboarding routes */}
@@ -142,7 +143,7 @@ function App() {
               path="/hr/hiring-management/history"
               element={<History />}
             />
-
+            <Route path="*" element={<Navigate to="/login" />} />
             {/* Other Routes */}
           </Routes>
         </ThemeProvider>
