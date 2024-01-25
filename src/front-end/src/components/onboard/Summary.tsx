@@ -5,10 +5,15 @@ import { useCookies } from 'react-cookie';
 import axios from 'axios';
 export default function Summary() {
     // const user = useSelector((state: RootState) => state.user);
-    const {userInfo} = useContext(UserContext);
+    const {userInfo, setUserInfo} = useContext(UserContext);
     const [cookies] = useCookies(['userID']);
     const userID = cookies.userID;
     const handleSumbit = async () =>{
+        if (userInfo.emergencyContacts !== undefined) {
+            const emergencyContacts = Object.values(userInfo.emergencyContacts);
+            userInfo.emergencyContacts = emergencyContacts;
+        }
+        console.log(userInfo);
         await axios.put(`http://localhost:8000/personalInfo/update/${userID}`, userInfo)
         .then(res => {
             console.log(res.data);
