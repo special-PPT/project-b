@@ -35,7 +35,7 @@ const handleRowClick = (employeeId: string) => {
 
 const handleApplicationClick = (employeeId: string) => {
   const url = `/hr/employee-application/${employeeId}`;
-  window.open(url, "_blank");
+  window.open(url);
 };
 
 const actionStyle = {

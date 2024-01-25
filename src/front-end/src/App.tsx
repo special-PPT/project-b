@@ -30,7 +30,6 @@ function App() {
   // TODO: need route protection here (?)
   useEffect(() => {
     dispatch(fetchEmployeeProfiles());
-    dispatch(fetchOnboardingApplications());
   }, [dispatch]);
 
   return (

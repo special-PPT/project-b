@@ -66,19 +66,13 @@ function transformHrToHistoryData(hrData: HrManagement): HistoryRow[] {
   });
 }
 
-export function transformToOnboardData(
-  applications: OnboardingApplication[]
-): OnboardData[] {
-  return applications.map((application) => {
-    const name = `${application.applicationData.firstName} ${application.applicationData.lastName}`;
-
-    return {
-      employee_id: application.userID._id,
-      name: name,
-      email: application.userID.email,
-      status: application.status,
-    };
-  });
+export function transformEmployeeToOnboardData(employee: Employee): OnboardData {
+  return {
+    employee_id: employee._id,
+    name: employee.username,
+    email: employee.email,
+    status: employee.onboardingApplication.status
+  };
 }
 
 export function transformPersonalDetails(employee: Employee) {
@@ -125,5 +119,6 @@ export function transformProfileDocuments(
     name: doc.type,
     modifiedTime: "",
     size: "",
+    url: doc.url,
   }));
 }
