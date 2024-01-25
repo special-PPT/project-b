@@ -10,8 +10,8 @@ interface FileUploadButtonProps {
 }
 
 const FileUploadButton: React.FC<FileUploadButtonProps> = ({ documentType, status }) => {
-    const [cookies] = useCookies(['userId']);
-    const userId = cookies.userId;
+    const [cookies] = useCookies(['userID']);
+    const userId = cookies.userID;
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [filename, setFilename] = useState<string>("");
 
