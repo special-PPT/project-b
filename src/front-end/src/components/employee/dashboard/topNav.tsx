@@ -16,7 +16,6 @@ import {
 import userImage from './user.png';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -26,7 +25,7 @@ interface TopNavProps {
 }
 
 export default function TopNav(props: TopNavProps) {
-  const [cookies, , removeCookie] = useCookies(['username', 'role', 'userId', 'authToken']);
+  const [cookies, , removeCookie] = useCookies(['username', 'role', 'userId', 'authToken', 'email']);
   const username = cookies.username;
   const { onNavOpen } = props;
   const navigate = useNavigate();
@@ -36,6 +35,7 @@ export default function TopNav(props: TopNavProps) {
     removeCookie('role', { path: '/' });
     removeCookie('userId', { path: '/' });
     removeCookie('authToken', { path: '/' });
+    removeCookie('email', { path: '/' });
     navigate('/login');
   }
 

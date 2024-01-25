@@ -43,7 +43,7 @@ const userController = {
       const { username, password } = req.body;
       console.log(username, password);
       // Find user by username
-      const user = await User.findOne({ username });
+      const user = await User.findOne({ username }).populate('personalInformation');
       // console.log(user);
       if (!user) {
         return res.status(400).send("User not found");
@@ -69,6 +69,7 @@ const userController = {
       res.cookie("username", username, { maxAge: 3 * 60 * 60 * 1000 });
       res.cookie("userId", user._id, { maxAge: 3 * 60 * 60 * 1000 });
       res.cookie("role", user.role, { maxAge: 3 * 60 * 60 * 1000 });
+      res.cookie("email", user.email, { maxAge: 3 * 60 * 60 * 1000 });
       res.status(200).json({ user });
     } catch (error) {
       res.status(500).json({ message: "Error logging in user", error });
