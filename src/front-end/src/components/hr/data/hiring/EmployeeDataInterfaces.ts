@@ -57,4 +57,5 @@ export interface FileTableEntry {
   name: string;
   modifiedTime: string; 
   size: string;
+  url: string;
 };

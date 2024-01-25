@@ -64,6 +64,14 @@ const hrSlice = createSlice({
         }
       }
     },
+    updateEmployeeOnboardingApplicationStatus: (state, action) => {
+      const { employee_id, status, feedback } = action.payload;
+      const employee = state.employees[employee_id];
+      if (employee && employee.onboardingApplication) {
+        employee.onboardingApplication.status = status;
+        employee.onboardingApplication.feedback = feedback;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchEmployeeProfiles.fulfilled, (state, action) => {
@@ -77,5 +85,5 @@ const hrSlice = createSlice({
   },
 });
 
-export const { updateVisaDocumentStatus } = hrSlice.actions;
+export const { updateVisaDocumentStatus, updateEmployeeOnboardingApplicationStatus } = hrSlice.actions;
 export default hrSlice.reducer;

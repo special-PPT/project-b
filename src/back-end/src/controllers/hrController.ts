@@ -140,6 +140,32 @@ const hrController = {
     }
   },
 
+  // update onboarding application status
+  async updateOnboardingStatus(req: Request, res: Response) {
+    try {
+      const { employee_id, isAccept, feedback } = req.body;
+  
+      // Find the onboarding application by employee_id (userID)
+      const onboardingApplication = await OnboardingApplication.findOne({ userID: employee_id });
+  
+      if (!onboardingApplication) {
+        return res.status(404).send("Onboarding application not found");
+      }
+  
+      // Update the application's status and feedback
+      onboardingApplication.status = isAccept ? "Accepted" : "Rejected";
+      onboardingApplication.feedback = feedback;
+  
+      // Save the updated onboarding application
+      await onboardingApplication.save();
+  
+      return res.status(200).send("Onboarding status updated successfully");
+    } catch (error) {
+      console.error("Error updating onboarding status:", error);
+      return res.status(500).send("Internal Server Error");
+    }
+  },  
+
   // get all information from HRManagement
   async getAllHRManagementData(req: Request, res: Response) {
     try {
