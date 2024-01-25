@@ -1,11 +1,21 @@
 import { Button, Container, Grid, Paper, Typography } from '@mui/material'
 import React, { useContext } from 'react'
 import { UserContext } from './UserContext';
+import { useCookies } from 'react-cookie';
+import axios from 'axios';
 export default function Summary() {
     // const user = useSelector((state: RootState) => state.user);
     const {userInfo} = useContext(UserContext);
-    const handleSumbit = () =>{
-        
+    const [cookies] = useCookies(['userID']);
+    const userID = cookies.userID;
+    const handleSumbit = async () =>{
+        await axios.put(`http://localhost:8000/personalInfo/update/${userID}`, userInfo)
+        .then(res => {
+            console.log(res.data);
+        })
+        .catch(err => {
+            console.log(err);
+        });
     }
   return (
     <Container>
@@ -72,7 +82,7 @@ export default function Summary() {
         <Grid item xs={12}>
             <Button variant='contained' color='primary'
                 fullWidth
-                
+                onClick={handleSumbit}
             >
                 Submit
             </Button>
