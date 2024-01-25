@@ -5,7 +5,7 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { UserContext } from './UserContext';
 import dayjs, { Dayjs } from 'dayjs';
-
+import FileUploadButton from './uploadFile';
 
 export default function BasicInfo() {
     const { userInfo, setUserInfo, handleChange } = useContext(UserContext);
@@ -91,9 +91,10 @@ export default function BasicInfo() {
                    </Paper>
                 </Grid>
                 <Grid item xs={12}>
-                    <Button variant="contained" color="primary">
+                    <FileUploadButton documentType='image' status='upload'/>
+                    {/* <Button variant="contained" color="primary">
                         Upload Image
-                    </Button>
+                    </Button> */}
                 </Grid>
                 <Grid item xs={12}>
                     <Divider/>
@@ -548,9 +549,11 @@ export default function BasicInfo() {
                     </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                    <Button variant="outlined" color="primary">
+                <FileUploadButton documentType='document' status='upload' />
+
+                    {/* <Button variant="outlined" color="primary">
                         Select File
-                    </Button>
+                    </Button> */}
                 </Grid>
                 <Grid item xs={12}>
                     {/* <Button 

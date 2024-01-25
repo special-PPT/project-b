@@ -25,7 +25,7 @@ interface TopNavProps {
 }
 
 export default function TopNav(props: TopNavProps) {
-  const [cookies, , removeCookie] = useCookies(['username', 'role', 'userId', 'authToken']);
+  const [cookies, , removeCookie] = useCookies(['username', 'role', 'userId', 'authToken', 'email']);
   const username = cookies.username;
   const { onNavOpen } = props;
   const navigate = useNavigate();
@@ -35,6 +35,7 @@ export default function TopNav(props: TopNavProps) {
     removeCookie('role', { path: '/' });
     removeCookie('userId', { path: '/' });
     removeCookie('authToken', { path: '/' });
+    removeCookie('email', { path: '/' });
     navigate('/login');
   }
 

@@ -53,7 +53,6 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({ documentType, statu
 
             console.log(response.data);
             setUploadProgress(0);
-            window.location.reload();
             // Additional success handling
         } catch (error) {
             console.error('Error during file upload:', error);
