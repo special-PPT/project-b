@@ -11,20 +11,33 @@ import {
   useMediaQuery,
   Theme,
   Typography,
+  Button
 } from "@mui/material";
 import userImage from './user.png';
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
 
 interface TopNavProps {
-    onNavOpen: () => void;
-  }
+  onNavOpen: () => void;
+}
 
 export default function TopNav(props: TopNavProps) {
+  const [cookies, , removeCookie] = useCookies(['username', 'role', 'userId', 'authToken']);
+  const username = cookies.username;
   const { onNavOpen } = props;
+  const navigate = useNavigate();
   const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
-  const username = "John";
+  const handleLogout = async () => {
+    removeCookie('username', { path: '/' });
+    removeCookie('role', { path: '/' });
+    removeCookie('userId', { path: '/' });
+    removeCookie('authToken', { path: '/' });
+    navigate('/login');
+  }
 
   return (
     <>
@@ -75,7 +88,7 @@ export default function TopNav(props: TopNavProps) {
                 </Badge>
               </IconButton>
             </Tooltip>
-            <Typography>Logout</Typography>
+            <Button onClick={handleLogout}>Logout</Button>
             <Avatar
               sx={{
                 cursor: "pointer",
@@ -84,7 +97,7 @@ export default function TopNav(props: TopNavProps) {
               }}
               src={userImage}
             />
-            
+
           </Stack>
         </Stack>
       </Box>

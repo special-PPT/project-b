@@ -27,29 +27,15 @@ import FileUploadButton from "./common/UploadFileButton";
 import { useCookies } from 'react-cookie';
 
 
-// function extractUserIdFromCookie(): string | null {
-//   const cookies = document.cookie; // Get the cookie string
-//   const userIdCookie = cookies.split('; ').find(row => row.startsWith('userId=')); // Find the userId cookie
-  
-//   if (userIdCookie) {
-//     const encodedValue = userIdCookie.split('=')[1]; // Get the encoded value of userId
-//     const decodedValue = decodeURIComponent(encodedValue); // Decode the value
-//     const trimmedValue = decodedValue.substring(3, decodedValue.length - 1); // Trim "j%3A" and the last "%22"
-//     return trimmedValue;
-//   }
-
-//   return null; // Return null if userId cookie is not found
-// }
-
-// const userId = extractUserIdFromCookie() as string;
-
 
 
 interface DocumentSub {
-  type: string;
+  name: string;
+  modifiedTime: string;
+  size: string;         // Make sure this property exists
   url: string;
   documentKey: string;
-  name: string;
+  type: string;
 }
 
 interface EmergencyContact {
@@ -91,8 +77,7 @@ interface PersonalInformation {
 export default function EmployeeProfile() {
   const [cookies] = useCookies(['userId']);
   const userId = cookies.userId;
-  console.log(userId);
-  
+
   const [personalInfoData, setPersonalInfoData] = useState<PersonalInformation | null>(null);
   const [alertMessage, setAlertMessage] = useState<string>('');
 
@@ -110,6 +95,25 @@ export default function EmployeeProfile() {
       [section]: !prevModes[section],
     }));
   };
+
+  const fileTable = [
+    {
+      name: "Receipt",
+      modifiedTime: "Dec, 14, 2023",
+      size: "5kb",
+      url: "www.google.com",
+      documentKey: "12323123",
+      type: "Receipt"
+    },
+    {
+      name: "driver-licence",
+      modifiedTime: "Nov, 21, 2023",
+      size: "18kb",
+      url: "www.google.com",
+      documentKey: "12323123",
+      type: "Driver License"
+    },
+  ];
 
   const isMobile = useMediaQuery("(max-width:1000px)");
 
@@ -164,6 +168,7 @@ export default function EmployeeProfile() {
     useState("friend");
 
   const [profilePicture, setProfilePicture] = useState('path-to-file');
+  const [documents, setDocuments] = useState(fileTable);
 
 
   useEffect(() => {
@@ -223,7 +228,13 @@ export default function EmployeeProfile() {
           setProfilePicture(data.profilePicture);
         }
 
-        
+        setVisaType(data.workAuth);
+
+        if (data.documents) {
+          setDocuments(data.documents);
+        }
+
+
 
       } catch (e) {
         if (e instanceof Error) {
@@ -239,26 +250,6 @@ export default function EmployeeProfile() {
 
   }, []);
 
-
-
-  const fileTable = [
-    {
-      name: "Receipt",
-      modifiedTime: "Dec, 14, 2023",
-      size: "5kb",
-      url: "www.google.com",
-      documentKey: "12323123",
-      type: "Receipt"
-    },
-    {
-      name: "driver-licence",
-      modifiedTime: "Nov, 21, 2023",
-      size: "18kb",
-      url: "www.google.com",
-      documentKey: "12323123",
-      type: "Driver License"
-    },
-  ];
 
   const handleSubmitProfile = async () => {
     const personalInfo: PersonalInformation = {
@@ -343,9 +334,10 @@ export default function EmployeeProfile() {
       <Typography variant="h3" sx={{ mb: 4 }}>
         Personal Details
       </Typography>
-      <Stack spacing={5}>
+      <Stack  spacing={5}>
         <Box
           sx={{
+            display: 'flex',
             position: "relative",
             width: 200,
             height: 200,
@@ -353,27 +345,12 @@ export default function EmployeeProfile() {
           }}
         >
           <img
-            src={ profilePicture? profilePicture :  userImage}
+            src={profilePicture ? profilePicture : userImage}
             alt="user's img"
             style={{ width: "200px", height: "200px" }}
           />
-          <FileUploadButton documentType="image" status="submitted"/>
-          <Box
-            sx={{
-              position: "absolute",
-              top: -10,
-              right: -10,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "white", // Circle color
-              color: "black", // Icon color
-              borderRadius: "50%", // Makes the Box a circle
-              width: 40, // Width of the circle
-              height: 40, // Height of the circle
-            }}
-          >
-            
+          <Box>
+            <FileUploadButton documentType="image" status="submitted" />
           </Box>
         </Box>
         <Box
@@ -871,15 +848,15 @@ export default function EmployeeProfile() {
           <Box sx={{ m: 2 }}>
             {isMobile ? (
               <>
-                {fileTable.map((doc, index) => (
+                {documents.map((doc, index) => (
                   <Document
                     key={index}
-                    documentName={doc.name}
-                    lastModifiedDate={doc.modifiedTime}
-                    documentSize={doc.size}
+                    documentName={doc.name ? doc.name : 'example'}
+                    lastModifiedDate={doc.modifiedTime ? doc.modifiedTime : 'Dec 05 2023'}
+                    documentSize={doc.size ? doc.size : '10kb'}
                     canDownload={true}
                     canPreview={true}
-                    documentUrl={doc.url}
+                    documentUrl={doc.url ? doc.url : 'www.google.com'}
                   />
                 ))}
               </>
@@ -905,16 +882,16 @@ export default function EmployeeProfile() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {fileTable.map((row) => (
+                      {documents.map((row) => (
                         <TableRow
                           key={row.name}
                           sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                         >
                           <TableCell component="th" scope="row">
-                            {row.name}
+                            {row.name ? row.name : 'exampleTab'}
                           </TableCell>
-                          <TableCell align="right">{row.modifiedTime}</TableCell>
-                          <TableCell align="right">{row.size}</TableCell>
+                          <TableCell align="right">{row.modifiedTime ? row.modifiedTime : 'Dec 06 2022'}</TableCell>
+                          <TableCell align="right">{row.size ? row.size : '9kb'}</TableCell>
                           <TableCell align="right">
                             <Button>
                               <DownloadIcon />
@@ -944,7 +921,7 @@ export default function EmployeeProfile() {
         width: '50%',
         fontSize: 20,
         "&:hover": {
-            backgroundColor: "darkblue",
+          backgroundColor: "darkblue",
         },
         border: "1px solid #3a4d8f",
         mt: 4,

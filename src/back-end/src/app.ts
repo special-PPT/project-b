@@ -41,6 +41,7 @@ app.use('/application', applicationRoutes);
 app.use('/visa', visaRoutes);
 app.use('/hr', hrRoutes);
 
+
 // 处理不存在的路由
 app.use((req, res, next) => {
   res.status(404).send('Sorry, that route does not exist.');

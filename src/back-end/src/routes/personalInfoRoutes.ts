@@ -12,10 +12,10 @@ router.put('/update/:userId', authenticateToken, personalInfoController.updatePe
 router.get('/get/:userId', authenticateToken, personalInfoController.getPersonalInfo);
 
 // Upload document route
-router.post('/uploadDocument/:userId', upload.single('document'), personalInfoController.uploadDocument);
+router.post('/uploadDocument/:userId', authenticateToken, upload.single('document'), personalInfoController.uploadDocument);
 
 // Update profile image
-router.put('/updateImage/:userId',upload.single('image'),personalInfoController.updateProfileImage);
+router.put('/updateImage/:userId', authenticateToken, upload.single('image'),personalInfoController.updateProfileImage);
 
 
 // Route for getting a document

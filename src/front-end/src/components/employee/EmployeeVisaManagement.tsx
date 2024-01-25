@@ -13,6 +13,7 @@ import { CheckCircle, Warning, HourglassEmpty } from '@mui/icons-material';
 import { green, red, yellow, grey } from '@mui/material/colors';
 import PreviewIcon from "@mui/icons-material/Preview";
 import theme from "../../theme";
+import { useCookies } from "react-cookie";
 
 // Define the shape of the props according to your document structure
 interface DocStatusProps {
@@ -74,7 +75,6 @@ enum DocumentStatus {
 
 interface DocumentSub {
   type: string;
-  docType: string;
   url: string;
   status: string;
   name: string;
@@ -102,13 +102,13 @@ const documentTypes = ["OPT Receipt", "OPT EAD", "I-983", "I-20"];
 
 const initializeDocuments = (existingDocuments: DocumentSub[]): DocumentSub[] => {
   return documentTypes.map(type => {
-    const foundDoc = existingDocuments.find(doc => doc.docType === type);
+    const foundDoc = existingDocuments.find(doc => doc.type === type);
     if (foundDoc) return foundDoc;
 
     // If a document of a specific type is not found, create a default one
     return {
-      type: '',
-      docType: type,
+      type: type,
+      // docType: type, 
       url: '',
       status: 'Not_Submitted',
       name: '',
@@ -156,7 +156,7 @@ function CustomTabPanel(props: TabPanelProps) {
               <Typography>Drag and drop here</Typography>
             </Stack>
           </Box>
-          <FileUploadButton documentType={document.docType} status='Pending'/>
+          <FileUploadButton documentType={document.type} status='Pending'/>
         </Box>
       ) : (
         <><Box
@@ -234,7 +234,8 @@ function a11yProps(index: number) {
 export default function EmployeeVisaManagement() {
   const [currentTab, setCurrentTab] = useState(0);
   const [visaStatusData, setVisaStatusData] = useState<VisaStatusData | null>(null);
-  const userId = '65b04d30a01027291e2cc518';
+  const [cookies] = useCookies(['userId']);
+  const userId = cookies.userId;
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const initializedDocuments: DocumentSub[] = initializeDocuments(visaStatusData?.documents ?? []);
@@ -335,7 +336,7 @@ export default function EmployeeVisaManagement() {
 
 
                 {doc.status === "Rejected" && (
-                  <FileUploadButton documentType={doc.docType} status="Pending" />
+                  <FileUploadButton documentType={documentTypes[index]} status="Pending" />
                 )}
                 <Divider sx={{
                   mt: '20px'
@@ -374,7 +375,7 @@ export default function EmployeeVisaManagement() {
               initializedDocuments.map((doc, index) => {
                 return (
                   <CustomTabPanel
-                    key={doc.docType}
+                    key={doc.type}
                     value={currentTab}
                     index={index}
                     document={doc}

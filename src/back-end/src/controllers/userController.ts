@@ -75,7 +75,6 @@ const userController = {
   },
 
 
-
   // Update user status
   async updateUserStatus(req: Request, res: Response) {
     try {

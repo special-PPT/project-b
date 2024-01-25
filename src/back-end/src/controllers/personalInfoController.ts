@@ -122,7 +122,7 @@ const personalInfoController = {
   },
 
   async getDocuments(req: Request, res: Response) {
-    const { userId, docId } = req.params;
+    const { userId } = req.params;
 
     try {
       // Retrieve the document URL from the database

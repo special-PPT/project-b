@@ -2,23 +2,7 @@ import React, { useState } from "react";
 import { Button, Box, Container } from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import axios from 'axios';
-
-function extractUserIdFromCookie(): string | null {
-    const cookies = document.cookie; // Get the cookie string
-    const userIdCookie = cookies.split('; ').find(row => row.startsWith('userId=')); // Find the userId cookie
-
-    if (userIdCookie) {
-        const encodedValue = userIdCookie.split('=')[1]; // Get the encoded value of userId
-        const decodedValue = decodeURIComponent(encodedValue); // Decode the value
-        const trimmedValue = decodedValue.substring(3, decodedValue.length - 1); // Trim "j%3A" and the last "%22"
-        return trimmedValue;
-    }
-
-    return null; // Return null if userId cookie is not found
-}
-
-const userId = extractUserIdFromCookie() as string;
-console.log(userId);
+import { useCookies } from "react-cookie";
 
 interface FileUploadButtonProps {
     documentType: string; // Assuming you're passing this as a prop
@@ -26,6 +10,8 @@ interface FileUploadButtonProps {
 }
 
 const FileUploadButton: React.FC<FileUploadButtonProps> = ({ documentType, status }) => {
+    const [cookies] = useCookies(['userId']);
+    const userId = cookies.userId;
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [filename, setFilename] = useState<string>("");
 
@@ -35,10 +21,10 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({ documentType, statu
         let formData = new FormData();
 
         if (documentType === 'image') {
-            formData.append("profileImage", file);
+            formData.append("image", file);
         } else {
             formData.append('document', file);
-            formData.append('documentType', documentType);
+            formData.append('type', documentType);
             formData.append('status', status);
             formData.append('name', file.name);
         }
