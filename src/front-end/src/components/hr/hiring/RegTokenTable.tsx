@@ -17,10 +17,12 @@ import {
 import {
   handleRowClick,
   handleSendClick,
-  handleLinkClick,
   handleClickHistory,
 } from "../utils/utils";
 import SendIcon from "@mui/icons-material/Send";
+import { RegDataInterface } from "../data/hiring/EmployeeDataInterfaces";
+import { useDispatch } from "../../../redux/hooks/useDispatch";
+import { fetchEmployeeProfiles } from "../../../redux/features/hr/hrSlice";
 
 interface Column {
   id:
@@ -28,7 +30,6 @@ interface Column {
     | "name"
     | "email"
     | "generate_token_and_send_email"
-    | "link"
     | "status";
   label: string;
   minWidth?: number;
@@ -44,26 +45,15 @@ const columns: readonly Column[] = [
     label: "Generate token and send email",
     minWidth: 100,
   },
-  { id: "link", label: "Link", minWidth: 150 },
   { id: "status", label: "Status", minWidth: 100 },
 ];
 
-interface Data {
-  employee_id: number;
-  name: string;
-  email: string;
-  generate_token_and_send_email: boolean;
-  link: string;
-  status: string;
-}
-
 type RegTokenTableProps = {
-  rows: Data[];
+  rows: RegDataInterface[];
 };
 
-const RegTokenTable: React.FC<RegTokenTableProps> = ({
-  rows,
-}) => {
+const RegTokenTable: React.FC<RegTokenTableProps> = ({ rows }) => {
+  const dispatch = useDispatch();
   const theme = useTheme();
 
   const [page, setPage] = useState(0);
@@ -84,6 +74,16 @@ const RegTokenTable: React.FC<RegTokenTableProps> = ({
   const handleSearchChange = (query: string) => {
     setSearchQuery(query.toLowerCase());
   };
+
+  const handleIconClick = async (id: string, name: string, email: string) => {
+    const success = await handleSendClick(id, name, email);
+    if (success) {
+      dispatch(fetchEmployeeProfiles());
+    } else {
+      alert("Failed to generate token");
+    }
+  };
+
 
   const filteredRows = rows
     .filter((row) => row.name.toLowerCase().includes(searchQuery))
@@ -143,19 +143,14 @@ const RegTokenTable: React.FC<RegTokenTableProps> = ({
                     {row.generate_token_and_send_email ? (
                       <SendIcon
                         style={{
-                          color: theme.palette.primary.light,
+                          color: theme.palette.primary.main,
                           cursor: "pointer",
                         }}
-                        onClick={() => handleSendClick(row.employee_id)}
+                        onClick={() => handleIconClick(row.employee_id.toString(), row.name, row.email)}
                       />
                     ) : (
                       <SendIcon style={{ color: "grey" }} />
                     )}
-                  </StyledBodyCell>
-                  <StyledBodyCell>
-                    <ClickableSpan onClick={() => handleLinkClick(row.link)}>
-                      {row.link}
-                    </ClickableSpan>
                   </StyledBodyCell>
                   <StyledBodyCell>{row.status}</StyledBodyCell>
                 </TableRow>

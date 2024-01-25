@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from './redux/hooks/useDispatch';
 import { fetchEmployeeProfiles } from './redux/features/hr/hrSlice';
+import { fetchOnboardingApplications } from './redux/features/hr/onboardSlice';
 import "./App.css";
 // import LoginPage from './components/auth/loginPage';
 import { ThemeProvider } from "@mui/material";
@@ -21,12 +22,12 @@ import ProfileScreen from "./components/hr/profile/ProfileScreen";
 import HrVisaManagement from "./components/hr/visa/HrVisaManagement";
 import HrHiringManagement from "./components/hr/hiring/HrHiringManagement";
 import HrEmployeeApplication from "./components/hr/hiring/HrEmployeeApplication";
-import { Provider } from "react-redux";
-import store from "./redux/store/store";
 import RouteProtector from './components/auth/RouteProtector';
+import History from "./components/hr/hiring/History";
 function App() {
   const dispatch = useDispatch();
 
+  // TODO: need route protection here (?)
   useEffect(() => {
     dispatch(fetchEmployeeProfiles());
   }, [dispatch]);
@@ -136,6 +137,10 @@ function App() {
                 <HrEmployeeApplication />
               </RouteProtector>
               }
+            />
+            <Route
+              path="/hr/hiring-management/history"
+              element={<History />}
             />
 
             {/* Other Routes */}

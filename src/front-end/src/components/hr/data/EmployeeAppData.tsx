@@ -1,68 +1,7 @@
 import { SxProps, Theme } from '@mui/system';
+import { PersonalDetails, EmergencyContact } from './hiring/EmployeeDataInterfaces';
 
-const employeeData = {
-  personalDetails: {
-    firstName: "John",
-    lastName: "Doe",
-    middleName: "Yash",
-    preferredName: "",
-    DOB: "2000-01-09",
-    gender: "Male",
-    SSN: "000000",
-    street: "112 Second",
-    buildingOrApt: "1222",
-    city: "Pleasanton",
-    state: "CA",
-    zip: "666666",
-    email: "example@example.com",
-    cellPhone: "122-222-2221",
-    workingPhone: "669-999-6666",
-    visaType: "OPT",
-    visaStartDate: "2023-01-09",
-    visaEndDate: "2024-01-08",
-  },
-  emergencyContacts: [
-    {
-      firstName: "John",
-      lastName: "Doe",
-      middleName: "Doe",
-      phoneName: "000-222-333",
-      email: "example@example.com",
-      relationship: "friend",
-    },
-    {
-      firstName: "Jane",
-      lastName: "Smith",
-      middleName: "",
-      phoneName: "111-444-555",
-      email: "jane@example.com",
-      relationship: "sister",
-    },
-  ],
-};
-
-type PersonalDetails = {
-  firstName: string;
-  lastName: string;
-  middleName: string;
-  preferredName: string;
-  DOB: string;
-  gender: string;
-  SSN: string;
-  street: string;
-  buildingOrApt: string;
-  city: string;
-  state: string;
-  zip: string;
-  email: string;
-  cellPhone: string;
-  workingPhone: string;
-  visaType: string;
-  visaStartDate: string;
-  visaEndDate: string;
-};
-
-type PersonalDetailsFieldConfig = {
+export type PersonalDetailsFieldConfig = {
   key: keyof PersonalDetails;
   label: string;
   type?: string;
@@ -105,16 +44,7 @@ const employmentFields: PersonalDetailsFieldConfig[] = [
   { key: "visaEndDate", label: "End Date" },
 ];
 
-interface EmergencyContact {
-  firstName: string;
-  lastName: string;
-  middleName: string;
-  phoneName: string;
-  email: string;
-  relationship: string;
-}
-
-type EmergencyContactFieldConfig = {
+export type EmergencyContactFieldConfig = {
   key: keyof EmergencyContact;
   label: string;
   type?: string;
@@ -138,52 +68,14 @@ export interface TextFieldGroupProps {
   sx?: SxProps<Theme>;
 }
 
-type SectionData = {
+export type SectionData = {
   title: string;
   fields: (PersonalDetailsFieldConfig[] | EmergencyContactFieldConfig[])[];
   data: PersonalDetails | EmergencyContact;
   sx?: SxProps<Theme>;
 };
 
-
-const sections: SectionData[] = [
-  {
-    title: "Basic Info",
-    fields: [personalDetailsField1, personalDetailsField2],
-    data: employeeData.personalDetails,
-  },
-  {
-    title: "Address",
-    fields: [addressField1, addressField2],
-    data: employeeData.personalDetails,
-  },
-  {
-    title: "Contact",
-    fields: [contactFields],
-    data: employeeData.personalDetails,
-    sx: { px: 3 },
-  },
-  {
-    title: "Employment",
-    fields: [employmentFields],
-    data: employeeData.personalDetails,
-    sx: { px: 3 },
-  },
-  {
-    title: "Emergency Contact 1",
-    fields: [emergencyContact1Fields1, emergencyContact1Fields2],
-    data: employeeData.emergencyContacts[0],
-  },
-  {
-    title: "Emergency Contact 2",
-    fields: [emergencyContact1Fields1, emergencyContact1Fields2],
-    data: employeeData.emergencyContacts[1],
-  },
-];
-
-
 export {
-  employeeData,
   personalDetailsField1,
   personalDetailsField2,
   addressField1,
@@ -192,5 +84,4 @@ export {
   employmentFields,
   emergencyContact1Fields1,
   emergencyContact1Fields2,
-  sections,
 };

@@ -7,14 +7,25 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import RegTokenTable from "./RegTokenTable";
 import HrHiringTableMobile from "./HrHiringTableMobile";
 import OnboardAppReviewTable from "./OnboardAppReviewTable";
-import { regData } from "../data/HiringData";
-import { onboardDataArray } from "../data/HiringData";
+import { useTypedSelector } from "../../../redux/hooks/useTypedSelector";
+import {
+  transformEmployeeToRegData,
+  transformEmployeeToOnboardData,
+} from "../data/hiring/hiringDataTransformUtils";
 
 type HrHiringManagementProps = {
   // your props here
 };
 
 const HrHiringManagement: React.FC<HrHiringManagementProps> = (props) => {
+  const employees = useTypedSelector((state) => state.hr.employees);
+  const regData = Object.values(employees)
+    .filter((employee) => !employee.isActive)
+    .map((employee) => transformEmployeeToRegData(employee));
+
+  const onboardDataArray = Object.values(employees)
+    .map((employee) => transformEmployeeToOnboardData(employee));
+
   const theme = useTheme();
   const [currentTab, setCurrentTab] = useState("registrationToken");
   const isMobile = useMediaQuery("(max-width:600px)");
@@ -70,7 +81,10 @@ const HrHiringManagement: React.FC<HrHiringManagementProps> = (props) => {
             <HrHiringTableMobile currentTab={currentTab} rows={regData} />
           )}
           {currentTab === "onboardingApplicationReview" && (
-            <HrHiringTableMobile currentTab={currentTab} rows={onboardDataArray} />
+            <HrHiringTableMobile
+              currentTab={currentTab}
+              rows={onboardDataArray}
+            />
           )}
         </>
       )}
