@@ -3,12 +3,17 @@ import {
   Employee,
   HrManagement,
   OnboardingApplication,
+  Document,
 } from "../../../../redux/features/hr/hrTypes";
 import {
   RegDataInterface,
   HistoryRow,
   OnboardData,
+  FileTableEntry,
 } from "./EmployeeDataInterfaces";
+function formatDate(dateString: string) {
+  return dateString.split("T")[0];
+}
 
 export const transformEmployeeToRegData = (
   employee: Employee
@@ -74,4 +79,51 @@ export function transformToOnboardData(
       status: application.status,
     };
   });
+}
+
+export function transformPersonalDetails(employee: Employee) {
+  const personalProfile = {
+    profilePicture: !employee.personalInformation.profilePicture
+      ? "https://wallpapers-clan.com/wp-content/uploads/2023/06/sad-ghost-dark-blue-background.jpg"
+      : employee.personalInformation.profilePicture,
+    firstName: employee.personalInformation.firstName,
+    lastName: employee.personalInformation.lastName,
+    middleName: employee.personalInformation.middleName,
+    preferredName: employee.personalInformation.preferredName,
+    DOB: formatDate(employee.personalInformation.dateOfBirth),
+    gender: employee.personalInformation.gender,
+    SSN: employee.personalInformation.ssn,
+    street: employee.personalInformation.address.street,
+    buildingOrApt: employee.personalInformation.address.building,
+    city: employee.personalInformation.address.city,
+    state: employee.personalInformation.address.state,
+    zip: employee.personalInformation.address.zip,
+    email: employee.email,
+    cellPhone: employee.personalInformation.phoneNumbers.cell,
+    workingPhone: employee.personalInformation.phoneNumbers.work,
+    visaType: employee.visaStatus.visaType,
+    visaStartDate: formatDate(employee.visaStatus.startDate),
+    visaEndDate: formatDate(employee.visaStatus.endDate),
+  };
+  const contacts = employee.personalInformation.emergencyContacts.map(
+    (contact) => ({
+      firstName: contact.firstName,
+      lastName: contact.lastName,
+      middleName: contact.middleName,
+      phoneName: contact.phone,
+      email: contact.email,
+      relationship: contact.relationship,
+    })
+  );
+  return { personalProfile, contacts };
+}
+
+export function transformProfileDocuments(
+  documents: Document[]
+): FileTableEntry[] {
+  return documents.map((doc) => ({
+    name: doc.type,
+    modifiedTime: "",
+    size: "",
+  }));
 }
