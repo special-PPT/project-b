@@ -16,7 +16,6 @@ import {
 import userImage from './user.png';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;

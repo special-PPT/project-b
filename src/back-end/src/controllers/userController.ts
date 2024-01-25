@@ -42,7 +42,7 @@ const userController = {
       const { username, password } = req.body;
       console.log(username, password);
       // Find user by username
-      const user = await User.findOne({ username });
+      const user = await User.findOne({ username }).populate('personalInformation');
       // console.log(user);
       if (!user) {
         return res.status(400).send("User not found");
