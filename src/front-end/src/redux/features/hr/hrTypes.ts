@@ -11,7 +11,20 @@ export interface Employee {
   createdAt: string;
   updatedAt: string;
   __v: number;
-  registrationToken: string;
+  registrationToken: RegistrationToken;
+}
+
+interface RegistrationToken {
+  _id: string;
+  createdAt: string;  // ISO date string format
+  email: string;
+  expiry: string;     // ISO date string format
+  name: string;
+  status: string;
+  token: string;
+  updatedAt: string;  // ISO date string format
+  userId: string;
+  __v: number;
 }
 
 interface PersonalInformation {
@@ -93,4 +106,40 @@ export interface HrEmployeeProfileData {
   work_auth: string;
   phone: string;
   email: string;
+}
+
+interface User {
+  createdAt: string;
+  updatedAt: string;
+  email: string;
+  isActive: boolean;
+  onboardingApplication: string;
+  password: string;
+  personalInformation: string;
+  registrationToken: string;
+  role: string;
+  username: string;
+  visaStatus: string;
+  __v: number;
+  _id: string;
+}
+
+export interface HrManagement {
+  createdAt: string;
+  updatedAt: string;
+  userID: string;
+  __v: number;
+  _id: string;
+  employeeProfiles: User[]; 
+  registrationTokens: RegistrationToken[];
+}
+
+export interface OnboardingApplication {
+  _id: string;
+  userID: User;
+  status: string;
+  applicationData: PersonalInformation;
+  feedback?: string;
+  submittedDate: Date;
+  reviewedDate?: Date;
 }
