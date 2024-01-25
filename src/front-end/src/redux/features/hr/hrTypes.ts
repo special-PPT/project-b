@@ -6,7 +6,7 @@ export interface Employee {
   role: string;
   isActive: boolean;
   personalInformation: PersonalInformation;
-  onboardingApplication: string;
+  onboardingApplication: OnboardingApplication;
   visaStatus: VisaStatus;
   createdAt: string;
   updatedAt: string;
@@ -113,7 +113,7 @@ interface User {
   updatedAt: string;
   email: string;
   isActive: boolean;
-  onboardingApplication: string;
+  onboardingApplication: OnboardingApplication;
   password: string;
   personalInformation: string;
   registrationToken: string;

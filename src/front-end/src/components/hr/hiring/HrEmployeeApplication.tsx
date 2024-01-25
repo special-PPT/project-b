@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Container,
   Grid,
   Paper,
@@ -14,18 +13,31 @@ import {
   MenuItem,
   TableHead,
   TableRow,
+  IconButton,
+  useTheme,
 } from "@mui/material";
+import { saveAs } from "file-saver";
 import EditIcon from "@mui/icons-material/Edit";
 import { useParams } from "react-router-dom";
 import DownloadIcon from "@mui/icons-material/Download";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import PreviewIcon from "@mui/icons-material/Preview";
 import {
   transformPersonalDetails,
   transformProfileDocuments,
 } from "../data/hiring/hiringDataTransformUtils";
 import { useTypedSelector } from "../../../redux/hooks/useTypedSelector";
+import AppDecisionButtons from "../common/ApplicationDecision";
 
 export default function HrEmployeeApplication() {
+  const theme = useTheme();
+
+  const handlePreviewClick = (documentUrl: string) => {
+    const isAbsoluteUrl =
+      documentUrl.startsWith("http://") || documentUrl.startsWith("https://");
+    const urlToOpen = isAbsoluteUrl ? documentUrl : `http://${documentUrl}`;
+    window.open(urlToOpen, "_blank");
+  };
+
   const { employeeId } = useParams();
   const effectiveEmployeeId = employeeId ? employeeId : "";
   console.log("effectiveEmployeeId: ", effectiveEmployeeId);
@@ -41,6 +53,8 @@ export default function HrEmployeeApplication() {
     transformPersonalDetails(employee),
     transformProfileDocuments(employee.personalInformation.documents),
   ];
+
+  const showButtons = employeeId !== undefined && employee.onboardingApplication && employee.onboardingApplication.status === 'Pending';
 
   return (
     <Container
@@ -515,14 +529,20 @@ export default function HrEmployeeApplication() {
                       <TableCell align="right">{row.modifiedTime}</TableCell>
                       <TableCell align="right">{row.size}</TableCell>
                       <TableCell align="right">
-                        <Button>
-                          <DownloadIcon />
-                        </Button>
+                        <IconButton
+                          onClick={() => saveAs(row.url, "downloadedFile.pdf")}
+                        >
+                          <DownloadIcon
+                            sx={{ color: theme.palette.primary.main }}
+                          />
+                        </IconButton>
                       </TableCell>
                       <TableCell align="right">
-                        <Button>
-                          <RemoveRedEyeIcon />
-                        </Button>
+                        <IconButton onClick={() => handlePreviewClick(row.url)}>
+                          <PreviewIcon
+                            sx={{ color: theme.palette.primary.main }}
+                          />
+                        </IconButton>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -532,7 +552,9 @@ export default function HrEmployeeApplication() {
           </Box>
         </Box>
         {/* TODO: */}
-        {/* <DecisionButtons big˜gerButton={true}/> */}
+        {showButtons && (
+          <AppDecisionButtons employeeId={employeeId} />
+        )}
       </Stack>
     </Container>
   );

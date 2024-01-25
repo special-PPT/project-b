@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { OnboardingApplication } from './hrTypes';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+import { OnboardingApplication } from "./hrTypes";
 
 type OnboardingApplicationsState = {
   applications: { [key: string]: OnboardingApplication };
@@ -8,27 +8,26 @@ type OnboardingApplicationsState = {
 };
 
 export const fetchOnboardingApplications = createAsyncThunk(
-  'hr/fetchOnboardingApplications',
+  "hr/fetchOnboardingApplications",
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get<OnboardingApplication[]>(
-        'http://localhost:8000/hr/onboarding-applications'
+        "http://localhost:8000/hr/onboarding-applications"
       );
 
-      const transformedData = response.data.reduce<{ [key: string]: OnboardingApplication }>(
-        (acc, application) => {
-          acc[application._id] = application;
-          return acc;
-        },
-        {}
-      );
+      const transformedData = response.data.reduce<{
+        [key: string]: OnboardingApplication;
+      }>((acc, application) => {
+        acc[application._id] = application;
+        return acc;
+      }, {});
 
       return transformedData;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         return rejectWithValue(error.message);
       } else {
-        return rejectWithValue('An unknown error occurred');
+        return rejectWithValue("An unknown error occurred");
       }
     }
   }
@@ -42,19 +41,30 @@ const initialState: OnboardingApplicationsState = {
 
 // Create slice
 const onboardingSlice = createSlice({
-  name: 'onboarding',
+  name: "onboarding",
   initialState,
   reducers: {
+    updateOnboardingApplicationStatus: (state, action) => {
+      const { employee_id, status, feedback } = action.payload;
+      const application = state.applications[employee_id];
+      if (application) {
+        application.status = status;
+        application.feedback = feedback;
+      }
+    },
   },
+
   extraReducers: (builder) => {
     builder.addCase(fetchOnboardingApplications.fulfilled, (state, action) => {
       state.applications = action.payload;
       state.error = null;
     });
     builder.addCase(fetchOnboardingApplications.rejected, (state, action) => {
-      state.error = action.error.message || 'Failed to fetch onboarding applications';
+      state.error =
+        action.error.message || "Failed to fetch onboarding applications";
     });
   },
 });
 
 export default onboardingSlice.reducer;
+export const { updateOnboardingApplicationStatus } = onboardingSlice.actions;

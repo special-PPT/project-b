@@ -10,9 +10,8 @@ import OnboardAppReviewTable from "./OnboardAppReviewTable";
 import { useTypedSelector } from "../../../redux/hooks/useTypedSelector";
 import {
   transformEmployeeToRegData,
-  transformToOnboardData,
+  transformEmployeeToOnboardData,
 } from "../data/hiring/hiringDataTransformUtils";
-import { OnboardData } from "../data/hiring/EmployeeDataInterfaces";
 
 type HrHiringManagementProps = {
   // your props here
@@ -24,13 +23,8 @@ const HrHiringManagement: React.FC<HrHiringManagementProps> = (props) => {
     .filter((employee) => !employee.isActive)
     .map((employee) => transformEmployeeToRegData(employee));
 
-  // call useTypedSelector to get applications stored in redux and apply transformToOnboardData on it
-  const applicationsDictionary = useTypedSelector(
-    (state) => state.onboarding.applications
-  );
-  const onboardDataArray: OnboardData[] = transformToOnboardData(
-    Object.values(applicationsDictionary)
-  );
+  const onboardDataArray = Object.values(employees)
+    .map((employee) => transformEmployeeToOnboardData(employee));
 
   const theme = useTheme();
   const [currentTab, setCurrentTab] = useState("registrationToken");
