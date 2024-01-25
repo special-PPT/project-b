@@ -127,7 +127,7 @@ const hrController = {
       }
 
       // Update the document's status and feedback
-      document.status = isAccept ? "Accepted" : "Rejected";
+      document.status = isAccept ? "Approved" : "Rejected";
       document.feedback = feedback;
 
       // Save the updated visa status
@@ -153,7 +153,7 @@ const hrController = {
       }
   
       // Update the application's status and feedback
-      onboardingApplication.status = isAccept ? "Accepted" : "Rejected";
+      onboardingApplication.status = isAccept ? "Approved" : "Rejected";
       onboardingApplication.feedback = feedback;
   
       // Save the updated onboarding application
