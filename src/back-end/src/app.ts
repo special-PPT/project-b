@@ -5,11 +5,19 @@ import personalInfoRoutes from './routes/personalInfoRoutes';
 import applicationRoutes from './routes/applicationRoutes';
 import visaRoutes from './routes/visaRoutes';
 import hrRoutes from './routes/hrRoutes';
-import cors from 'cors';
+import verifyRoutes from './routes/verifyRoutes';
+import cors from 'cors'; 
+import cookieParser from 'cookie-parser';
+import { verify } from 'crypto';
+
 require('dotenv').config();
 const CookieParser = require('cookie-parser');
 
 const app = express();
+
+app.use(cookieParser());
+
+app.use(cookieParser());
 
 // 连接到MongoDB
 mongoose.connect(process.env.MONGODB_URL!)
@@ -18,20 +26,27 @@ mongoose.connect(process.env.MONGODB_URL!)
 
 // CORS配置
 const corsOptions = {
-  origin: '*', // 指定接受请求的源
-  credentials: true // 允许跨源请求发送凭证
+  origin: 'http://localhost:3000',
+  credentials: true, // 允许跨域请求携带凭据
 };
 
 app.use(cors(corsOptions));
 app.use(CookieParser());
 app.use(express.json());
 
-// 路由中间件
+// Built-in middleware for URL-encoded data
+app.use(express.urlencoded({ extended: true }));
+
+// Route Middlewares
 app.use('/user', userRoutes);
 app.use('/personalInfo', personalInfoRoutes);
 app.use('/application', applicationRoutes);
 app.use('/visa', visaRoutes);
 app.use('/hr', hrRoutes);
+// /verify/${token.token}
+app.use('/verify', verifyRoutes);
+
+
 
 // 处理不存在的路由
 app.use((req, res, next) => {

@@ -32,16 +32,9 @@ export default function OnboardingLayout() {
   const handleBack = () => {
       setActiveStep(activeStep - 1);
   }
-  const userID = "65adb80fe7e982f9b419d6c7"
-  const handleSubmit = async () => {
-    const resp = await axios.put(`http://localhost:8000/personalInfo/update/${userID}`, userInfo)
-    .then(res => {
-        console.log(res.data);
-    })
-    .catch(err => {
-        console.log(err);
-    }
-    )
+  const userID = "65af03d70b1107824b6b511c"
+  const handleSubmit = () =>{
+        console.log(userInfo);
   }
   return (
     <UserProvider>
@@ -52,22 +45,26 @@ export default function OnboardingLayout() {
                 </Grid> 
                 <Grid item xs={12} md={8}>
                     {OnboardingContent(activeStep)}
-                    <Button variant="outlined" color="primary" onClick={handleBack}>
-                        Back
-                    </Button>
-                    <Button variant="contained" color="primary" onClick={handleNext}>
-                        Save
-                    </Button>
+                    <Grid container spacing={3}>
+                        <Grid item xs={12} md={activeStep === 3? 12 : 6}>
+                            <Button variant="outlined" color="primary" onClick={handleBack}
+                            fullWidth
+                            >
+                                Back
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            {
+                                activeStep === 3 ? null :
+                                <Button variant="contained" color="primary" onClick={handleNext}
+                                fullWidth
+                                >
+                                    Save
+                                </Button>
+                            }
+                        </Grid>
+                    </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                    <Button variant="contained" color="primary" onClick={handleSubmit}
-                    fullWidth
-                    >
-                        Submit
-                    </Button>
-                </Grid>
-                
-                
             </Grid>
         </Container>
     </UserProvider>

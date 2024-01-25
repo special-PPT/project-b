@@ -53,11 +53,13 @@ const hrPersonalInfo: Partial<IPersonalInformation> = {
   documents: [
     {
       type: "Passport",
+      name: "passport.pdf",
       url: "url-to-passport-doc",
       documentKey: "example-key-1"
     },
     {
       type: "Visa",
+      name: "visa.pdf",
       url: "url-to-visa-doc",
       documentKey: "example-key-2"
     },
