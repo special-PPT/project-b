@@ -1,11 +1,12 @@
 import express, { Request, Response } from "express";
 import HRManagement from "../models/HRManagement";
 import User from "../models/User";
+import OnboardingApplication from "../models/OnboardingApplication";
 import PersonalInformation from "../models/PersonalInformation";
 import VisaStatus from "../models/VisaStatus";
 import RegistrationToken from "../models/RegistrationToken";
-const { registTokenGen } = require("../config/registTokenGen");
-const { sendEmail } = require("../config/mailConfig");
+import registTokenGen from "../config/registTokenGen";
+const { sendEmail, sendEmailNotifs } = require("../config/mailConfig");
 
 const hrController = {
   // Generate and send a registration token
@@ -14,7 +15,7 @@ const hrController = {
       const { name, email, userId } = req.body;
 
       // Generate a token logic here (can use a package like uuid or crypto)
-      const token = registTokenGen(email + name); // Replace this with actual token generation logic
+      const token = registTokenGen(email + name);
       sendEmail(email, token);
 
       // Create a RegistrationToken and save it
@@ -26,39 +27,65 @@ const hrController = {
         token: token,
         email: email,
         expiry: expiry,
-        status: "sent",
+        status: "Sent",
         userId: userId,
       });
 
-      // Save the token information in HRManagement
-      // Assuming HRManagement schema can store registration tokens
-      const hrRecord = new HRManagement({
-        // set the registration token details here
-      });
+      await registrationToken.save();
+
+      // Find the HR user's ID from the Users collection
+      const hrUser = await User.findOne({ role: "HR" });
+      if (!hrUser) {
+        throw new Error("HR user not found");
+      }
+      const hrUserId = hrUser._id;
+
+      // Find HRManagement record corresponding to HR's userId and update it
+      let hrRecord = await HRManagement.findOne({ userID: hrUserId });
+
+      if (!hrRecord) {
+        // If no HRManagement record exists for HR, create a new one
+        hrRecord = new HRManagement({
+          userID: hrUserId,
+          registrationTokens: [],
+          employeeProfiles: [],
+        });
+      }
+
+      // Push the new token and employee profile to the HRManagement record
+      hrRecord.registrationTokens.push(registrationToken._id);
+      hrRecord.employeeProfiles.push(userId);
 
       await hrRecord.save();
 
-      // Send an email with the token (use an email service)
-      // This is just a placeholder for sending an email
-      console.log(`Sending email to ${email} with token: ${token}`);
+      // Update user with the new registration token
+      const updatedUser = await User.findByIdAndUpdate(userId, {
+        $set: { registrationToken: registrationToken._id },
+      });
+      if (!updatedUser) {
+        throw new Error("User not found or update failed");
+      }
 
+      console.log(`Sending email to ${email} with token: ${token}`);
       res
         .status(200)
         .json({ message: "Registration token generated and sent" });
     } catch (error) {
+      console.error("Error generating token:", error);
       res.status(500).json({ message: "Error generating token", error });
     }
   },
 
-  // View all employee profiles
-  async viewEmployeeProfiles(req: Request, res: Response) {
+  // api for hr to send notification email to employee
+  async sendEmailNotifications(req: Request, res: Response) {
     try {
-      const profiles = await User.find({});
-      res.status(200).json(profiles);
+      const { toUser, subject, text, html } = req.body;
+      await sendEmailNotifs(toUser, subject, text, html);
+
+      res.status(200).json({ message: "Email sent successfully" });
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Error retrieving employee profiles", error });
+      console.error("Error sending email: ", error);
+      res.status(500).json({ message: "Error sending email", error });
     }
   },
 
@@ -68,49 +95,13 @@ const hrController = {
     try {
       const employees = await User.find({ role: "Employee" })
         .populate("personalInformation")
-        .populate("visaStatus");
+        .populate("visaStatus")
+        .populate("registrationToken")
+        .populate("onboardingApplication");
       res.status(200).json(employees);
     } catch (error) {
       res.status(500).json({
         message: "Error retrieving all employee personal info",
-        error,
-      });
-    }
-  },
-
-  async getEmployeePersonalInfoById(req: Request, res: Response) {
-    try {
-      const employeeId = req.params.employeeId;
-      const personalInfo = await PersonalInformation.findOne({
-        userID: employeeId,
-      }).populate("documents");
-
-      if (!personalInfo) {
-        return res.status(404).json({ message: "Employee not found" });
-      }
-
-      res.status(200).json(personalInfo);
-    } catch (error) {
-      res.status(500).json({
-        message: "Error retrieving employee personal info",
-        error,
-      });
-    }
-  },
-
-  async getEmployeeVisaStatusById(req: Request, res: Response) {
-    try {
-      const employeeId = req.params.employeeId;
-      const visaStatus = await VisaStatus.findOne({ userID: employeeId });
-
-      if (!visaStatus) {
-        return res.status(404).json({ message: "Employee not found" });
-      }
-
-      res.status(200).json(visaStatus);
-    } catch (error) {
-      res.status(500).json({
-        message: "Error retrieving employee visa status",
         error,
       });
     }
@@ -125,27 +116,62 @@ const hrController = {
       const visaStatus = await VisaStatus.findOne({ userID: employee_id });
 
       if (!visaStatus) {
-        return res.status(404).send('Employee not found');
+        return res.status(404).send("Employee not found");
       }
 
       // Find the document by type
-      const document = visaStatus.documents.find(doc => doc.type === type);
+      const document = visaStatus.documents.find((doc) => doc.type === type);
 
       if (!document) {
-        return res.status(404).send('Document not found');
+        return res.status(404).send("Document not found");
       }
 
       // Update the document's status and feedback
-      document.status = isAccept ? 'Accepted' : 'Rejected';
+      document.status = isAccept ? "Accepted" : "Rejected";
       document.feedback = feedback;
 
       // Save the updated visa status
       await visaStatus.save();
 
-      return res.status(200).send('Document status updated successfully');
+      return res.status(200).send("Document status updated successfully");
     } catch (error) {
-      console.error('Error updating document status:', error);
-      return res.status(500).send('Internal Server Error');
+      console.error("Error updating document status:", error);
+      return res.status(500).send("Internal Server Error");
+    }
+  },
+
+  // get all information from HRManagement
+  async getAllHRManagementData(req: Request, res: Response) {
+    try {
+      const hrUserId = req.query.hrUserId;
+
+      // Find the HRManagement document for the HR user
+      const hrData = await HRManagement.findOne({ userID: hrUserId })
+        .populate("employeeProfiles")
+        .populate("registrationTokens");
+
+      res.status(200).json(hrData);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error retrieving HR management data",
+        error,
+      });
+    }
+  },
+
+  // get all onboarding applications
+  async getAllOnboardingApps(req: Request, res: Response) {
+    try {
+      const applications = await OnboardingApplication.find()
+        .populate("userID")
+        .populate("applicationData");
+
+      res.status(200).json(applications);
+    } catch (error) {
+      console.error("Error fetching onboarding applications:", error);
+      res
+        .status(500)
+        .json({ message: "Error retrieving onboarding applications", error });
     }
   },
 

@@ -7,6 +7,8 @@ import User from "../models/User";
 import PersonalInformation from "../models/PersonalInformation";
 import OnboardingApplication from "../models/OnboardingApplication";
 import VisaStatus from "../models/VisaStatus";
+import RegistrationToken from "../models/RegistrationToken";
+import HRManagement from "../models/HRManagement";
 
 const numEmployee = 15;
 
@@ -24,6 +26,8 @@ async function createData() {
     await PersonalInformation.deleteMany({});
     await OnboardingApplication.deleteMany({});
     await VisaStatus.deleteMany({});
+    await RegistrationToken.deleteMany({});
+    await HRManagement.deleteMany({});
     console.log("All existing users deleted");
 
     console.log("Creating HR user...");
@@ -34,13 +38,13 @@ async function createData() {
     await createUsersWithData(numEmployee);
     console.log("Users with data created");
 
-    console.log("Inserting HR management data...");
-    await insertHRManagementData();
-    console.log("HR management data inserted");
-
     console.log("Inserting registration tokens...");
     await insertRegistrationTokens();
     console.log("Registration token inserted.")
+
+    console.log("Inserting HR management data...");
+    await insertHRManagementData();
+    console.log("HR management data inserted");
   } catch (error) {
     console.error("Error in createData:", error);
   } finally {

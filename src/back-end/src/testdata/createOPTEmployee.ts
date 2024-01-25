@@ -48,10 +48,11 @@ const generateRandomUserData = (
 
     const user: Partial<IUser> = {
       username: faker.internet.userName({ firstName, lastName }),
-      email: faker.internet.email({ firstName, lastName }),
+      email: "chenyanru0812@gmail.com",
+      // email: faker.internet.email({ firstName, lastName }),
       password: "password",
       role: "Employee",
-      isActive: generateBiasedBoolean(0.7),
+      isActive: generateBiasedBoolean(0.3),
     };
 
     const personalInfo: Partial<IPersonalInformation> = {

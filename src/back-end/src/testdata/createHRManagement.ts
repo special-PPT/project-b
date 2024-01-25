@@ -5,7 +5,6 @@ import User from "../models/User";
 require("dotenv").config();
 
 // Sample HRManagement Data
-
 export async function insertHRManagementData() {
   try {
     // Retrieve all users with the role of 'HR'
@@ -20,12 +19,10 @@ export async function insertHRManagementData() {
     }
 
     // Retrieve all registration tokens
-    const tokens = await RegistrationToken.find({});
+    const tokens = await RegistrationToken.find({}).populate("userId");
+    // Map to get token IDs and corresponding employee user IDs
     const tokenIds = tokens.map((token) => token._id);
-
-    // Retrieve all employee user IDs
-    const employees = await User.find({ role: "Employee" });
-    const employeeIds = employees.map((employee) => employee._id);
+    const employeeIds = tokens.map((token) => token.userId);
 
     for (const hr of hrs) {
       const hrManagementData = {
@@ -41,7 +38,6 @@ export async function insertHRManagementData() {
     }
   } catch (error) {
     console.error("Failed to insert HRManagement data:", error);
-  } finally {
   }
 }
 

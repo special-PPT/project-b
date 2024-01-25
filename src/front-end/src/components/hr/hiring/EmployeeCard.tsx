@@ -12,7 +12,7 @@ import {
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
 interface EmployeeCardProps {
-  employee_id: number;
+  employee_id: string;
   name: string;
   email: string;
   generate_token_and_send_email?: boolean;
@@ -50,7 +50,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
                 color: theme.palette.primary.light,
                 cursor: "pointer",
               }}
-              onClick={() => handleSendClick(employee_id)}
+              onClick={() => handleSendClick(employee_id, name, email)}
             />
           ) : (
             <SendIcon

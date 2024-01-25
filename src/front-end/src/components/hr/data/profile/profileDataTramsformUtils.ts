@@ -63,7 +63,9 @@ export function transformEmployeeToProfileData(
   };
 }
 
-export function transformProfileDocuments (documents: Document[]): DocumentInterface[] {
+export function transformProfileDocuments(
+  documents: Document[]
+): DocumentInterface[] {
   return documents.map((doc) => ({
     documentName: doc.type,
     lastModifiedDate: "",
@@ -72,4 +74,4 @@ export function transformProfileDocuments (documents: Document[]): DocumentInter
     canPreview: true,
     documentUrl: doc.url,
   }));
-};
+}
