@@ -16,7 +16,6 @@ import {
   TableRow,
   useMediaQuery,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
 import DownloadIcon from "@mui/icons-material/Download";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import userImage from "./dashboard/user.png";
@@ -394,6 +393,7 @@ export default function EmployeeProfile() {
             <Grid item xs={12} sm={6}>
               <Stack spacing={2}>
                 <TextField
+                  required
                   value={firstName}
                   label="First Name"
                   onChange={(e) => {
@@ -415,6 +415,7 @@ export default function EmployeeProfile() {
                   }}
                 />
                 <TextField
+                  required
                   variant="outlined"
                   type="date"
                   value={DOB}
@@ -427,6 +428,7 @@ export default function EmployeeProfile() {
                   }}
                 />
                 <TextField
+                  required
                   error={!ssnValid}
                   helperText={!ssnValid ? "Please enter a valid SSN (XXX-XX-XXXX)." : ""}
                   value={SSN}
@@ -445,6 +447,7 @@ export default function EmployeeProfile() {
             <Grid item xs={12} sm={6}>
               <Stack spacing={2}>
                 <TextField
+                  required
                   value={lastName}
                   label="Last Name"
                   onChange={(e) => {
@@ -465,6 +468,7 @@ export default function EmployeeProfile() {
                   }}
                 />
                 <TextField
+                  required
                   id="gender"
                   select
                   label="Gender"
@@ -510,6 +514,7 @@ export default function EmployeeProfile() {
             <Grid item xs={12} sm={6}>
               <Stack spacing={2}>
                 <TextField
+                  required
                   value={street}
                   label="Street"
                   onChange={(e) => {
@@ -520,6 +525,7 @@ export default function EmployeeProfile() {
                   }}
                 />
                 <TextField
+                  required
                   value={city}
                   label="City"
                   onChange={(e) => {
@@ -530,6 +536,7 @@ export default function EmployeeProfile() {
                   }}
                 />
                 <TextField
+                  required
                   value={zip}
                   label="Zip"
                   onChange={(e) => {
@@ -544,6 +551,7 @@ export default function EmployeeProfile() {
             <Grid item xs={12} sm={6}>
               <Stack spacing={2}>
                 <TextField
+                  required
                   value={buildingOrApt}
                   label="Building / Apt #"
                   onChange={(e) => {
@@ -554,6 +562,7 @@ export default function EmployeeProfile() {
                   }}
                 />
                 <TextField
+                  required
                   value={state}
                   label="State"
                   onChange={(e) => {
@@ -588,9 +597,10 @@ export default function EmployeeProfile() {
           <Grid item xs={12} sm={6} sx={{ px: 3 }}>
             <Stack spacing={2}>
               <TextField
-               error={!emailValid}
-               helperText={!emailValid ? "Please enter a valid email." : ""}
-               
+                required
+                error={!emailValid}
+                helperText={!emailValid ? "Please enter a valid email." : ""}
+
                 value={email}
                 label="Email"
                 onChange={(e) => {
@@ -601,6 +611,7 @@ export default function EmployeeProfile() {
                 }}
               />
               <TextField
+                required
                 value={cellPhone}
                 label="Cell Phone"
                 onChange={(e) => {
@@ -644,6 +655,7 @@ export default function EmployeeProfile() {
           <Grid item xs={12} sm={6} sx={{ px: 3 }}>
             <Stack spacing={2}>
               <TextField
+                required
                 id="visatype"
                 select
                 value={visaType}
@@ -712,6 +724,7 @@ export default function EmployeeProfile() {
               <Grid item xs={12} sm={6}>
                 <Stack spacing={2}>
                   <TextField
+                    required
                     value={emergencyContact1FirstName}
                     label="First Name"
                     onChange={(e) => {
@@ -732,6 +745,7 @@ export default function EmployeeProfile() {
                     }}
                   />
                   <TextField
+                    required
                     value={emergencyContact1PhoneName}
                     label="phone"
                     onChange={(e) => {
@@ -746,6 +760,7 @@ export default function EmployeeProfile() {
               <Grid item xs={12} sm={6}>
                 <Stack spacing={2}>
                   <TextField
+                    required
                     value={emergencyContact1LastName}
                     label="Last Name"
                     onChange={(e) => {
@@ -756,6 +771,7 @@ export default function EmployeeProfile() {
                     }}
                   />
                   <TextField
+                    required
                     value={emergencyContact1Email}
                     label="Email"
                     onChange={(e) => {
@@ -766,6 +782,7 @@ export default function EmployeeProfile() {
                     }}
                   />
                   <TextField
+                    required
                     value={emergencyContact1Relationship}
                     label="Relationship"
                     onChange={(e) => {
@@ -787,6 +804,7 @@ export default function EmployeeProfile() {
               <Grid item xs={12} sm={6}>
                 <Stack spacing={2}>
                   <TextField
+                    required
                     value={emergencyContact2FirstName}
                     label="First Name"
                     onChange={(e) => {
@@ -807,6 +825,7 @@ export default function EmployeeProfile() {
                     }}
                   />
                   <TextField
+                    required
                     value={emergencyContact2PhoneName}
                     label="phone"
                     onChange={(e) => {
@@ -821,6 +840,7 @@ export default function EmployeeProfile() {
               <Grid item xs={12} sm={6}>
                 <Stack spacing={2}>
                   <TextField
+                    required
                     value={emergencyContact2LastName}
                     label="Last Name"
                     onChange={(e) => {
@@ -831,6 +851,7 @@ export default function EmployeeProfile() {
                     }}
                   />
                   <TextField
+                    required
                     value={emergencyContact2Email}
                     label="Email"
                     onChange={(e) => {
@@ -841,6 +862,7 @@ export default function EmployeeProfile() {
                     }}
                   />
                   <TextField
+                    required
                     value={emergencyContact2Relationship}
                     label="Relationship"
                     onChange={(e) => {

@@ -267,17 +267,18 @@ export default function EmployeeVisaManagement() {
     };
 
     fetchVisaStatusData();
-    console.log(visaStatusData);
+
+    const savedTab = localStorage.getItem('currentTab');
+    if (savedTab !== null) {
+      setCurrentTab(parseInt(savedTab, 10));
+    }
 
   }, []);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setCurrentTab(newValue);
+    localStorage.setItem('currentTab', newValue.toString());
   };
-
-  // const handleDocumentUpload = (documentType, file) => {
-
-  // };
 
   if (visaStatusData?.visaType !== "F1(CPT/OPT)") {
     return null;
