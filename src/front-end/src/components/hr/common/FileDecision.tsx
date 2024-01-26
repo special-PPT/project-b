@@ -39,7 +39,7 @@ const DecisionButtons: React.FC<DecisionButtonsProps> = ({
   const [feedback, setFeedback] = useState("");
 
   const updateDocumentStatus = async (isAccept: boolean, feedback: string) => {
-    const status = isAccept ? "Accepted" : "Rejected";
+    const status = isAccept ? "Approved" : "Rejected";
     await axios.put("http://localhost:8000/hr/updateVisaDocStatus", {
       employee_id: employeeId,
       type: type,
