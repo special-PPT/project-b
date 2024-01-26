@@ -100,7 +100,7 @@ const VisaTableMobile: React.FC<VisaTableProps> = ({ rows }) => {
         </Grid>
       </Grid>
       <>
-        {filteredRows.map((row) => (
+        {filteredRows?.map((row) => (
           <EmployeeCard
             filterOption={filterOption}
             key={row.employee_id}

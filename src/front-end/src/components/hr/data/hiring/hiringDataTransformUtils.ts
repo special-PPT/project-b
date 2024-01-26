@@ -53,7 +53,7 @@ export async function getHrManagementData(hrId: string): Promise<HistoryRow[]> {
 }
 
 function transformHrToHistoryData(hrData: HrManagement): HistoryRow[] {
-  return hrData.employeeProfiles.map((user, index) => {
+  return hrData?.employeeProfiles.map((user, index) => {
     const token = hrData.registrationTokens[index];
     const isExpired = new Date(token.expiry) < new Date();
 

@@ -36,6 +36,7 @@ export default function TopNav(props: TopNavProps) {
     removeCookie('userId', { path: '/' });
     removeCookie('authToken', { path: '/' });
     removeCookie('email', { path: '/' });
+    localStorage.setItem('currentTab', '0');
     navigate('/login');
   }
 
